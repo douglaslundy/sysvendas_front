@@ -13,7 +13,7 @@ import { Provider } from "react-redux";
 const clientSideEmotionCache = createEmotionCache();
 import store from "../src/store";
 import Messages from "../src/components/messages";
-import AlertModal from "../src/components/messagesModal";
+import AlertDialog from "../src/components/alertDialog";
 
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
@@ -29,7 +29,7 @@ export default function MyApp(props) {
           <CssBaseline />
           <FullLayout>
 
-            <AlertModal />
+            <AlertDialog />
             <Messages />
 
             <Component {...pageProps} />
