@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
     Typography,
     Box,
@@ -17,7 +17,7 @@ import FeatherIcon from "feather-icons-react";
 import ClientModal from "../modal/client";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllClients, inactiveClientFetch } from "../../store/fetchActions";
+import { getAllClients, inactiveClientFetch } from "../../store/fetchActions/client";
 import { showClient } from "../../store/ducks/clients";
 import { changeTitleAlert, turnAlert, turnModal } from "../../store/ducks/Layout";
   
@@ -32,8 +32,6 @@ import { changeTitleAlert, turnAlert, turnModal } from "../../store/ducks/Layout
   }));
 
 export default () => {
-
-    const [open, setOpen] = useState(false);
 
     const dispatch = useDispatch();
 

@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import clientReducer from './ducks/clients';
 import layoutReducer from './ducks/Layout';
+import clientReducer from './ducks/clients';
+import categorieReducer from './ducks/categories';
 
 
 export default configureStore({
     reducer: {
         clients: clientReducer,
-        layout: layoutReducer
+        layout: layoutReducer, 
+        categories: categorieReducer,
     },
 });

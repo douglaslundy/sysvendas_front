@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
     Typography,
     Box,
@@ -6,36 +6,62 @@ import {
     TableBody,
     TableCell,
     TableHead,
-    TableRow
+    TableRow,
+    Fab,
+    Button, 
+    styled 
 } from "@mui/material";
+
 import BaseCard from "../baseCard/BaseCard";
+import FeatherIcon from "feather-icons-react";
+import CategorieModal from "../modal/categorie";
+import { useDispatch, useSelector } from "react-redux";
+
+import { getAllCategories, inactiveCategorieFetch } from "../../store/fetchActions/categorie";
+import { showCategorie } from "../../store/ducks/categories";
+import { changeTitleAlert, turnAlert, turnModal } from "../../store/ducks/Layout";
+  
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
 
 export default () => {
 
+    const dispatch = useDispatch();
 
-    const [loading, setLoading] = useState(true);
-    const [categories, setCategories] = useState([{
-        "full_name": "nenhum resultado encontrado",
-        "id": "0"
-    }]);
+    const { categories } = useSelector(state => state.categories);
 
-    useEffect(()=>{
-        getList();
+    useEffect(() => {
+        dispatch(getAllCategories());
     }, []);
 
-    const getList = () =>{
-        setLoading(true);
-        const result = [{}]
-        setLoading(false);
-        
-        if(result.length >= 0){
-            setCategories(result);
-        }
-    }
+    const HandleEditCategorie = async categorie => {
+        dispatch(showCategorie(categorie));
+        dispatch(turnModal());
+    }  
 
+    const HandleInactiveCategorie = async categorie => {
+        dispatch(inactiveCategorieFetch(categorie));
+        dispatch(turnAlert());
+        dispatch(changeTitleAlert(`A Categoria ${categorie.name} foi inativado com sucesso!`))
+    }
 
     return (
         <BaseCard title="Categorias">
+
+            <CategorieModal>
+                <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
+                    <FeatherIcon icon="user-plus" />
+                </Fab>
+            </CategorieModal>
+            <br />
+         
             <Table
                 aria-label="simple table"
                 sx={{
@@ -47,68 +73,67 @@ export default () => {
                     <TableRow>
                         <TableCell>
                             <Typography color="textSecondary" variant="h6">
-                                Id
+                                Nome / Apelido
                             </Typography>
                         </TableCell>
-                        <TableCell>
+                                                
+                        <TableCell align="center">
                             <Typography color="textSecondary" variant="h6">
-                                Name
+                                Ações
                             </Typography>
                         </TableCell>
-                        <TableCell  align="right">
-                            <Typography color="textSecondary" variant="h6">
-                                Status
-                            </Typography>
-                        </TableCell>                       
                     </TableRow>
                 </TableHead>
-                <TableBody>
+
+                <TableBody>                                 
                     {categories.map((categorie) => (
-                        <TableRow key={categorie.id}>
-                            <TableCell>
-                                <Typography variant="h6">
-                                    {categorie.id}
-                                </Typography>
-                            </TableCell>
-
-                            <TableCell>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <Box>
-                                        <Typography
-                                            variant="h6"
+                        <StyledTableRow  key={categorie.id} hover>
+                            {categorie &&
+                                <>
+                                    <TableCell>
+                                        <Box
                                             sx={{
-                                                fontWeight: "600",
+                                                display: "flex",
+                                                alignItems: "center",
                                             }}
                                         >
-                                            {categorie.name}
-                                        </Typography>
-                                        <Typography
-                                            color="textSecondary"
-                                            sx={{
-                                                fontSize: "13px",
-                                            }}
-                                        >
-                                            {categorie.name}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            </TableCell>
+                                            <Box>
+                                                <Typography
+                                                    variant="h6"
+                                                    sx={{
+                                                        fontWeight: "600",
+                                                    }}
+                                                >
+                                                    {categorie.name}
+                                                </Typography>                                               
+                                            </Box>
+                                        </Box>
+                                    </TableCell>                                    
+
+                                    <TableCell align="center">
+                                        <Box sx={{ "& button": { mx: 1 } }}>
+
+                                            <Button onClick={() => { HandleEditCategorie(categorie) }} color="primary" size="medium" variant="contained">
+                                                <FeatherIcon icon="edit" width="20" height="20" />
+                                                Editar
+                                            </Button>
+
+                                            <Button onClick={() => { HandleInactiveCategorie(categorie) }} color="error" size="medium" variant="contained">
+                                                <FeatherIcon icon="trash" width="20" height="20" />
+                                                Inativar
+                                            </Button>
 
 
-                            <TableCell align="right">
-                                <Typography color="textSecondary" variant="h6">
-                                    {categorie.active}
-                                </Typography>
-                            </TableCell>
-                        </TableRow>
+                                        </Box>
+                                    </TableCell>
+                                </>
+                            }
+
+                        </StyledTableRow >
                     ))}
                 </TableBody>
             </Table>
-        </BaseCard>
+            
+        </BaseCard >
     );
 };

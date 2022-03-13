@@ -17,8 +17,8 @@ import BaseCard from "../../baseCard/BaseCard";
 import * as yup from 'yup'
 
 import { showClient } from '../../../store/ducks/clients';
-import { editClientFetch, addClientFetch } from '../../../store/fetchActions';
-import { turnModal, turnAlert, changeTitleAlert } from '../../../store/ducks/Layout';
+import { editClientFetch, addClientFetch } from '../../../store/fetchActions/client';
+import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
 
 
 const style = {
@@ -50,7 +50,7 @@ export default function ClientModal(props) {
         limit: "",
     });
     const { client } = useSelector(state => state.clients);
-    const { isOpenModal} = useSelector(state => state.layout);
+    const { isOpenModal, isOpenAlert } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
     const { full_name, surname, cpf_cnpj, email, phone, im, ie, fantasy_name, obs, limit } = form;
@@ -85,21 +85,19 @@ export default function ClientModal(props) {
     }
 
     const handlePostData = async () => {
-        
-        console.log("no modal entrou na rota add Cliente ")
-        dispatch(addClientFetch(form));       
+
+        console.log("no modal entrou na rota add Cliente ");
         dispatch(changeTitleAlert(`O cliente ${form.full_name} foi Cadastrado com sucesso!`));
-        cleanForm();                
-        dispatch(turnAlert());
+        dispatch(addClientFetch(form));
+        cleanForm();
     };
 
     const handlePutData = async () => {
-        
-        console.log(" no modal entrou entrou na rota add Cliente " + client.id)
-        dispatch(editClientFetch(form));
+
+        console.log(" no modal entrou entrou na rota add Cliente " + client.id);
         dispatch(changeTitleAlert(`O cliente ${form.full_name} foi atualizado com sucesso!`));
-        cleanForm();                
-        dispatch(turnAlert());
+        await dispatch(editClientFetch(form));
+        cleanForm();
     };
 
     const handleClose = () => {
@@ -111,12 +109,12 @@ export default function ClientModal(props) {
         let schema = yup.object().shape({
 
             limit: yup.number("Limit deve ser um campo numerico")
-            .required("O Campo limit é obrigatório")
-            .positive("Limit deve ser um campo positivo"),
+                .required("O Campo limit é obrigatório")
+                .positive("Limit deve ser um campo positivo"),
 
             full_name: yup.string("O Campo nome deve ser uma String")
                 .required("O Campo Nome é obrigatório")
-                .min(6, "Campo deve possuir o minimo de ${min} caracteres"),           
+                .min(6, "Campo deve possuir o minimo de ${min} caracteres"),
         })
         try {
             // limpa mensagem de erro de fazer a validação, de modo que so exiba as mensagens atuais

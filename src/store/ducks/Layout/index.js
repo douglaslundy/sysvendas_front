@@ -38,9 +38,6 @@ export default createReducer(INITIAL_STATE, {
    [changeTitleAlert.type] : (state, action) => ({...state, titleAlert: action.payload}),
 
    [changeSubTitleALert.type] : (state, action) => ({...state, subTitleAlert: action.payload})
-
-
-
 });
 
 

@@ -1,6 +1,6 @@
-import api from "../../services/api";
-import { inactiveClient, addClient, editClient, addClients } from "../ducks/clients";
-import { addMessage, addAlertMessage } from "../ducks/Layout";
+import api from "../../../services/api";
+import { inactiveClient, addClient, editClient, addClients } from "../../ducks/clients";
+import { turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 
 export const getAllClients = () => {
     return (dispatch) => {
@@ -10,7 +10,7 @@ export const getAllClients = () => {
                 dispatch(addClients(res.data))
             })
             .catch(console.log)
-            .then(console.log('eu fiz uma consulta no banco ' + new Date))
+            .then(console.log('eu fiz uma consulta por clientes no banco ' + new Date))
     }
 }
 
@@ -21,7 +21,8 @@ export const addClientFetch = (client) => {
             .then((res) =>
             (
                 dispatch(addClient(res.data.client)),
-                dispatch(addMessage(`O cliente ${res.data.client.full_name} foi adicionado com sucesso!`))
+                dispatch(addMessage(`O cliente ${res.data.client.full_name} foi adicionado com sucesso!`)),
+                dispatch(turnAlert())
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
@@ -39,7 +40,8 @@ export const editClientFetch = (client) => {
             .then((res) =>
             (
                 dispatch(editClient(res.data.client)),
-                dispatch(addMessage(`O cliente ${res.data.client.full_name} foi atualizado com sucesso!`))
+                dispatch(addMessage(`O cliente ${res.data.client.full_name} foi atualizado com sucesso!`)),      
+                dispatch(turnAlert())
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
@@ -48,18 +50,17 @@ export const editClientFetch = (client) => {
     };
 }
 
-
 export const inactiveClientFetch = (client) => {
     return (dispatch) => {
         api.delete(`/clients/${client.id}`)
             .then((res) =>
             (
                 dispatch(inactiveClient(client)),
-                dispatch(addMessage(`O cliente ${client.full_name} foi inativado com sucesso!`))
+                dispatch(addMessage(`O cliente ${client.full_name} foi inativado com sucesso!`)),
+                dispatch(turnAlert())
             ))
             .catch((error) => {
                 dispatch(addMessage(`ERROR - ${error} `));
-                return error;
             })
     }
 }
