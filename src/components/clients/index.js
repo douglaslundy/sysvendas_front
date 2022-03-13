@@ -38,11 +38,10 @@ export default () => {
     const dispatch = useDispatch();
 
     const { clients } = useSelector(state => state.clients);
-    const {isOpen} = useSelector(state => state.layout);
 
     useEffect(() => {
         dispatch(getAllClients());
-    }, [clients]);
+    }, []);
 
     const HandleEditClient = async client => {
         dispatch(showClient(client));

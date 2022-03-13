@@ -85,6 +85,8 @@ export default function ClientModal(props) {
     }
 
     const handlePostData = async () => {
+        
+        console.log("no modal entrou na rota add Cliente ")
         dispatch(addClientFetch(form));       
         dispatch(changeTitleAlert(`O cliente ${form.full_name} foi Cadastrado com sucesso!`));
         cleanForm();                
@@ -92,6 +94,8 @@ export default function ClientModal(props) {
     };
 
     const handlePutData = async () => {
+        
+        console.log(" no modal entrou entrou na rota add Cliente " + client.id)
         dispatch(editClientFetch(form));
         dispatch(changeTitleAlert(`O cliente ${form.full_name} foi atualizado com sucesso!`));
         cleanForm();                

@@ -16,6 +16,7 @@ export const getAllClients = () => {
 
 export const addClientFetch = (client) => {
     return (dispatch) => {
+        console.log(" em fetch actions  entrou na rota add Cliente ");
         api.post('/clients', client)
             .then((res) =>
             (
@@ -32,6 +33,8 @@ export const addClientFetch = (client) => {
 
 export const editClientFetch = (client) => {
     return (dispatch) => {
+        
+        console.log(" em fetch actions entrou na rota Editar Cliente " + client.id);
         api.put(`/clients/${client.id}`, client)
             .then((res) =>
             (
