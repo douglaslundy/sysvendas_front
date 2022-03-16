@@ -48,7 +48,6 @@ export default () => {
 
     const HandleInactiveCategorie = async categorie => {
         dispatch(inactiveCategorieFetch(categorie));
-        dispatch(turnAlert());
         dispatch(changeTitleAlert(`A Categoria ${categorie.name} foi inativado com sucesso!`))
     }
 

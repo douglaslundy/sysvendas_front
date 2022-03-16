@@ -10,15 +10,15 @@ const Menuitems = [
     href: "/clients",
   },
   {
+    title: "Produtos", 
+    icon: "box",
+    href: "/products",
+  },
+  {
     title: "Categorias", 
     icon: "box",
     href: "/categories",
   },
-  // {
-  //   title: "Produtos", 
-  //   icon: "box",
-  //   href: "/products",
-  // },
   // {
   //   title: "Vendas", 
   //   icon: "bar-code",

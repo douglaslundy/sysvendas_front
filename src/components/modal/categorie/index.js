@@ -93,7 +93,7 @@ export default function CategorieModal(props) {
 
             name: yup.string("O Campo nome deve ser uma String")
                 .required("O Campo Nome é obrigatório")
-                .min(3, "Campo deve possuir o minimo de ${min} caracteres"),
+                .min(3, "Campo Nome deve possuir o minimo de ${min} caracteres"),
         })
         try {
             // limpa mensagem de erro de fazer a validação, de modo que so exiba as mensagens atuais

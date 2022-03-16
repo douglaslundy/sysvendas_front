@@ -48,7 +48,6 @@ export default () => {
 
     const HandleInactiveClient = async client => {
         dispatch(inactiveClientFetch(client));
-        dispatch(turnAlert());
         dispatch(changeTitleAlert(`O cliente ${client.full_name} foi inativado com sucesso!`))
     }
 
@@ -99,7 +98,6 @@ export default () => {
                 <TableBody>                                 
                     {clients.map((client) => (
                         <StyledTableRow  key={client.id} hover>
-                            {client &&
                                 <>
                                     <TableCell>
                                         <Box
@@ -178,9 +176,8 @@ export default () => {
                                         </Box>
                                     </TableCell>
                                 </>
-                            }
 
-                        </StyledTableRow >
+                        </StyledTableRow>
                     ))}
                 </TableBody>
             </Table>
