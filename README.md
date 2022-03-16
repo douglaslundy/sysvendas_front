@@ -8,8 +8,8 @@ Contact:
 ##### https://www.linkedin.com/in/douglaslundy/
 
 Esta aplicação é um projeto Back-End, de gestão de clientes, estoque e vendas, 
-estoque e vendas, em desenvolvimento para o cliente Jr ferragens, 
-está sendo desenvolvido utilizando NextJs, Redux, Yup, Axios e Material UI.
+em desenvolvimento para o cliente Jr ferragens, 
+neste projeto esta sendo utilizando NextJs, Redux, Yup, Axios e Material UI.
 Esta aplicação consumirá uma API em Laravel 9.0 no Backend Tb ainda em desenvolvimento.
 
 Após a conclusão deste projeto, este README será alterado com as informações adicionais pertinentes,
