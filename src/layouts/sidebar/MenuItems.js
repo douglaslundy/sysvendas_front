@@ -19,6 +19,11 @@ const Menuitems = [
     icon: "box",
     href: "/categories",
   },
+  {
+    title: "Unidades", 
+    icon: "box",
+    href: "/units",
+  },
   // {
   //   title: "Vendas", 
   //   icon: "bar-code",
