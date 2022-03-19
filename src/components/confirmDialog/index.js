@@ -40,7 +40,7 @@ export default function ConfirmDialog(props) {
     return (
 
         <Dialog open={confirmDialog.isOpen}
-            onClose={() => setConfirmDialog({isOpen: false })}
+            onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
             classes={{ paper: classes.dialog }}
         >
             <DialogTitle className={classes.dialogTitle}>

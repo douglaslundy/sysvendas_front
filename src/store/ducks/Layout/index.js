@@ -3,6 +3,7 @@ import { createAction, createReducer } from '@reduxjs/toolkit';
 const INITIAL_STATE = {
     messages: [],
     alertMessages:[],
+    isOpenLoading: false,
     isOpenModal: false, 
     isOpenAlert: false,
     titleAlert: "Cliente Cadastrado com sucesso!",
@@ -15,6 +16,8 @@ export const removeMessage = createAction('REMOVE_MESSAGE');
 
 export const addAlertMessage = createAction('ADD_ALERT_MESSAGE');
 export const removeAlertMessage = createAction('REMOVE_ALERT_MESSAGE');
+
+export const turnLoading = createAction('IS_OPEN_LOADING');
 
 export const turnModal = createAction('IS_OPEN_MODAL');
 
@@ -31,6 +34,8 @@ export default createReducer(INITIAL_STATE, {
    [addAlertMessage.type]: (state, action) => ({...state, alertMessages: [...state.alertMessages, action.payload ]}),
    [removeAlertMessage.type]: (state, action) => ({...state, alertMessages: state.alertMessages.filter((msg) => msg !== action.payload )}),
    
+   [turnLoading.type] : (state, action) => ({...state, isOpenLoading: ( !state.isOpenLoading)}),
+
    [turnModal.type] : (state, action) => ({...state, isOpenModal: ( !state.isOpenModal)}),
 
    [turnAlert.type] : (state, action) => ({...state, isOpenAlert: ( !state.isOpenAlert)}),

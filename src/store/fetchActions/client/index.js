@@ -1,25 +1,26 @@
 import api from "../../../services/api";
 import { inactiveClient, addClient, editClient, addClients } from "../../ducks/clients";
-import { turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
+import { turnAlert, addMessage, addAlertMessage, turnLoading } from "../../ducks/Layout";
 
 export const getAllClients = () => {
     return (dispatch) => {
         api
             .get('/clients')
             .then((res) => {
-                dispatch(addClients(res.data))
+                dispatch(turnLoading());
+                dispatch(addClients(res.data));
             })
             .catch(console.log)
-            .then(console.log('eu fiz uma consulta por clientes no banco ' + new Date))
+            .then(dispatch(turnLoading()))
     }
 }
 
 export const addClientFetch = (client) => {
     return (dispatch) => {
-        console.log(" em fetch actions  entrou na rota add Cliente ");
         api.post('/clients', client)
             .then((res) =>
             (
+                dispatch(turnLoading()),
                 dispatch(addClient(res.data.client)),
                 dispatch(addMessage(`O cliente ${res.data.client.full_name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert())
@@ -28,6 +29,7 @@ export const addClientFetch = (client) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
                 return error.response.data
             })
+            .then(dispatch(turnLoading()))
     };
 };
 
@@ -35,10 +37,10 @@ export const addClientFetch = (client) => {
 export const editClientFetch = (client) => {
     return (dispatch) => {
         
-        console.log(" em fetch actions entrou na rota Editar Cliente " + client.id);
         api.put(`/clients/${client.id}`, client)
             .then((res) =>
             (
+                dispatch(turnLoading()),
                 dispatch(editClient(res.data.client)),
                 dispatch(addMessage(`O cliente ${res.data.client.full_name} foi atualizado com sucesso!`)),      
                 dispatch(turnAlert())
@@ -47,6 +49,7 @@ export const editClientFetch = (client) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
                 return error.response.data
             })
+            .then(dispatch(turnLoading()))
     };
 }
 
@@ -55,6 +58,7 @@ export const inactiveClientFetch = (client) => {
         api.delete(`/clients/${client.id}`)
             .then((res) =>
             (
+                dispatch(turnLoading()),
                 dispatch(inactiveClient(client)),
                 dispatch(addMessage(`O cliente ${client.full_name} foi inativado com sucesso!`)),
                 dispatch(turnAlert())
@@ -62,5 +66,6 @@ export const inactiveClientFetch = (client) => {
             .catch((error) => {
                 dispatch(addMessage(`ERROR - ${error} `));
             })
+            .then(dispatch(turnLoading()))
     }
 }

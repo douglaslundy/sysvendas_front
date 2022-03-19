@@ -24,15 +24,12 @@ const Menuitems = [
     icon: "box",
     href: "/units",
   },
+
   // {
   //   title: "Vendas", 
   //   icon: "bar-code",
   //   href: "/buttons",
-  // },
-
-
-
-  
+  // },  
   // {
   //   title: "Buttons",
   //   icon: "disc",
@@ -43,6 +40,7 @@ const Menuitems = [
   //   icon: "layout",
   //   href: "/forms",
   // }
+  
 ];
 
 export default Menuitems;

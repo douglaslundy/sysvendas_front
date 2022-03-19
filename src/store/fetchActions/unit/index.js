@@ -1,17 +1,18 @@
 import api from "../../../services/api";
 
 import { inactiveUnit, addUnit, editUnit, addUnits } from "../../ducks/units";
-import { turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
+import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 
 export const getAllUnits = () => {
     return (dispatch) => {
         api
             .get('/units')
             .then((res) => {
-                dispatch(addUnits(res.data))
+                dispatch(turnLoading());
+                dispatch(addUnits(res.data));
             })
             .catch(console.log)
-            .then(console.log('eu fiz uma consulta por unidades no banco ' + new Date))
+            .then(dispatch(turnLoading()))
     }
 }
 
@@ -21,6 +22,7 @@ export const addUnitFetch = (unit) => {
         api.post('/units', unit)
             .then((res) =>
             (
+                dispatch(turnLoading()),
                 dispatch(addUnit(res.data.unit)),
                 dispatch(addMessage(`A unidade ${res.data.unit.name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert())
@@ -29,6 +31,7 @@ export const addUnitFetch = (unit) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
                 return error.response.data
             })
+            .then(dispatch(turnLoading()))
     };
 };
 
@@ -40,7 +43,7 @@ export const editUnitFetch = (unit) => {
         api.put(`/units/${unit.id}`, unit)
             .then((res) =>
             (
-                console.log(res.data),
+                dispatch(turnLoading()),
                 dispatch(editUnit(res.data.unit)),
                 dispatch(addMessage(`A unidade ${res.data.unit.name} foi atualizado com sucesso!`)),      
                 dispatch(turnAlert())
@@ -49,6 +52,7 @@ export const editUnitFetch = (unit) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
                 return error.response.data
             })
+            .then(dispatch(turnLoading()))
     };
 }
 
@@ -57,6 +61,7 @@ export const inactiveUnitFetch = (unit) => {
         api.delete(`/units/${unit.id}`)
             .then((res) =>
             (
+                dispatch(turnLoading()),
                 dispatch(inactiveUnit(unit)),
                 dispatch(addMessage(`A unidade ${unit.name} foi deletada com sucesso!`)),
                 dispatch(turnAlert())
@@ -65,5 +70,6 @@ export const inactiveUnitFetch = (unit) => {
                 dispatch(addMessage(`ERROR - ${error} `));
                 return error;
             })
+            .then(dispatch(turnLoading()))
     }
 }

@@ -1,16 +1,17 @@
 import api from "../../../services/api";
 import { inactiveProduct, addProduct, editProduct, addProducts } from "../../ducks/products";
-import { turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
+import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 
 export const getAllProducts = () => {
     return (dispatch) => {
         api
             .get('/products')
             .then((res) => {
+                dispatch(turnLoading())
                 dispatch(addProducts(res.data))
             })
             .catch(console.log)
-            .then(console.log('eu fiz uma consulta por productes no banco ' + new Date))
+            .then(dispatch(turnLoading()))
     }
 }
 
@@ -20,6 +21,7 @@ export const addProductFetch = (product) => {
         api.post('/products', product)
             .then((res) =>
             (
+                dispatch(turnLoading()),
                 dispatch(addProduct(res.data.product)),
                 dispatch(addMessage(`O produto ${res.data.product.name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert())
@@ -28,6 +30,7 @@ export const addProductFetch = (product) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
                 return error.response.data
             })
+            then(dispatch(turnLoading()))
     };
 };
 
@@ -39,6 +42,7 @@ export const editProductFetch = (product) => {
         api.put(`/products/${product.id}`, product)
             .then((res) =>
             (
+                dispatch(turnLoading()),
                 dispatch(editProduct(res.data.product)),
                 dispatch(addMessage(`O produto ${res.data.product.name} foi atualizado com sucesso!`)),      
                 dispatch(turnAlert())
@@ -47,6 +51,7 @@ export const editProductFetch = (product) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
                 return error.response.data
             })
+            .then(dispatch(turnLoading()))
     };
 }
 
@@ -55,6 +60,7 @@ export const inactiveProductFetch = (product) => {
         api.delete(`/products/${product.id}`)
             .then((res) =>
             (
+                dispatch(turnLoading()),
                 dispatch(inactiveProduct(product)),
                 dispatch(addMessage(`O produto ${product.name} foi inativado com sucesso!`)),
                 dispatch(turnAlert())
@@ -63,5 +69,6 @@ export const inactiveProductFetch = (product) => {
                 dispatch(addMessage(`ERROR - ${error} `));
                 return error;
             })
+            .then(dispatch(turnLoading()))
     }
 }

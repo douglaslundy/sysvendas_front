@@ -8,8 +8,8 @@ import {
     TableHead,
     TableRow,
     Fab,
-    Button, 
-    styled 
+    Button,
+    styled
 } from "@mui/material";
 
 import BaseCard from "../baseCard/BaseCard";
@@ -20,21 +20,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllUnits, inactiveUnitFetch } from "../../store/fetchActions/unit";
 import { showUnit } from "../../store/ducks/units";
 import { changeTitleAlert, turnAlert, turnModal } from "../../store/ducks/Layout";
-  
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+import ConfirmDialog from "../confirmDialog";
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
+        backgroundColor: theme.palette.action.hover,
     },
     // hide last border
     '&:last-child td, &:last-child th': {
-      border: 0,
+        border: 0,
     },
-  }));
+}));
 
 export default () => {
 
+    const [confirmDialog, setConfirmDialog] = useState({
+        isOpen: false,
+        title: 'Deseja realmente excluir',
+        subTitle: 'Esta ação não poderá ser desfeita',
+    });
     const dispatch = useDispatch();
-
     const { units } = useSelector(state => state.units);
 
     useEffect(() => {
@@ -44,9 +49,10 @@ export default () => {
     const HandleEditUnit = async unit => {
         dispatch(showUnit(unit));
         dispatch(turnModal());
-    }  
+    }
 
     const HandleInactiveUnit = async unit => {
+        // setConfirmDialog({...confirmDialog, isOpen: true, title: `Deseja Realmente excluir a unidade ${unit.name}`})
         dispatch(inactiveUnitFetch(unit));
         dispatch(changeTitleAlert(`A Categoria ${unit.name} foi inativado com sucesso!`))
     }
@@ -60,7 +66,7 @@ export default () => {
                 </Fab>
             </UnitModal>
             <br />
-         
+
             <Table
                 aria-label="simple table"
                 sx={{
@@ -75,7 +81,7 @@ export default () => {
                                 Nome / Apelido
                             </Typography>
                         </TableCell>
-                                                
+
                         <TableCell align="center">
                             <Typography color="textSecondary" variant="h6">
                                 Ações
@@ -84,9 +90,9 @@ export default () => {
                     </TableRow>
                 </TableHead>
 
-                <TableBody>                                 
+                <TableBody>
                     {units.map((unit) => (
-                        <StyledTableRow  key={unit.id} hover>
+                        <StyledTableRow key={unit.id} hover>
                             {unit &&
                                 <>
                                     <TableCell>
@@ -104,10 +110,10 @@ export default () => {
                                                     }}
                                                 >
                                                     {unit.name}
-                                                </Typography>                                               
+                                                </Typography>
                                             </Box>
                                         </Box>
-                                    </TableCell>                                    
+                                    </TableCell>
 
                                     <TableCell align="center">
                                         <Box sx={{ "& button": { mx: 1 } }}>
@@ -132,7 +138,10 @@ export default () => {
                     ))}
                 </TableBody>
             </Table>
-            
+            <ConfirmDialog
+                confirmDialog={confirmDialog}
+                setConfirmDialog={setConfirmDialog} />
+
         </BaseCard >
     );
 };
