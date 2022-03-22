@@ -8,8 +8,8 @@ import {
     TableHead,
     TableRow,
     Fab,
-    Button, 
-    styled 
+    Button,
+    styled
 } from "@mui/material";
 
 import BaseCard from "../baseCard/BaseCard";
@@ -20,18 +20,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllCategories, inactiveCategorieFetch } from "../../store/fetchActions/categorie";
 import { showCategorie } from "../../store/ducks/categories";
 import { changeTitleAlert, turnAlert, turnModal } from "../../store/ducks/Layout";
-  
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+import ConfirmDialog from "../confirmDialog";
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
+        backgroundColor: theme.palette.action.hover,
     },
     // hide last border
     '&:last-child td, &:last-child th': {
-      border: 0,
+        border: 0,
     },
-  }));
+}));
 
 export default () => {
+
+    const [confirmDialog, setConfirmDialog] = useState({
+        isOpen: false,
+        title: 'Deseja realmente excluir',
+        subTitle: 'Esta ação não poderá ser desfeita',
+    });
 
     const dispatch = useDispatch();
 
@@ -44,10 +51,10 @@ export default () => {
     const HandleEditCategorie = async categorie => {
         dispatch(showCategorie(categorie));
         dispatch(turnModal());
-    }  
+    }
 
     const HandleInactiveCategorie = async categorie => {
-        dispatch(inactiveCategorieFetch(categorie));
+        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Deseja Realmente inativar a categoria ${categorie.name}`, confirm: inactiveCategorieFetch(categorie) })
         dispatch(changeTitleAlert(`A Categoria ${categorie.name} foi inativado com sucesso!`))
     }
 
@@ -60,7 +67,7 @@ export default () => {
                 </Fab>
             </CategorieModal>
             <br />
-         
+
             <Table
                 aria-label="simple table"
                 sx={{
@@ -75,7 +82,7 @@ export default () => {
                                 Nome / Apelido
                             </Typography>
                         </TableCell>
-                                                
+
                         <TableCell align="center">
                             <Typography color="textSecondary" variant="h6">
                                 Ações
@@ -84,9 +91,9 @@ export default () => {
                     </TableRow>
                 </TableHead>
 
-                <TableBody>                                 
+                <TableBody>
                     {categories.map((categorie) => (
-                        <StyledTableRow  key={categorie.id} hover>
+                        <StyledTableRow key={categorie.id} hover>
                             {categorie &&
                                 <>
                                     <TableCell>
@@ -104,10 +111,10 @@ export default () => {
                                                     }}
                                                 >
                                                     {categorie.name}
-                                                </Typography>                                               
+                                                </Typography>
                                             </Box>
                                         </Box>
-                                    </TableCell>                                    
+                                    </TableCell>
 
                                     <TableCell align="center">
                                         <Box sx={{ "& button": { mx: 1 } }}>
@@ -132,7 +139,11 @@ export default () => {
                     ))}
                 </TableBody>
             </Table>
-            
+
+            <ConfirmDialog
+                confirmDialog={confirmDialog}
+                setConfirmDialog={setConfirmDialog} />
+
         </BaseCard >
     );
 };

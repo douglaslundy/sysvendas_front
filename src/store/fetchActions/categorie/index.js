@@ -5,71 +5,75 @@ import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks
 
 export const getAllCategories = () => {
     return (dispatch) => {
+        dispatch(turnLoading());
+
         api
             .get('/categorie')
             .then((res) => {
-                dispatch(turnLoading())
-                dispatch(addCategories(res.data))
+                dispatch(addCategories(res.data));
+                dispatch(turnLoading());
             })
-            .catch(console.log)
-            .then(dispatch(turnLoading()))
+            .catch(() => {dispatch(turnLoading())})
     }
 }
 
 export const addCategorieFetch = (categorie) => {
     return (dispatch) => {
-        console.log(" em fetch actions  entrou na rota add Categoriee ");
+        dispatch(turnLoading());
+
         api.post('/categorie', categorie)
             .then((res) =>
             (
-                dispatch(turnLoading()),
                 dispatch(addCategorie(res.data.categorie)),
                 dispatch(addMessage(`A categoria ${res.data.categorie.name} foi adicionado com sucesso!`)),
-                dispatch(turnAlert())
+                dispatch(turnAlert()),
+                dispatch(turnLoading())
             ))
             .catch((error) => {
-                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
+                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `));
+                dispatch(turnLoading());
                 return error.response.data
             })
-            .then(dispatch(turnLoading()))
     };
 };
 
 
 export const editCategorieFetch = (categorie) => {
     return (dispatch) => {
-        
-        console.log(" em fetch actions entrou na rota Editar Categorie " + categorie.id);
+        dispatch(turnLoading());
+
         api.put(`/categorie/${categorie.id}`, categorie)
             .then((res) =>
             (
-                dispatch(turnLoading()),
                 dispatch(editCategorie(res.data.categorie)),
                 dispatch(addMessage(`A categoria ${res.data.categorie.name} foi atualizado com sucesso!`)),      
-                dispatch(turnAlert())
+                dispatch(turnAlert()),
+                dispatch(turnLoading())
             ))
             .catch((error) => {
-                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
+                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `));
+                dispatch(turnLoading())
                 return error.response.data
             })
-            .then(dispatch(turnLoading()))
     };
 }
 
 export const inactiveCategorieFetch = (categorie) => {
     return (dispatch) => {
+        dispatch(turnLoading());
+
         api.delete(`/categorie/${categorie.id}`)
             .then((res) =>
             (   
-                dispatch(turnLoading()),
                 dispatch(inactiveCategorie(categorie)),
                 dispatch(addMessage(`A categoria ${categorie.name} foi inativado com sucesso!`)),
-                dispatch(turnAlert())
+                dispatch(turnAlert()),
+                dispatch(turnLoading())
             ))
             .catch((error) => {
                 dispatch(addMessage(`ERROR - ${error} `));
+                dispatch(turnLoading());
                 return error;
             })
-            then(dispatch(turnLoading()))
     }
 }

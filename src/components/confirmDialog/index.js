@@ -10,6 +10,7 @@ import FeatherIcon from "feather-icons-react";
 import { makeStyles } from '@mui/styles';
 
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles(
     theme => (
@@ -37,6 +38,7 @@ const useStyles = makeStyles(
 export default function ConfirmDialog(props) {
     const { confirmDialog, setConfirmDialog } = props;
     const classes = useStyles();
+    const dispatch = useDispatch();
     return (
 
         <Dialog open={confirmDialog.isOpen}
@@ -59,7 +61,7 @@ export default function ConfirmDialog(props) {
 
             <DialogActions className={classes.dialogAction}>
                 <Button
-                    onClick={confirmDialog.onConfirm}
+                    onClick={() => {dispatch(confirmDialog.confirm), setConfirmDialog({ ...confirmDialog, isOpen: false })}}
                     color="error" size="medium" variant="contained">
                     <FeatherIcon icon="trash" width="40" height="20" />
                     Sim

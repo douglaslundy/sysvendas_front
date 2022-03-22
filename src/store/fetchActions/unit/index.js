@@ -5,71 +5,74 @@ import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks
 
 export const getAllUnits = () => {
     return (dispatch) => {
+        dispatch(turnLoading())
         api
             .get('/units')
             .then((res) => {
-                dispatch(turnLoading());
                 dispatch(addUnits(res.data));
+                dispatch(turnLoading());
             })
-            .catch(console.log)
-            .then(dispatch(turnLoading()))
+            .catch((error) =>{
+                dispatch(turnLoading())
+            })
     }
 }
 
 export const addUnitFetch = (unit) => {
     return (dispatch) => {
-        console.log(" em fetch actions  entrou na rota add Unite ");
+        dispatch(turnLoading())
         api.post('/units', unit)
             .then((res) =>
             (
-                dispatch(turnLoading()),
                 dispatch(addUnit(res.data.unit)),
                 dispatch(addMessage(`A unidade ${res.data.unit.name} foi adicionado com sucesso!`)),
-                dispatch(turnAlert())
+                dispatch(turnAlert()),
+                dispatch(turnLoading())
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
+                dispatch(turnLoading())
                 return error.response.data
             })
-            .then(dispatch(turnLoading()))
     };
 };
 
 
 export const editUnitFetch = (unit) => {
     return (dispatch) => {
-        
-        console.log(" em fetch actions entrou na rota Editar Unit " + unit.id);
+
+        dispatch(turnLoading()),
         api.put(`/units/${unit.id}`, unit)
             .then((res) =>
             (
-                dispatch(turnLoading()),
                 dispatch(editUnit(res.data.unit)),
                 dispatch(addMessage(`A unidade ${res.data.unit.name} foi atualizado com sucesso!`)),      
-                dispatch(turnAlert())
+                dispatch(turnAlert()),
+                dispatch(turnLoading())
             ))
             .catch((error) => {
-                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
+                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))                
+                dispatch(turnLoading())
                 return error.response.data
             })
-            .then(dispatch(turnLoading()))
     };
 }
 
 export const inactiveUnitFetch = (unit) => {
     return (dispatch) => {
+        dispatch(turnLoading())
         api.delete(`/units/${unit.id}`)
             .then((res) =>
             (
-                dispatch(turnLoading()),
                 dispatch(inactiveUnit(unit)),
                 dispatch(addMessage(`A unidade ${unit.name} foi deletada com sucesso!`)),
-                dispatch(turnAlert())
+                dispatch(turnAlert()),
+                dispatch(turnLoading())
             ))
             .catch((error) => {
                 dispatch(addMessage(`ERROR - ${error} `));
+                dispatch(turnLoading())
                 return error;
             })
-            .then(dispatch(turnLoading()))
     }
 }

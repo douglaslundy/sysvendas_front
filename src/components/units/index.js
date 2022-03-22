@@ -52,9 +52,8 @@ export default () => {
     }
 
     const HandleInactiveUnit = async unit => {
-        // setConfirmDialog({...confirmDialog, isOpen: true, title: `Deseja Realmente excluir a unidade ${unit.name}`})
-        dispatch(inactiveUnitFetch(unit));
-        dispatch(changeTitleAlert(`A Categoria ${unit.name} foi inativado com sucesso!`))
+        setConfirmDialog({...confirmDialog, isOpen: true, title: `Deseja Realmente excluir a unidade ${unit.name}`, confirm: inactiveUnitFetch(unit)})
+        dispatch(changeTitleAlert(`A Categoria ${unit.name} foi excluido com sucesso!`))
     }
 
     return (

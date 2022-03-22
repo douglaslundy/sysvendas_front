@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Typography,
     Box,
@@ -20,6 +20,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getAllProducts, inactiveProductFetch } from "../../store/fetchActions/product";
 import { showProduct } from "../../store/ducks/products";
 import { changeTitleAlert, turnAlert, turnModal } from "../../store/ducks/Layout";
+import ConfirmDialog from "../confirmDialog";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -32,6 +33,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default () => {
+    const [confirmDialog, setConfirmDialog] = useState({
+        isOpen: false,
+        title: 'Deseja realmente excluir',
+        subTitle: 'Esta ação não poderá ser desfeita',
+    });
 
     const dispatch = useDispatch();
 
@@ -47,7 +53,7 @@ export default () => {
     }
 
     const HandleInactiveProduct = async product => {
-        dispatch(inactiveProductFetch(product));
+        setConfirmDialog({...confirmDialog, isOpen: true, title: `Deseja Realmente inativar o produto ${product.name}`, confirm: inactiveProductFetch(product)})
         dispatch(changeTitleAlert(`O produto ${product.name} foi inativado com sucesso!`));
     }
 
@@ -216,6 +222,9 @@ export default () => {
                     ))}
                 </TableBody>
             </Table>
+            <ConfirmDialog 
+                confirmDialog={confirmDialog} 
+                setConfirmDialog={setConfirmDialog} />
 
         </BaseCard >
     );
