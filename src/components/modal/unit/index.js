@@ -71,7 +71,6 @@ export default function UnitModal(props) {
 
     const handlePostData = async () => {
 
-        console.log("no modal entrou na rota add Unite ");
         dispatch(changeTitleAlert(`A Unidade ${form.name} foi Cadastrado com sucesso!`));
         dispatch(addUnitFetch(form));
         cleanForm();
@@ -79,7 +78,7 @@ export default function UnitModal(props) {
 
     const handlePutData = async () => {
         dispatch(changeTitleAlert(`A unidade ${form.name} foi atualizado com sucesso!`));
-        await dispatch(editUnitFetch(form));
+        dispatch(editUnitFetch(form));
         cleanForm();
     };
 

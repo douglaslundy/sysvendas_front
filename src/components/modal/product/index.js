@@ -89,7 +89,6 @@ export default function ProductModal(props) {
 
     const handlePostData = async () => {
 
-        console.log("no modal entrou na rota add Producte ");
         dispatch(changeTitleAlert(`O produto ${form.name} foi Cadastrado com sucesso!`));
         dispatch(addProductFetch(form));
         cleanForm();
@@ -97,7 +96,6 @@ export default function ProductModal(props) {
 
     const handlePutData = async () => {
 
-        console.log(" no modal entrou entrou na rota add Producte " + product.id);
         dispatch(changeTitleAlert(`O produto ${form.name} foi atualizado com sucesso!`));
         dispatch(editProductFetch(form));
         cleanForm();

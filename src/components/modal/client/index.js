@@ -3,6 +3,7 @@ import AlertModal from '../../messagesModal'
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import Phone from '../../helpers/textFields/phone';
 
 import {
     Grid,
@@ -50,7 +51,7 @@ export default function ClientModal(props) {
         limit: "",
     });
     const { client } = useSelector(state => state.clients);
-    const { isOpenModal, isOpenAlert } = useSelector(state => state.layout);
+    const { isOpenModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
     const { full_name, surname, cpf_cnpj, email, phone, im, ie, fantasy_name, obs, limit } = form;
@@ -86,7 +87,6 @@ export default function ClientModal(props) {
 
     const handlePostData = async () => {
 
-        console.log("no modal entrou na rota add Cliente ");
         dispatch(changeTitleAlert(`O cliente ${form.full_name} foi Cadastrado com sucesso!`));
         dispatch(addClientFetch(form));
         cleanForm();
@@ -94,9 +94,8 @@ export default function ClientModal(props) {
 
     const handlePutData = async () => {
 
-        console.log(" no modal entrou entrou na rota add Cliente " + client.id);
         dispatch(changeTitleAlert(`O cliente ${form.full_name} foi atualizado com sucesso!`));
-        await dispatch(editClientFetch(form));
+        dispatch(editClientFetch(form));
         cleanForm();
     };
 
@@ -202,14 +201,11 @@ export default function ClientModal(props) {
                                         value={cpf_cnpj ? cpf_cnpj : ''}
                                         onChange={changeItem}
                                     />
-                                    <TextField
-                                        id="phone"
-                                        label="Telefone"
-                                        variant="outlined"
-                                        name="phone"
-                                        value={phone ? phone : ''}
-                                        onChange={changeItem}
+
+                                    <Phone value={phone}
+                                        changeItem={changeItem}
                                     />
+
                                     <TextField
                                         id="im"
                                         label="Inscrição Municipal"
