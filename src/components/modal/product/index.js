@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Currency from '../../helpers/textFields/currency';
+import Unity from '../../helpers/textFields/units';
 
 import {
     Grid,
@@ -198,13 +199,13 @@ export default function ProductModal(props) {
                                         name={'cost_value'}
                                         changeItem={changeItem}
                                     />
-                                    
+
                                     <Currency value={sale_value}
                                         label={'Valor de Venda'}
                                         name={'sale_value'}
                                         changeItem={changeItem}
                                     />
-                                    <TextField
+                                    {/* <TextField
                                         id="unity"
                                         label="Unidade"
                                         variant="outlined"
@@ -212,7 +213,14 @@ export default function ProductModal(props) {
                                         value={id_unity ? id_unity : ''}
                                         onChange={changeItem}
                                         required
+                                    /> */}
+
+                                    <Unity value={id_unity}
+                                        label={'Unidade'}
+                                        name={'id_unity'}
+                                        changeItem={changeItem}
                                     />
+
                                     <TextField
                                         id="stock"
                                         label="Estoque"

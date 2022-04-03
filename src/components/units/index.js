@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { getAllUnits, inactiveUnitFetch } from "../../store/fetchActions/unit";
 import { showUnit } from "../../store/ducks/units";
-import { changeTitleAlert, turnAlert, turnModal } from "../../store/ducks/Layout";
+import { changeTitleAlert, turnModal } from "../../store/ducks/Layout";
 import ConfirmDialog from "../confirmDialog";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({

@@ -18,6 +18,18 @@ export const getAllUnits = () => {
     }
 }
 
+export const getAllUnitsToSelect = () => {
+    return (dispatch) => {
+        api
+            .get('/units')
+            .then((res) => {
+                dispatch(addUnits(res.data));
+            })
+            .catch((error) =>{
+            })
+    }
+}
+
 export const addUnitFetch = (unit) => {
     return (dispatch) => {
         dispatch(turnLoading())
