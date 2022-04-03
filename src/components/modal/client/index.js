@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Phone from '../../helpers/textFields/phone';
+import Currency from '../../helpers/textFields/currency';
+import CpfCnpj from '../../helpers/textFields/cpfCnpj';
 
 import {
     Grid,
@@ -81,7 +83,7 @@ export default function ClientModal(props) {
 
 
     const handleSaveData = async () => {
-        if (!(await validate())) return;
+        // if (!(await validate())) return;
         client && client.id ? handlePutData() : handlePostData()
     }
 
@@ -104,33 +106,33 @@ export default function ClientModal(props) {
     };
 
 
-    async function validate() {
-        let schema = yup.object().shape({
+    // async function validate() {
+    //     let schema = yup.object().shape({
 
-            limit: yup.number("Limit deve ser um campo numerico")
-                .required("O Campo limit é obrigatório")
-                .positive("Limit deve ser um campo positivo"),
+    //         limit: yup.number("Limit deve ser um campo numerico")
+    //             .required("O Campo limit é obrigatório")
+    //             .positive("Limit deve ser um campo positivo"),
 
-            full_name: yup.string("O Campo nome deve ser uma String")
-                .required("O Campo Nome é obrigatório")
-                .min(6, "Campo Nome deve possuir o minimo de ${min} caracteres"),
-        })
-        try {
-            // limpa mensagem de erro de fazer a validação, de modo que so exiba as mensagens atuais
-            setTexto('');
-            await schema.validate({
-                full_name,
-                surname,
-                email,
-                limit,
-            })
-            return true;
+    //         full_name: yup.string("O Campo nome deve ser uma String")
+    //             .required("O Campo Nome é obrigatório")
+    //             .min(6, "Campo Nome deve possuir o minimo de ${min} caracteres"),
+    //     })
+    //     try {
+    //         // limpa mensagem de erro de fazer a validação, de modo que so exiba as mensagens atuais
+    //         setTexto('');
+    //         await schema.validate({
+    //             full_name,
+    //             surname,
+    //             email,
+    //             limit,
+    //         })
+    //         return true;
 
-        } catch (err) {
-            setTexto(err.errors);
-            return false;
-        }
-    }
+    //     } catch (err) {
+    //         setTexto(err.errors);
+    //         return false;
+    //     }
+    // }
 
     useEffect(() => {
 
@@ -193,16 +195,16 @@ export default function ClientModal(props) {
                                         onChange={changeItem}
                                         required
                                     />
-                                    <TextField
-                                        id="cpf_cnpj"
-                                        label="CPF / CPNJ"
-                                        variant="outlined"
-                                        name="cpf_cnpj"
-                                        value={cpf_cnpj ? cpf_cnpj : ''}
-                                        onChange={changeItem}
-                                    />
+                                    
+                                    <CpfCnpj value={cpf_cnpj}
+                                        label={'CPF / CNPJ'}
+                                        name={'cpf_cnpj'}
+                                        changeItem={changeItem}
+                                     />
 
                                     <Phone value={phone}
+                                        label={'Telefone'}
+                                        name={'phone'}
                                         changeItem={changeItem}
                                     />
 
@@ -232,14 +234,10 @@ export default function ClientModal(props) {
                                         onChange={changeItem}
                                     />
 
-                                    <TextField
-                                        id="limit"
-                                        label="Limite"
-                                        variant="outlined"
-                                        name="limit"
-                                        type="number"
-                                        value={limit ? limit : ''}
-                                        onChange={changeItem}
+                                    <Currency value={limit}
+                                        label={'Limite'}
+                                        name={'limit'}
+                                        changeItem={changeItem}
                                     />
 
                                     <TextField

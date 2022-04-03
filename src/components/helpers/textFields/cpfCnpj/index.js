@@ -1,21 +1,21 @@
-import React from 'react';
+import React, { useState } from "react";
+import CpfCnpj from "@react-br-forms/cpf-cnpj-mask";
 import { TextField } from "@mui/material";
-import InputMask from 'react-input-mask';
-import { ref } from 'yup';
+import { ref } from "yup";
 
-const PhoneMask = React.forwardRef((props, ref) => {
+const CpfCnpjInput = React.forwardRef((props, ref) => {
     const { inputRef, ...styles } = props;
+
     return (
-        <InputMask 
-        {...styles}
-        ref={inputRef}
-        mask="(99)99999-9999" maskChar={null} />
+        <CpfCnpj
+            {...styles}
+        />
     );
 });
 
 export default function index(props) {
 
-    const { label,  name, value, changeItem } = props;
+    const { label, name, value, changeItem } = props;
     return (
         <TextField
             id="phone"
@@ -26,7 +26,7 @@ export default function index(props) {
             onChange={changeItem}
 
             InputProps={{
-                inputComponent: PhoneMask,
+                inputComponent: CpfCnpjInput,
             }}
 
         />

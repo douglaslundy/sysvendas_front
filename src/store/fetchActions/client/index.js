@@ -1,13 +1,30 @@
+import { cleanCpfCnpj } from "../../../components/helpers/formatt/cpf_cnpj";
+import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
+import { cleanPhone } from "../../../components/helpers/formatt/phone";
 import api from "../../../services/api";
 import { inactiveClient, addClient, editClient, addClients } from "../../ducks/clients";
 import { turnAlert, addMessage, addAlertMessage, turnLoading } from "../../ducks/Layout";
 
 export const getAllClients = () => {
+
+    const config = {
+        transformResponse: [function (data) {
+                
+            const payload = JSON.parse(data).map(d => {
+                return {
+                    ...d,
+                "limit": getCurrency(d.limit)
+                }
+            })
+            return payload;
+          }]
+    }
+
     return (dispatch) => {
         dispatch(turnLoading());
 
         api
-            .get('/clients')
+            .get('/clients', config)
             .then((res) => {
                 dispatch(addClients(res.data));
                 dispatch(turnLoading());
@@ -20,11 +37,21 @@ export const addClientFetch = (client) => {
     return (dispatch) => {
         dispatch(turnLoading());
 
+        client.limit = setCurrency(client.limit);
+        client.cpf_cnpj = cleanCpfCnpj(client.cpf_cnpj);
+        client.phone = cleanPhone(client.phone);
+
         api.post('/clients', client)
             .then((res) =>
             (
-                dispatch(addClient(res.data.client)),
-                dispatch(addMessage(`O cliente ${res.data.client.full_name} foi adicionado com sucesso!`)),
+                client = {
+                    ...res.data.client, 
+                    limit: getCurrency(res.data.client.limit)
+                },
+
+
+                dispatch(addClient(client)),
+                dispatch(addMessage(`O cliente ${client.full_name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert()),
                 dispatch(turnLoading())
             ))
@@ -39,13 +66,25 @@ export const addClientFetch = (client) => {
 
 export const editClientFetch = (client) => {
     return (dispatch) => {
-        dispatch(turnLoading())
+        dispatch(turnLoading());
+        
+        client = {
+            ...client, 
+            limit: setCurrency(client.limit),
+            cpf_cnpj: cleanCpfCnpj(client.cpf_cnpj),
+            phone: cleanPhone(client.phone)
+        };
         
         api.put(`/clients/${client.id}`, client)
             .then((res) =>
             (
-                dispatch(editClient(res.data.client)),
-                dispatch(addMessage(`O cliente ${res.data.client.full_name} foi atualizado com sucesso!`)),      
+                client = {
+                    ...res.data.client, 
+                    limit: getCurrency(res.data.client.limit)
+                },
+
+                dispatch(editClient(client)),
+                dispatch(addMessage(`O cliente ${client.full_name} foi atualizado com sucesso!`)),      
                 dispatch(turnAlert()),
                 dispatch(turnLoading())
             ))

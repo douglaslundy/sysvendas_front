@@ -3,6 +3,7 @@ import AlertModal from '../../messagesModal'
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import Currency from '../../helpers/textFields/currency';
 
 import {
     Grid,
@@ -19,16 +20,6 @@ import * as yup from 'yup'
 import { showProduct } from '../../../store/ducks/products';
 import { editProductFetch, addProductFetch } from '../../../store/fetchActions/product';
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
-
-// const typeProduct = {
-//     name: "",
-//     bar_code: "",
-//     id_unity: "",
-//     id_category: "",
-//     cost_value: "",
-//     sale_value: "",
-//     stock: ""
-// }
 
 const style = {
     position: 'absolute',
@@ -83,7 +74,7 @@ export default function ProductModal(props) {
 
 
     const handleSaveData = async () => {
-        if (!(await validate())) return;
+        // if (!(await validate())) return;
         product && product.id ? handlePutData() : handlePostData()
     }
 
@@ -106,41 +97,41 @@ export default function ProductModal(props) {
     };
 
 
-    async function validate() {
-        let schema = yup.object().shape({
+    // async function validate() {
+    //     let schema = yup.object().shape({
 
-            stock: yup.number("Estoque deve ser um campo numerico")
-                .required("O Campo Estoque é obrigatório")
-                .positive("Estoque deve ser um campo positivo"),
+    //         stock: yup.number("Estoque deve ser um campo numerico")
+    //             .required("O Campo Estoque é obrigatório")
+    //             .positive("Estoque deve ser um campo positivo"),
 
-            sale_value: yup.number("Valor de Venda deve ser um campo numerico")
-                .required("O Campo Valor de Venda é obrigatório")
-                .positive("Valor de Venda deve ser um campo positivo"),
+    //         sale_value: yup.number("Valor de Venda deve ser um campo numerico")
+    //             .required("O Campo Valor de Venda é obrigatório")
+    //             .positive("Valor de Venda deve ser um campo positivo"),
 
-            cost_value: yup.number("Valor de custo deve ser um campo numerico")
-                .required("O Campo Valor de custo é obrigatório")
-                .positive("Valor de custo deve ser um campo positivo"),
+    //         cost_value: yup.number("Valor de custo deve ser um campo numerico")
+    //             .required("O Campo Valor de custo é obrigatório")
+    //             .positive("Valor de custo deve ser um campo positivo"),
 
-            name: yup.string("O Campo nome deve ser uma String")
-                .required("O Campo Nome é obrigatório")
-                .min(6, "Campo Nome deve possuir o minimo de ${min} caracteres"),
-        })
-        try {
-            // limpa mensagem de erro de fazer a validação, de modo que so exiba as mensagens atuais
-            setTexto('');
-            await schema.validate({
-                name,
-                cost_value,
-                sale_value,
-                stock,
-            })
-            return true;
+    //         name: yup.string("O Campo nome deve ser uma String")
+    //             .required("O Campo Nome é obrigatório")
+    //             .min(6, "Campo Nome deve possuir o minimo de ${min} caracteres"),
+    //     })
+    //     try {
+    //         // limpa mensagem de erro de fazer a validação, de modo que so exiba as mensagens atuais
+    //         setTexto('');
+    //         await schema.validate({
+    //             name,
+    //             cost_value,
+    //             sale_value,
+    //             stock,
+    //         })
+    //         return true;
 
-        } catch (err) {
-            setTexto(err.errors);
-            return false;
-        }
-    }
+    //     } catch (err) {
+    //         setTexto(err.errors);
+    //         return false;
+    //     }
+    // }
 
     useEffect(() => {
 
@@ -201,21 +192,17 @@ export default function ProductModal(props) {
                                         value={id_category ? id_category : ''}
                                         onChange={changeItem}
                                     />
-                                    <TextField
-                                        id="cost_value"
-                                        label="Valor de Custo"
-                                        variant="outlined"
-                                        name="cost_value"
-                                        value={cost_value ? cost_value : ''}
-                                        onChange={changeItem}
+
+                                    <Currency value={cost_value}
+                                        label={'Valor de Custo'}
+                                        name={'cost_value'}
+                                        changeItem={changeItem}
                                     />
-                                    <TextField
-                                        id="sale_value"
-                                        label="Valor de Custo"
-                                        variant="outlined"
-                                        name="sale_value"
-                                        value={sale_value ? sale_value : ''}
-                                        onChange={changeItem}
+                                    
+                                    <Currency value={sale_value}
+                                        label={'Valor de Venda'}
+                                        name={'sale_value'}
+                                        changeItem={changeItem}
                                     />
                                     <TextField
                                         id="unity"

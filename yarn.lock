@@ -788,6 +788,11 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.3.tgz#f327fcb4f2576bf0b0ea0e65e773495cdf40188b"
   integrity sha512-8U7hIl7+30XbIrJ0deQMXpXESM1L4yrt6BHok5hzcR0LivivuNkk+tHU1iRVScOwCmQcrOr6kvtIr29MNbQHqQ==
 
+"@react-br-forms/cpf-cnpj-mask@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@react-br-forms/cpf-cnpj-mask/-/cpf-cnpj-mask-1.0.6.tgz#34bfd22d8d4bbe69e1f71a0770b3d0f33a75eb30"
+  integrity sha512-zZFDpJC45vx1jqB2E47/wfs7vF4Mjz/rm/0uqrkJgZWUdZ2eMMceBK9g+Xqbh6wVj6vx89gAQ+2CxH5UEAL9Iw==
+
 "@reduxjs/toolkit@^1.8.0":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.8.0.tgz#8ae875e481ed97e4a691aafa034f876bfd0413c4"
@@ -3784,7 +3789,7 @@ prompts@^2.0.1, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.5.7, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -3907,6 +3912,13 @@ react-refresh@^0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
+
+react-text-mask@^5.4.3:
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/react-text-mask/-/react-text-mask-5.4.3.tgz#991efb4299e30c2e6c2c46d13f617169463e0d2d"
+  integrity sha1-mR77QpnjDC5sLEbRP2FxaUY+DS0=
+  dependencies:
+    prop-types "^15.5.6"
 
 react-transition-group@^4.4.2:
   version "4.4.2"
@@ -4463,6 +4475,11 @@ test-exclude@^6.0.0:
     "@istanbuljs/schema" "^0.1.2"
     glob "^7.1.4"
     minimatch "^3.0.4"
+
+text-mask-addons@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/text-mask-addons/-/text-mask-addons-3.8.0.tgz#17b61ef665a4f36811f2ea1f01a223b4be61ab26"
+  integrity sha1-F7Ye9mWk82gR8uofAaIjtL5hqyY=
 
 throat@^6.0.1:
   version "6.0.1"

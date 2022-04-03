@@ -200,6 +200,9 @@ export default () => {
                                         </Box>
                                     </Box>
                                 </TableCell>
+                                <TableCell>
+                                    <Typography variant="h6"> {product.bar_code}</Typography>
+                                </TableCell>
 
 
                                 <TableCell align="center">

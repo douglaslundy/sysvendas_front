@@ -51,7 +51,7 @@ export default function UnitModal(props) {
     const [texto, setTexto] = useState();
 
     const changeItem = ({ target }) => {
-        setForm({ ...form, [target.name]: target.value });
+        setForm({ ...form, [target.name]: target.value.toUpperCase() });
     };
 
     const cleanForm = () => {
@@ -151,6 +151,7 @@ export default function UnitModal(props) {
                                         value={name ? name : ''}
                                         onChange={changeItem}
                                         required
+                                        inputProps={{ maxLength: 3 }}
                                     />                                    
                                 </Stack>
                                 {/* </FormGroup> */}

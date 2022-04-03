@@ -1,31 +1,55 @@
 import api from "../../../services/api";
+import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
 import { inactiveProduct, addProduct, editProduct, addProducts } from "../../ducks/products";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 
 export const getAllProducts = () => {
+
+    const config = {
+        transformResponse: [function (data) {
+                
+            const payload = JSON.parse(data).map(d => {
+                return {
+                    ...d,
+                "cost_value": getCurrency(d.cost_value),
+                "sale_value": getCurrency(d.sale_value),
+                }
+            })
+            return payload;
+          }]
+    }
+
+
     return (dispatch) => {
         dispatch(turnLoading())
         api
-            .get('/products')
+            .get('/products', config)
             .then((res) => {
-                dispatch(addProducts(res.data))
-                dispatch(turnLoading())
+                dispatch(addProducts(res.data));
+                dispatch(turnLoading());
             })
-            .catch(() => {
-                dispatch(turnLoading())
-            }) 
+            .catch(() => {dispatch(turnLoading())}) 
     }
 }
 
 export const addProductFetch = (product) => {
     return (dispatch) => {
-        dispatch(turnLoading())
+        dispatch(turnLoading());
+
+        product.cost_value = setCurrency(product.cost_value);
+        product.sale_value = setCurrency(product.sale_value);
 
         api.post('/products', product)
             .then((res) =>
             (
-                dispatch(addProduct(res.data.product)),
-                dispatch(addMessage(`O produto ${res.data.product.name} foi adicionado com sucesso!`)),
+                product = {
+                    ...res.data.product, 
+                    cost_value: getCurrency(res.data.product.cost_value),
+                    sale_value: getCurrency(res.data.product.sale_value)
+                },
+
+                dispatch(addProduct(product)),
+                dispatch(addMessage(`O produto ${product.name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert()),
                 dispatch(turnLoading())
             ))
@@ -41,12 +65,25 @@ export const addProductFetch = (product) => {
 export const editProductFetch = (product) => {
     return (dispatch) => {
         dispatch(turnLoading())
+        
+        product = {
+            ...product, 
+            cost_value: setCurrency(product.cost_value),
+            sale_value: setCurrency(product.sale_value)
+        };
+
 
         api.put(`/products/${product.id}`, product)
             .then((res) =>
             (
-                dispatch(editProduct(res.data.product)),
-                dispatch(addMessage(`O produto ${res.data.product.name} foi atualizado com sucesso!`)),      
+                product = {
+                    ...res.data.product, 
+                    cost_value: getCurrency(res.data.product.cost_value),
+                    sale_value: getCurrency(res.data.product.sale_value)
+                },
+
+                dispatch(editProduct(product)),
+                dispatch(addMessage(`O produto ${product.name} foi atualizado com sucesso!`)),      
                 dispatch(turnAlert()),
                 dispatch(turnLoading())
             ))
