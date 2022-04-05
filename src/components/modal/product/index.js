@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Currency from '../../helpers/textFields/currency';
 import Unity from '../../helpers/textFields/units';
+import Category from '../../helpers/textFields/categories';
 
 import {
     Grid,
@@ -185,13 +186,18 @@ export default function ProductModal(props) {
                                         value={bar_code ? bar_code : ''}
                                         onChange={changeItem}
                                     />
-                                    <TextField
+                                    {/* <TextField
                                         id="id_category"
                                         label="Categoria"
                                         variant="outlined"
                                         name="id_category"
                                         value={id_category ? id_category : ''}
                                         onChange={changeItem}
+                                    /> */}
+                                      <Category value={id_category}
+                                        label={'Categoria'}
+                                        name={'id_category'}
+                                        changeItem={changeItem}
                                     />
 
                                     <Currency value={cost_value}

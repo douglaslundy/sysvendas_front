@@ -17,6 +17,18 @@ export const getAllCategories = () => {
     }
 }
 
+export const getAllCategoriesToSelect = () => {
+    return (dispatch) => {
+
+        api
+            .get('/categorie')
+            .then((res) => {
+                dispatch(addCategories(res.data));
+            })
+            .catch(() => {})
+    }
+}
+
 export const addCategorieFetch = (categorie) => {
     return (dispatch) => {
         dispatch(turnLoading());
