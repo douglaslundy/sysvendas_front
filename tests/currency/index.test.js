@@ -1,6 +1,6 @@
-import { setCurrency, getCurrency } from '../../src/components/helpers/formatt/currency'
+import { setCurrency, getCurrency, convertToBrlCurrency } from '../../src/components/helpers/formatt/currency'
 
-describe('testing  currency formmat with setCurrency function', () => {
+describe('testing  currency formatt with setCurrency function', () => {
     it('should remove characteres from mask with , and return number of cents converted', () => {
         expect(setCurrency('R$ 1.000,50')).toBe(100050);
     });
@@ -21,10 +21,10 @@ describe('testing  currency formmat with setCurrency function', () => {
         expect(setCurrency('R$ 1.000,0')).toBe(100000);
     });
 
-})
+});
 
 
-describe('testing  currency formmat  with getCurrency function', () => {
+describe('testing  currency formatt  with getCurrency function', () => {
     
     it('should split number per 100 and return to currency  ', () => {
         expect(getCurrency('100055')).toBe('1000,55');
@@ -42,4 +42,14 @@ describe('testing  currency formmat  with getCurrency function', () => {
         expect(getCurrency('100050')).toBe('1000,5');
     });
 
-})
+});
+
+
+
+// describe('testing  currency formatt  with convertToBrCurrency function', () => {
+    
+//     it('should convert number to Br Currency  ', () => {
+//         expect(convertToBrlCurrency('100055')).toBe("R$ 100.055,00");
+//     });
+
+// });

@@ -21,6 +21,7 @@ import { getAllProducts, inactiveProductFetch } from "../../store/fetchActions/p
 import { showProduct } from "../../store/ducks/products";
 import { changeTitleAlert, turnAlert, turnModal } from "../../store/ducks/Layout";
 import ConfirmDialog from "../confirmDialog";
+import { convertToBrlCurrency } from "../helpers/formatt/currency";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -158,7 +159,7 @@ export default () => {
                                                     fontWeight: "600",
                                                 }}
                                             >
-                                                {product.sale_value}
+                                                {convertToBrlCurrency(product.sale_value)}
                                             </Typography>
                                             <Typography
                                                 color="textSecondary"
@@ -166,7 +167,7 @@ export default () => {
                                                     fontSize: "13px",
                                                 }}
                                             >
-                                                {product.cost_value}
+                                                {convertToBrlCurrency(product.cost_value)}
                                             </Typography>
                                         </Box>
                                     </Box>

@@ -1,5 +1,6 @@
 import api from "../../../services/api";
 import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
+import { getId } from '../../../components/helpers/formatt/getIdFromSelect';
 import { inactiveProduct, addProduct, editProduct, addProducts } from "../../ducks/products";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 
@@ -7,16 +8,16 @@ export const getAllProducts = () => {
 
     const config = {
         transformResponse: [function (data) {
-                
+
             const payload = JSON.parse(data).map(d => {
                 return {
                     ...d,
-                "cost_value": getCurrency(d.cost_value),
-                "sale_value": getCurrency(d.sale_value),
+                    "cost_value": getCurrency(d.cost_value),
+                    "sale_value": getCurrency(d.sale_value),
                 }
             })
             return payload;
-          }]
+        }]
     }
 
 
@@ -28,7 +29,7 @@ export const getAllProducts = () => {
                 dispatch(addProducts(res.data));
                 dispatch(turnLoading());
             })
-            .catch(() => {dispatch(turnLoading())}) 
+            .catch(() => { dispatch(turnLoading()) })
     }
 }
 
@@ -38,12 +39,13 @@ export const addProductFetch = (product) => {
 
         product.cost_value = setCurrency(product.cost_value);
         product.sale_value = setCurrency(product.sale_value);
+        product.id_category = getId(product.id_category);
 
         api.post('/products', product)
             .then((res) =>
             (
                 product = {
-                    ...res.data.product, 
+                    ...res.data.product,
                     cost_value: getCurrency(res.data.product.cost_value),
                     sale_value: getCurrency(res.data.product.sale_value)
                 },
@@ -65,11 +67,12 @@ export const addProductFetch = (product) => {
 export const editProductFetch = (product) => {
     return (dispatch) => {
         dispatch(turnLoading())
-        
+
         product = {
-            ...product, 
+            ...product,
             cost_value: setCurrency(product.cost_value),
-            sale_value: setCurrency(product.sale_value)
+            sale_value: setCurrency(product.sale_value),
+            id_category: getId(product.id_category)
         };
 
 
@@ -77,13 +80,13 @@ export const editProductFetch = (product) => {
             .then((res) =>
             (
                 product = {
-                    ...res.data.product, 
+                    ...res.data.product,
                     cost_value: getCurrency(res.data.product.cost_value),
                     sale_value: getCurrency(res.data.product.sale_value)
                 },
 
                 dispatch(editProduct(product)),
-                dispatch(addMessage(`O produto ${product.name} foi atualizado com sucesso!`)),      
+                dispatch(addMessage(`O produto ${product.name} foi atualizado com sucesso!`)),
                 dispatch(turnAlert()),
                 dispatch(turnLoading())
             ))

@@ -52,7 +52,6 @@ export const addUnitFetch = (unit) => {
 
 export const editUnitFetch = (unit) => {
     return (dispatch) => {
-
         dispatch(turnLoading()),
         api.put(`/units/${unit.id}`, unit)
             .then((res) =>

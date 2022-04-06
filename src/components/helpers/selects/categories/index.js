@@ -4,7 +4,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUnitsToSelect } from "../../../../store/fetchActions/unit";
+import { getAllCategoriesToSelect } from "../../../../store/fetchActions/categorie";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -18,11 +18,11 @@ export default function index(props) {
   const loading = open && options.length === 0;
 
   const dispatch = useDispatch();
-  const { units } = useSelector(state => state.units);
+  const { categories } = useSelector(state => state.categories);
 
 
   React.useEffect(() => {
-    dispatch(getAllUnitsToSelect());
+    dispatch(getAllCategoriesToSelect());
     let active = true;
 
     if (!loading) {
@@ -33,7 +33,7 @@ export default function index(props) {
       await sleep(1e3); // For demo purposes.
 
       if (active) {
-        setOptions([...units]);
+        setOptions([...categories]);
       }
     })();
 
@@ -53,7 +53,7 @@ export default function index(props) {
 
   return (
     <Autocomplete
-      id="unity"
+      id="category"
       // sx={{ width: 300 }}
       open={open}
       onOpen={() => {
@@ -63,14 +63,14 @@ export default function index(props) {
         setOpen(false);
       }}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      getOptionLabel={(option) => option.id}
+      getOptionLabel={(option) => `${option.id} - ${option.name}`}
       options={options}
       loading={loading}
       renderInput={(params) => (
 
         <TextField
           {...params}
-          id="unity"
+          id="category"
           label={label}
           name={name}
           value={value}

@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Currency from '../../helpers/textFields/currency';
-import Unity from '../../helpers/textFields/units';
-import Category from '../../helpers/textFields/categories';
+import Unity from '../../helpers/selects/units';
+import Category from '../../helpers/selects/categories';
 
 import {
     Grid,

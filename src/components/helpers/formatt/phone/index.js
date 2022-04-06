@@ -1,3 +1,4 @@
 export function cleanPhone(str){
-    return str.replace(/[()-]/g, '');
+    if(str)
+        return str.replace(/[()-]/g, '');
 }

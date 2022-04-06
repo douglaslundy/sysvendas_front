@@ -71,7 +71,6 @@ export default function CategorieModal(props) {
 
     const handlePostData = async () => {
 
-        console.log("no modal entrou na rota add Categoriee ");
         dispatch(changeTitleAlert(`A Categoria ${form.name} foi Cadastrado com sucesso!`));
         dispatch(addCategorieFetch(form));
         cleanForm();

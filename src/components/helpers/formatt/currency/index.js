@@ -25,28 +25,12 @@ export function getCurrency(str) {
 
 
 
+export function convertToBrlCurrency(str) {
+
+    const number = str.replace(',','.');
+    return parseFloat(number).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+}
 
 
 
-
-
-// function convertBrlCurrency(number) {
-//     const a = number.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-//     return a;
-// }
-
-
-
-
-
-// export function setCurrency(str) {
-//     let multiplier = str.replace(/['R$'.]/g, '');
-
-//     return multiplier.includes(',') ? parseInt(multiplier.replace(',', '')) : parseInt(multiplier) * 100;
-// }
-
-
-// export function getCurrency(str) {
-//     let divider = (str / 100).toString();
-//     return divider.replace(".", ",");
-// }
