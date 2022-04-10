@@ -17,8 +17,6 @@ import {
 
 import BaseCard from "../../baseCard/BaseCard";
 
-import * as yup from 'yup'
-
 import { showClient } from '../../../store/ducks/clients';
 import { editClientFetch, addClientFetch } from '../../../store/fetchActions/client';
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
@@ -83,56 +81,24 @@ export default function ClientModal(props) {
 
 
     const handleSaveData = async () => {
-        // if (!(await validate())) return;
         client && client.id ? handlePutData() : handlePostData()
     }
 
     const handlePostData = async () => {
 
         dispatch(changeTitleAlert(`O cliente ${form.full_name} foi Cadastrado com sucesso!`));
-        dispatch(addClientFetch(form));
-        cleanForm();
+        dispatch(addClientFetch(form, cleanForm));
     };
 
     const handlePutData = async () => {
 
         dispatch(changeTitleAlert(`O cliente ${form.full_name} foi atualizado com sucesso!`));
-        dispatch(editClientFetch(form));
-        cleanForm();
+        dispatch(editClientFetch(form, cleanForm));
     };
 
     const handleClose = () => {
         cleanForm();
     };
-
-
-    // async function validate() {
-    //     let schema = yup.object().shape({
-
-    //         limit: yup.number("Limit deve ser um campo numerico")
-    //             .required("O Campo limit é obrigatório")
-    //             .positive("Limit deve ser um campo positivo"),
-
-    //         full_name: yup.string("O Campo nome deve ser uma String")
-    //             .required("O Campo Nome é obrigatório")
-    //             .min(6, "Campo Nome deve possuir o minimo de ${min} caracteres"),
-    //     })
-    //     try {
-    //         // limpa mensagem de erro de fazer a validação, de modo que so exiba as mensagens atuais
-    //         setTexto('');
-    //         await schema.validate({
-    //             full_name,
-    //             surname,
-    //             email,
-    //             limit,
-    //         })
-    //         return true;
-
-    //     } catch (err) {
-    //         setTexto(err.errors);
-    //         return false;
-    //     }
-    // }
 
     useEffect(() => {
 

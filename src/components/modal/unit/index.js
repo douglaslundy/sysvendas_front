@@ -14,8 +14,6 @@ import {
 
 import BaseCard from "../../baseCard/BaseCard";
 
-import * as yup from 'yup'
-
 import { showUnit } from '../../../store/ducks/units';
 import { editUnitFetch, addUnitFetch } from '../../../store/fetchActions/unit';
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
@@ -63,51 +61,24 @@ export default function UnitModal(props) {
         dispatch(showUnit({}));
     }
 
-
     const handleSaveData = async () => {
-        if (!(await validate())) return;
         unit && unit.id ? handlePutData() : handlePostData()
     }
 
     const handlePostData = async () => {
 
         dispatch(changeTitleAlert(`A Unidade ${form.name} foi Cadastrado com sucesso!`));
-        dispatch(addUnitFetch(form));
-        cleanForm();
+        dispatch(addUnitFetch(form, cleanForm));
     };
 
     const handlePutData = async () => {
         dispatch(changeTitleAlert(`A unidade ${form.name} foi atualizado com sucesso!`));
-        dispatch(editUnitFetch(form));
-        cleanForm();
+        dispatch(editUnitFetch(form, cleanForm));
     };
 
     const handleClose = () => {
         cleanForm();
     };
-
-
-    async function validate() {
-        let schema = yup.object().shape({
-
-            name: yup.string("O Campo nome deve ser uma String")
-                .required("O Campo Nome é obrigatório")
-                .min(2, "Campo Nome deve possuir o minimo de ${min} caracteres")
-                .max(3, "Campo Nome deve possuir o máximo de ${max} caracteres"),
-        })
-        try {
-            // limpa mensagem de erro de fazer a validação, de modo que so exiba as mensagens atuais
-            setTexto('');
-            await schema.validate({
-                name,
-            })
-            return true;
-
-        } catch (err) {
-            setTexto(err.errors);
-            return false;
-        }
-    }
 
     useEffect(() => {
 

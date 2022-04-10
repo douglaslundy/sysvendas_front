@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import CpfCnpj from "@react-br-forms/cpf-cnpj-mask";
 import { TextField } from "@mui/material";
-import { ref } from "yup";
 
 const CpfCnpjInput = React.forwardRef((props, ref) => {
     const { inputRef, ...styles } = props;

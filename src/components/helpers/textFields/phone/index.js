@@ -1,7 +1,6 @@
 import React from 'react';
 import { TextField } from "@mui/material";
 import InputMask from 'react-input-mask';
-import { ref } from 'yup';
 
 const PhoneMask = React.forwardRef((props, ref) => {
     const { inputRef, ...styles } = props;
@@ -9,7 +8,7 @@ const PhoneMask = React.forwardRef((props, ref) => {
         <InputMask 
         {...styles}
         ref={inputRef}
-        mask="(99)99999-9999" maskChar={null} />
+        mask="(99) 99999-9999" maskChar={null} />
     );
 });
 

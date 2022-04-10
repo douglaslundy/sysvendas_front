@@ -12,7 +12,7 @@ export const getAllUnits = () => {
                 dispatch(addUnits(res.data));
                 dispatch(turnLoading());
             })
-            .catch((error) =>{
+            .catch((error) => {
                 dispatch(turnLoading())
             })
     }
@@ -25,21 +25,23 @@ export const getAllUnitsToSelect = () => {
             .then((res) => {
                 dispatch(addUnits(res.data));
             })
-            .catch((error) =>{
+            .catch((error) => {
             })
     }
 }
 
-export const addUnitFetch = (unit) => {
+export const addUnitFetch = (unit, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading())
         api.post('/units', unit)
             .then((res) =>
             (
+               
                 dispatch(addUnit(res.data.unit)),
                 dispatch(addMessage(`A unidade ${res.data.unit.name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert()),
-                dispatch(turnLoading())
+                dispatch(turnLoading()),
+                cleanForm(),
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
@@ -50,22 +52,23 @@ export const addUnitFetch = (unit) => {
 };
 
 
-export const editUnitFetch = (unit) => {
+export const editUnitFetch = (unit, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading()),
-        api.put(`/units/${unit.id}`, unit)
-            .then((res) =>
-            (
-                dispatch(editUnit(res.data.unit)),
-                dispatch(addMessage(`A unidade ${res.data.unit.name} foi atualizado com sucesso!`)),      
-                dispatch(turnAlert()),
-                dispatch(turnLoading())
-            ))
-            .catch((error) => {
-                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))                
-                dispatch(turnLoading())
-                return error.response.data
-            })
+            api.put(`/units/${unit.id}`, unit)
+                .then((res) =>
+                (
+                    dispatch(editUnit(res.data.unit)),
+                    dispatch(addMessage(`A unidade ${res.data.unit.name} foi atualizado com sucesso!`)),
+                    dispatch(turnAlert()),
+                    dispatch(turnLoading()),
+                    cleanForm()
+                ))
+                .catch((error) => {
+                    dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
+                    dispatch(turnLoading())
+                    return error.response.data
+                })
     };
 }
 

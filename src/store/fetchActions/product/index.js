@@ -33,13 +33,16 @@ export const getAllProducts = () => {
     }
 }
 
-export const addProductFetch = (product) => {
+export const addProductFetch = (product, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
 
-        product.cost_value = setCurrency(product.cost_value);
-        product.sale_value = setCurrency(product.sale_value);
-        // product.id_category = getId(product.id_category);
+        product = {
+            ...product,
+            cost_value: setCurrency(product.cost_value),
+            sale_value: setCurrency(product.sale_value)
+            // id_category: getId(product.id_category)
+        };
 
         api.post('/products', product)
             .then((res) =>
@@ -53,7 +56,8 @@ export const addProductFetch = (product) => {
                 dispatch(addProduct(product)),
                 dispatch(addMessage(`O produto ${product.name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert()),
-                dispatch(turnLoading())
+                dispatch(turnLoading()),
+                cleanForm()
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
@@ -64,7 +68,7 @@ export const addProductFetch = (product) => {
 };
 
 
-export const editProductFetch = (product) => {
+export const editProductFetch = (product, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading())
 
@@ -88,7 +92,8 @@ export const editProductFetch = (product) => {
                 dispatch(editProduct(product)),
                 dispatch(addMessage(`O produto ${product.name} foi atualizado com sucesso!`)),
                 dispatch(turnAlert()),
-                dispatch(turnLoading())
+                dispatch(turnLoading()), 
+                cleanForm()
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))

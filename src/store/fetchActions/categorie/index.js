@@ -29,7 +29,7 @@ export const getAllCategoriesToSelect = () => {
     }
 }
 
-export const addCategorieFetch = (categorie) => {
+export const addCategorieFetch = (categorie, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
 
@@ -39,7 +39,8 @@ export const addCategorieFetch = (categorie) => {
                 dispatch(addCategorie(res.data.categorie)),
                 dispatch(addMessage(`A categoria ${res.data.categorie.name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert()),
-                dispatch(turnLoading())
+                dispatch(turnLoading()), 
+                cleanForm()
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `));
@@ -50,7 +51,7 @@ export const addCategorieFetch = (categorie) => {
 };
 
 
-export const editCategorieFetch = (categorie) => {
+export const editCategorieFetch = (categorie, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
 
@@ -60,7 +61,8 @@ export const editCategorieFetch = (categorie) => {
                 dispatch(editCategorie(res.data.categorie)),
                 dispatch(addMessage(`A categoria ${res.data.categorie.name} foi atualizado com sucesso!`)),      
                 dispatch(turnAlert()),
-                dispatch(turnLoading())
+                dispatch(turnLoading()), 
+                cleanForm()
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `));

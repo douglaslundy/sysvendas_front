@@ -33,13 +33,16 @@ export const getAllClients = () => {
     }
 }
 
-export const addClientFetch = (client) => {
+export const addClientFetch = (client, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
 
-        client.limit = setCurrency(client.limit);
-        client.cpf_cnpj = cleanCpfCnpj(client.cpf_cnpj);
-        client.phone = cleanPhone(client.phone);
+        client = {
+            ...client, 
+            limit: setCurrency(client.limit),
+            cpf_cnpj: cleanCpfCnpj(client.cpf_cnpj),
+            phone: cleanPhone(client.phone)
+        };
 
         api.post('/clients', client)
             .then((res) =>
@@ -53,7 +56,8 @@ export const addClientFetch = (client) => {
                 dispatch(addClient(client)),
                 dispatch(addMessage(`O cliente ${client.full_name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert()),
-                dispatch(turnLoading())
+                dispatch(turnLoading()), 
+                cleanForm()
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
@@ -64,7 +68,7 @@ export const addClientFetch = (client) => {
 };
 
 
-export const editClientFetch = (client) => {
+export const editClientFetch = (client, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
         
@@ -86,7 +90,8 @@ export const editClientFetch = (client) => {
                 dispatch(editClient(client)),
                 dispatch(addMessage(`O cliente ${client.full_name} foi atualizado com sucesso!`)),      
                 dispatch(turnAlert()),
-                dispatch(turnLoading())
+                dispatch(turnLoading()), 
+                cleanForm()
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))

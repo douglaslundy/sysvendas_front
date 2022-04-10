@@ -14,8 +14,6 @@ import {
 
 import BaseCard from "../../baseCard/BaseCard";
 
-import * as yup from 'yup'
-
 import { showCategorie } from '../../../store/ducks/categories';
 import { editCategorieFetch, addCategorieFetch } from '../../../store/fetchActions/categorie';
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
@@ -65,48 +63,23 @@ export default function CategorieModal(props) {
 
 
     const handleSaveData = async () => {
-        if (!(await validate())) return;
         categorie && categorie.id ? handlePutData() : handlePostData()
     }
 
     const handlePostData = async () => {
 
         dispatch(changeTitleAlert(`A Categoria ${form.name} foi Cadastrado com sucesso!`));
-        dispatch(addCategorieFetch(form));
-        cleanForm();
+        dispatch(addCategorieFetch(form, cleanForm));
     };
 
     const handlePutData = async () => {
         dispatch(changeTitleAlert(`A categoria ${form.name} foi atualizado com sucesso!`));
-        await dispatch(editCategorieFetch(form));
-        cleanForm();
+        await dispatch(editCategorieFetch(form, cleanForm));
     };
 
     const handleClose = () => {
         cleanForm();
     };
-
-
-    async function validate() {
-        let schema = yup.object().shape({
-
-            name: yup.string("O Campo nome deve ser uma String")
-                .required("O Campo Nome é obrigatório")
-                .min(3, "Campo Nome deve possuir o minimo de ${min} caracteres"),
-        })
-        try {
-            // limpa mensagem de erro de fazer a validação, de modo que so exiba as mensagens atuais
-            setTexto('');
-            await schema.validate({
-                name,
-            })
-            return true;
-
-        } catch (err) {
-            setTexto(err.errors);
-            return false;
-        }
-    }
 
     useEffect(() => {
 

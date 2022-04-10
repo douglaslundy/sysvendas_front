@@ -1,7 +1,7 @@
 export function setCurrency(str) {
 
     //remove todos os pontos
-    let multiplier = str.replace(/['R$'.]/g, '');
+    let multiplier = str.toString().replace(/['R$'.]/g, '');
 
     // troca a vergula pelo ponto, afim de transformar em numero monetário
     multiplier = multiplier.replace(',', '.');
