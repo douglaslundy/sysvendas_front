@@ -39,7 +39,7 @@ export const addProductFetch = (product) => {
 
         product.cost_value = setCurrency(product.cost_value);
         product.sale_value = setCurrency(product.sale_value);
-        product.id_category = getId(product.id_category);
+        // product.id_category = getId(product.id_category);
 
         api.post('/products', product)
             .then((res) =>
@@ -71,8 +71,8 @@ export const editProductFetch = (product) => {
         product = {
             ...product,
             cost_value: setCurrency(product.cost_value),
-            sale_value: setCurrency(product.sale_value),
-            id_category: getId(product.id_category)
+            sale_value: setCurrency(product.sale_value)
+            // id_category: getId(product.id_category)
         };
 
 

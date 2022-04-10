@@ -4,8 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Currency from '../../helpers/textFields/currency';
+import Percent from '../../helpers/textFields/percent';
 import Unity from '../../helpers/selects/units';
 import Category from '../../helpers/selects/categories';
+import { summedPercentage, valueSaleSummedFromPercent } from '../../helpers/functions/percent';
+
 
 import {
     Grid,
@@ -22,6 +25,7 @@ import * as yup from 'yup'
 import { showProduct } from '../../../store/ducks/products';
 import { editProductFetch, addProductFetch } from '../../../store/fetchActions/product';
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
+import { getCurrency, setCurrency } from '../../helpers/formatt/currency';
 
 const style = {
     position: 'absolute',
@@ -49,15 +53,37 @@ export default function ProductModal(props) {
         stock: ""
     });
     const { product } = useSelector(state => state.products);
-    const { isOpenModal, isOpenAlert } = useSelector(state => state.layout);
+    const { isOpenModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
     const { name, bar_code, id_unity, id_category, cost_value, sale_value, stock } = form;
     const [texto, setTexto] = useState();
+    const [percent, setPercent] = useState();
+
+    // responsavel por informar ao useEffect se a alteração esta acontecendo no input valor de venda ou percent
+    // e permitir que ele execute ou não a rotina de atualizar o input percnetual 
+    const [isPercent, setIsPercent] = useState(false);
 
     const changeItem = ({ target }) => {
         setForm({ ...form, [target.name]: target.value });
     };
+
+
+    const changePercent = ({ target }) => {
+
+        setIsPercent(true);
+        setPercent(target.value);
+        const newValue = valueSaleSummedFromPercent(cost_value, target.value);
+        setForm({ ...form, ['sale_value']: getCurrency(newValue * 100) });
+        setIsPercent(false);
+
+    };
+
+    const changePercentPerValue = () => {
+        if (!isPercent) {
+            setPercent(parseFloat(summedPercentage(setCurrency(cost_value), setCurrency(sale_value))));
+        }
+    }
 
     const cleanForm = () => {
         setForm({
@@ -142,6 +168,10 @@ export default function ProductModal(props) {
 
     }, [product]);
 
+    useEffect(() => {
+        changePercentPerValue()
+    }, [cost_value, sale_value]);
+
     return (
         <div>
             {props.children}
@@ -185,41 +215,42 @@ export default function ProductModal(props) {
                                         name="bar_code"
                                         value={bar_code ? bar_code : ''}
                                         onChange={changeItem}
+                                        required
                                     />
-                                    {/* <TextField
-                                        id="id_category"
-                                        label="Categoria"
-                                        variant="outlined"
-                                        name="id_category"
-                                        value={id_category ? id_category : ''}
-                                        onChange={changeItem}
-                                    /> */}
-                                      <Category value={id_category}
+
+                                    <Category value={id_category}
                                         label={'Categoria'}
                                         name={'id_category'}
                                         changeItem={changeItem}
                                     />
 
-                                    <Currency value={cost_value}
-                                        label={'Valor de Custo'}
-                                        name={'cost_value'}
-                                        changeItem={changeItem}
-                                    />
+                                    <Box sx={{
+                                        '& > :not(style)': { mb: 2 },
+                                        'display': 'flex',
+                                       'justify-content':'space-between'
+                                    }}
+                                    >
 
-                                    <Currency value={sale_value}
-                                        label={'Valor de Venda'}
-                                        name={'sale_value'}
-                                        changeItem={changeItem}
-                                    />
-                                    {/* <TextField
-                                        id="unity"
-                                        label="Unidade"
-                                        variant="outlined"
-                                        name="id_unity"
-                                        value={id_unity ? id_unity : ''}
-                                        onChange={changeItem}
-                                        required
-                                    /> */}
+                                        <Currency value={cost_value}
+                                            label={'Valor de Custo'}
+                                            name={'cost_value'}
+                                            changeItem={changeItem}
+                                            wd={"38%"}
+                                        />
+
+                                        <Currency value={sale_value}
+                                            label={'Valor de Venda'}
+                                            name={'sale_value'}
+                                            changeItem={changeItem}
+                                            wd={"38%"}
+                                        />
+                                        <Percent value={percent}
+                                            label={'Percentual'}
+                                            name={'percent'}
+                                            changeItem={changePercent}
+                                            wd={"20%"}
+                                        />
+                                    </Box>
 
                                     <Unity value={id_unity}
                                         label={'Unidade'}
@@ -234,6 +265,7 @@ export default function ProductModal(props) {
                                         name="stock"
                                         value={stock ? stock : ''}
                                         onChange={changeItem}
+                                        required
                                     />
 
                                 </Stack>

@@ -137,7 +137,7 @@ export default () => {
                                                     fontSize: "13px",
                                                 }}
                                             >
-                                                {/* {product.id_category} */} Alimentícios
+                                                {product.category.name} 
                                             </Typography>
                                         </Box>
                                     </Box>
@@ -196,7 +196,7 @@ export default () => {
                                                     fontSize: "13px",
                                                 }}
                                             >
-                                                {/* {product.id_unity} */}KG
+                                                {product.unity.name}
                                             </Typography>
                                         </Box>
                                     </Box>
