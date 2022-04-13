@@ -1,5 +1,6 @@
 import { Dialog } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import {makeStyles} from "@material-ui/core/styles";
+
 import Load from "../../../assets/images/logos/loading1.gif";
 import Image from "next/image";
 

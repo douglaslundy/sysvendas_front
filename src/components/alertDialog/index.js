@@ -7,7 +7,7 @@ import {
     Button
 } from '@mui/material';
 import FeatherIcon from "feather-icons-react";
-import { makeStyles } from '@mui/styles';
+import {makeStyles} from "@material-ui/core/styles";
 
 import { turnAlert } from '../../store/ducks/Layout';
 import { useSelector, useDispatch } from 'react-redux';
