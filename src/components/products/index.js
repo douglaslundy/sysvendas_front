@@ -9,7 +9,8 @@ import {
     TableRow,
     Fab,
     Button,
-    styled
+    styled,
+    TableContainer
 } from "@mui/material";
 
 import BaseCard from "../baseCard/BaseCard";
@@ -69,7 +70,8 @@ export default () => {
             </ProductModal>
             <br />
 
-            <Table
+            <TableContainer>
+                <Table
                 aria-label="simple table"
                 sx={{
                     mt: 3,
@@ -226,6 +228,7 @@ export default () => {
                     ))}
                 </TableBody>
             </Table>
+            </TableContainer>
             <ConfirmDialog 
                 confirmDialog={confirmDialog} 
                 setConfirmDialog={setConfirmDialog} />

@@ -3,10 +3,9 @@ import AlertModal from '../../messagesModal'
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import Currency from '../../helpers/textFields/currency';
-import Percent from '../../helpers/textFields/percent';
-import Unity from '../../helpers/selects/units';
-import Category from '../../helpers/selects/categories';
+import Currency from '../../inputs/textFields/currency';
+import Percent from '../../inputs/textFields/percent';
+import Select from '../../inputs/selects';
 import { summedPercentage, valueSaleSummedFromPercent } from '../../helpers/functions/percent';
 import {
     Grid,
@@ -21,6 +20,8 @@ import { showProduct } from '../../../store/ducks/products';
 import { editProductFetch, addProductFetch } from '../../../store/fetchActions/product';
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
 import { getCurrency, setCurrency } from '../../helpers/formatt/currency';
+import { getAllUnitsToSelect } from "../../../store/fetchActions/unit";
+import { getAllCategoriesToSelect } from "../../../store/fetchActions/categorie";
 
 const style = {
     position: 'absolute',
@@ -48,6 +49,9 @@ export default function ProductModal(props) {
         stock: ""
     });
     const { product } = useSelector(state => state.products);
+    const { categories } = useSelector(state => state.categories);
+    const { units } = useSelector(state => state.units);
+
     const { isOpenModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
@@ -170,16 +174,19 @@ export default function ProductModal(props) {
                                         required
                                     />
 
-                                    <Category value={id_category}
+
+                                    <Select value={id_category}
                                         label={'Categoria'}
                                         name={'id_category'}
+                                        store={categories}
+                                        getAllSelects={getAllCategoriesToSelect}
                                         changeItem={changeItem}
                                     />
 
                                     <Box sx={{
                                         '& > :not(style)': { mb: 2 },
                                         'display': 'flex',
-                                       'justify-content':'space-between'
+                                        'justify-content': 'space-between'
                                     }}
                                     >
 
@@ -204,9 +211,11 @@ export default function ProductModal(props) {
                                         />
                                     </Box>
 
-                                    <Unity value={id_unity}
+                                    <Select value={id_unity}
                                         label={'Unidade'}
                                         name={'id_unity'}
+                                        store={units}
+                                        getAllSelects={getAllUnitsToSelect}
                                         changeItem={changeItem}
                                     />
 

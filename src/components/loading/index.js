@@ -1,6 +1,4 @@
-import {
-    Dialog,
-} from '@mui/material';
+import { Dialog } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Load from "../../../assets/images/logos/loading1.gif";
 import Image from "next/image";

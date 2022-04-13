@@ -15,6 +15,11 @@ const Menuitems = [
     href: "/products",
   },
   {
+    title: "Pesquisar Produtos", 
+    icon: "box",
+    href: "/searchProd",
+  },
+  {
     title: "Categorias", 
     icon: "box",
     href: "/categories",

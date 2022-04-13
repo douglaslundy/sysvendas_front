@@ -6,40 +6,45 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllCategoriesToSelect, getAllUnitsToSelect } from "../../../../store/fetchActions/categorie";
 
 export default function BasicSelect(props) {
   
+  const { label, store,  name, value, changeItem, getAllSelects } = props;
   const dispatch = useDispatch();
-  const { categories } = useSelector(state => state.categories);
-
 
    useEffect(() => {
-    dispatch(getAllCategoriesToSelect());
+    dispatch(getAllSelects());
     
   }, []);
-
-  const { label,  name, value, changeItem } = props;
 
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth required>
-        <InputLabel id="unity">Categoria</InputLabel>
+        <InputLabel >{label}</InputLabel>
         <Select
-          id="unity"
+          id={name}
           value={value}
           name={name}
           label={label}
           onChange={changeItem}
         >
-          {categories.map((categorie) => (
-             <MenuItem value={categorie.id}>{categorie.name}</MenuItem>
+          {store.map((d) => (
+             <MenuItem value={d.id}>{d.name}</MenuItem>
           ))}
         </Select>
       </FormControl>
     </Box>
   );
 }
+
+
+
+
+
+
+
+
+
 
 
 

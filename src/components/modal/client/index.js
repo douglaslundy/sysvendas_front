@@ -3,9 +3,9 @@ import AlertModal from '../../messagesModal'
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import Phone from '../../helpers/textFields/phone';
-import Currency from '../../helpers/textFields/currency';
-import CpfCnpj from '../../helpers/textFields/cpfCnpj';
+import Phone from '../../inputs/textFields/phone';
+import Currency from '../../inputs/textFields/currency';
+import CpfCnpj from '../../inputs/textFields/cpfCnpj';
 
 import {
     Grid,
