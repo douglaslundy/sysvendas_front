@@ -33,7 +33,7 @@ const Currency = React.forwardRef((props, ref) => {
 
 export default function index(props) {
 
-    const { label, name, value, changeItem, wd } = props;
+    const { label, name, value, changeItem, wd, disabled } = props;
     return (
         <TextField
             id="phone"
@@ -44,6 +44,7 @@ export default function index(props) {
             onChange={changeItem}
             sx={{ width: wd }}
             required
+            disabled={disabled ? disabled : false}
 
             InputProps={{
                 inputComponent: Currency,

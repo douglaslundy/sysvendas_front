@@ -1,18 +1,3 @@
-// import React from 'react';
-// import { TextField } from "@mui/material";
-// import InputMask from 'react-input-mask';
-// import { ref } from 'yup';
-
-// const PercentMask = React.forwardRef((props, ref) => {
-//   const { inputRef, ...styles } = props;
-//   return (
-//     <InputMask
-//       {...styles}
-//       ref={inputRef}
-//       mask="999 %" maskChar={null} />
-//   );
-// });
-
 import React from 'react'
 import MaskedInput from 'react-text-mask'
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
@@ -47,7 +32,7 @@ const PercentMask = React.forwardRef((props, ref) => {
 
 export default function index(props) {
 
-  const { label, name, value, changeItem, wd } = props;
+  const { label, name, value, changeItem, wd, disabled } = props;
   return (
     <TextField
       id="percent"
@@ -58,6 +43,7 @@ export default function index(props) {
       onChange={changeItem}
       sx={{ width: wd }}
       required
+      disabled={disabled ? disabled : false}
       InputProps={{
         inputComponent: PercentMask,
       }}

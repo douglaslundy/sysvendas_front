@@ -19,10 +19,10 @@ export default createReducer(INITIAL_STATE, {
 	[addUnit.type]: (state, action) => ({ units: [action.payload, ...state.units] }),
 
 	// editUnit  persiste no banco uma atualização e altera o elemento na lista units
-	[editUnit.type]: (state, action) => ({ units: [action.payload, ...state.units.filter((cat) => cat.id !== action.payload.id)] }),	
+	[editUnit.type]: (state, action) => ({ units: [action.payload, ...state.units.filter((u) => u.id !== action.payload.id)] }),	
 
 	// editUnit  persiste no banco uma atualização de inativação e remove o elemento na lista units
-	[inactiveUnit.type]: (state, action) => ({ units: [...state.units.filter((cat) => cat.id !== action.payload.id)] }),
+	[inactiveUnit.type]: (state, action) => ({ units: [...state.units.filter((u) => u.id !== action.payload.id)] }),
 
 	// addUnits cria a lista de unites atraves de consulta no banco
 	[addUnits.type]: (state, action) => ({ units: [...action.payload] }),

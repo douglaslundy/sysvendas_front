@@ -19,10 +19,10 @@ export default createReducer(INITIAL_STATE, {
 	[addProduct.type]: (state, action) => ({ products: [action.payload, ...state.products] }),
 
 	// editProduct  persiste no banco uma atualização e altera o elemento na lista products
-	[editProduct.type]: (state, action) => ({ products: [action.payload, ...state.products.filter((cli) => cli.id !== action.payload.id)] }),	
+	[editProduct.type]: (state, action) => ({ products: [action.payload, ...state.products.filter((prod) => prod.id !== action.payload.id)] }),	
 
 	// editProduct  persiste no banco uma atualização de inativação e remove o elemento na lista products
-	[inactiveProduct.type]: (state, action) => ({ products: [...state.products.filter((cli) => cli.id !== action.payload.id)] }),
+	[inactiveProduct.type]: (state, action) => ({ products: [...state.products.filter((prod) => prod.id !== action.payload.id)] }),
 
 	// addProducts cria a lista de productes atraves de consulta no banco
 	[addProducts.type]: (state, action) => ({ products: [...action.payload] }),

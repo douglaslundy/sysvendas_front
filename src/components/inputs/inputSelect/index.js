@@ -3,13 +3,6 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllProducts } from "../../../store/fetchActions/product";
-import { showProduct } from "../../../store/ducks/products";
-import { changeTitleAlert, turnAlert, turnModal } from "../../../store/ducks/Layout";
-import ConfirmDialog from "../../confirmDialog";
-import { convertToBrlCurrency } from "../../helpers/formatt/currency";
-
 function sleep(delay = 0) {
   return new Promise((resolve) => {
     setTimeout(resolve, delay);
@@ -21,15 +14,7 @@ export default function index(props) {
   const [options, setOptions] = useState([]);
   const loading = open && options.length === 0;
 
-  const dispatch = useDispatch();
-  const { products } = useSelector(state => state.products);
-
-  useEffect(()=>{
-    dispatch(getAllProducts());
-  }, []);
-
   useEffect(() => {
-    // dispatch(getAllProducts());
     let active = true;
 
     if (!loading) {
@@ -55,14 +40,8 @@ export default function index(props) {
       setOptions([]);
     }
   }, [open]);
-
-  const show = (id) =>{
-    console.log('*********************************')
-    console.log('o Id do produto é ' + id)
-  }
-
   
-  const { label,  name, value, changeItem } = props;
+  const { label,  name, value, changeItem, products } = props;
 
   return (
     <Autocomplete
@@ -76,7 +55,7 @@ export default function index(props) {
         setOpen(false);
       }}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      getOptionLabel={(option) => `${option.id} - ${option.name}`}
+      getOptionLabel={(option) => `${option.id} - ${option.name} - Código ${option.bar_code}`}
       noOptionsText={"Categoria Indisponível"}
       options={options}
       loading={loading}
@@ -88,7 +67,7 @@ export default function index(props) {
           label={label}
           name={name}
           value={value}
-          onChange={show(JSON.stringify(value))}
+          onSelect={changeItem}
 
           InputProps={{
             ...params.InputProps,

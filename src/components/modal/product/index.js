@@ -194,20 +194,20 @@ export default function ProductModal(props) {
                                             label={'Valor de Custo'}
                                             name={'cost_value'}
                                             changeItem={changeItem}
-                                            wd={"38%"}
+                                            wd={"36%"}
                                         />
 
                                         <Currency value={sale_value}
                                             label={'Valor de Venda'}
                                             name={'sale_value'}
                                             changeItem={changeItem}
-                                            wd={"38%"}
+                                            wd={"36%"}
                                         />
                                         <Percent value={percent}
                                             label={'Percentual'}
                                             name={'percent'}
                                             changeItem={changePercent}
-                                            wd={"20%"}
+                                            wd={"24%"}
                                         />
                                     </Box>
 
