@@ -9,7 +9,9 @@ import {
     TableRow,
     Fab,
     Button,
-    styled
+    styled,
+    TableContainer,
+    TablePagination
 } from "@mui/material";
 
 import BaseCard from "../baseCard/BaseCard";
@@ -19,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { getAllCategories, inactiveCategorieFetch } from "../../store/fetchActions/categorie";
 import { showCategorie } from "../../store/ducks/categories";
-import { changeTitleAlert, turnAlert, turnModal } from "../../store/ducks/Layout";
+import { changeTitleAlert, turnModal } from "../../store/ducks/Layout";
 import ConfirmDialog from "../confirmDialog";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -58,6 +60,18 @@ export default () => {
         dispatch(changeTitleAlert(`A Categoria ${categorie.name} foi inativado com sucesso!`))
     }
 
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
     return (
         <BaseCard title="Categorias">
 
@@ -66,79 +80,91 @@ export default () => {
                     <FeatherIcon icon="user-plus" />
                 </Fab>
             </CategorieModal>
-            <br />
 
-            <Table
-                aria-label="simple table"
-                sx={{
-                    mt: 3,
-                    whiteSpace: "nowrap",
-                }}
-            >
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            <Typography color="textSecondary" variant="h6">
-                                Nome / Apelido
-                            </Typography>
-                        </TableCell>
+            <TableContainer>
+                <Table
+                    aria-label="simple table"
+                    sx={{
+                        mt: 3,
+                        whiteSpace: "nowrap",
+                    }}
+                >
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>
+                                <Typography color="textSecondary" variant="h6">
+                                    Nome / Apelido
+                                </Typography>
+                            </TableCell>
 
-                        <TableCell align="center">
-                            <Typography color="textSecondary" variant="h6">
-                                Ações
-                            </Typography>
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
+                            <TableCell align="center">
+                                <Typography color="textSecondary" variant="h6">
+                                    Ações
+                                </Typography>
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
 
-                <TableBody>
-                    {categories.map((categorie) => (
-                        <StyledTableRow key={categorie.id} hover>
-                            {categorie &&
-                                <>
-                                    <TableCell>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Box>
-                                                <Typography
-                                                    variant="h6"
+                    <TableBody>
+                        {categories
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map((categorie, index) => (
+
+                                <StyledTableRow key={categorie.id} hover>
+                                    {categorie &&
+                                        <>
+                                            <TableCell>
+                                                <Box
                                                     sx={{
-                                                        fontWeight: "600",
+                                                        display: "flex",
+                                                        alignItems: "center",
                                                     }}
                                                 >
-                                                    {categorie.name}
-                                                </Typography>
-                                            </Box>
-                                        </Box>
-                                    </TableCell>
+                                                    <Box>
+                                                        <Typography
+                                                            variant="h6"
+                                                            sx={{
+                                                                fontWeight: "600",
+                                                            }}
+                                                        >
+                                                            {categorie.name}
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
+                                            </TableCell>
 
-                                    <TableCell align="center">
-                                        <Box sx={{ "& button": { mx: 1 } }}>
+                                            <TableCell align="center">
+                                                <Box sx={{ "& button": { mx: 1 } }}>
 
-                                            <Button onClick={() => { HandleEditCategorie(categorie) }} color="primary" size="medium" variant="contained">
-                                                <FeatherIcon icon="edit" width="20" height="20" />
-                                                Editar
-                                            </Button>
+                                                    <Button onClick={() => { HandleEditCategorie(categorie) }} color="primary" size="medium" variant="contained">
+                                                        <FeatherIcon icon="edit" width="20" height="20" />
+                                                        Editar
+                                                    </Button>
 
-                                            <Button onClick={() => { HandleInactiveCategorie(categorie) }} color="error" size="medium" variant="contained">
-                                                <FeatherIcon icon="trash" width="20" height="20" />
-                                                Inativar
-                                            </Button>
+                                                    <Button onClick={() => { HandleInactiveCategorie(categorie) }} color="error" size="medium" variant="contained">
+                                                        <FeatherIcon icon="trash" width="20" height="20" />
+                                                        Inativar
+                                                    </Button>
 
 
-                                        </Box>
-                                    </TableCell>
-                                </>
-                            }
+                                                </Box>
+                                            </TableCell>
+                                        </>
+                                    }
 
-                        </StyledTableRow >
-                    ))}
-                </TableBody>
-            </Table>
+                                </StyledTableRow >
+                            ))}
+                    </TableBody>
+                </Table>
+                <TablePagination
+                    component="div"
+                    count={categories.length}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    rowsPerPage={rowsPerPage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </TableContainer>
 
             <ConfirmDialog
                 confirmDialog={confirmDialog}

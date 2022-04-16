@@ -9,7 +9,9 @@ import {
     TableRow,
     Fab,
     Button,
-    styled
+    styled,
+    TableContainer,
+    TablePagination
 } from "@mui/material";
 
 import BaseCard from "../baseCard/BaseCard";
@@ -56,6 +58,19 @@ export default () => {
         dispatch(changeTitleAlert(`A Categoria ${unit.name} foi excluido com sucesso!`))
     }
 
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+
     return (
         <BaseCard title="Unidades">
 
@@ -64,8 +79,8 @@ export default () => {
                     <FeatherIcon icon="user-plus" />
                 </Fab>
             </UnitModal>
-            <br />
 
+            <TableContainer>
             <Table
                 aria-label="simple table"
                 sx={{
@@ -90,7 +105,9 @@ export default () => {
                 </TableHead>
 
                 <TableBody>
-                    {units.map((unit) => (
+                    {units
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map((unit, index) => (
                         <StyledTableRow key={unit.id} hover>
                             {unit &&
                                 <>
@@ -137,6 +154,15 @@ export default () => {
                     ))}
                 </TableBody>
             </Table>
+            <TablePagination
+                    component="div"
+                    count={units.length}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    rowsPerPage={rowsPerPage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </TableContainer>
             <ConfirmDialog
                 confirmDialog={confirmDialog}
                 setConfirmDialog={setConfirmDialog} />

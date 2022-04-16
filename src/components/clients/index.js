@@ -9,7 +9,9 @@ import {
     TableRow,
     Fab,
     Button,
-    styled
+    styled,
+    TableContainer,
+    TablePagination
 } from "@mui/material";
 
 import BaseCard from "../baseCard/BaseCard";
@@ -19,7 +21,7 @@ import ClientModal from "../modal/client";
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllClients, inactiveClientFetch } from "../../store/fetchActions/client";
 import { showClient } from "../../store/ducks/clients";
-import { changeTitleAlert, turnAlert, turnModal } from "../../store/ducks/Layout";
+import { changeTitleAlert, turnModal } from "../../store/ducks/Layout";
 import ConfirmDialog from "../confirmDialog";
 
 
@@ -55,9 +57,21 @@ export default () => {
     }
 
     const HandleInactiveClient = async client => {
-        setConfirmDialog({...confirmDialog, isOpen: true, title: `Deseja Realmente inativar o cliente ${client.name}`, confirm: inactiveClientFetch(client)})
+        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Deseja Realmente inativar o cliente ${client.name}`, confirm: inactiveClientFetch(client) })
         dispatch(changeTitleAlert(`O cliente ${client.full_name} foi inativado com sucesso!`))
     }
+
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     return (
         <BaseCard title="Clientes">
@@ -67,128 +81,140 @@ export default () => {
                     <FeatherIcon icon="user-plus" />
                 </Fab>
             </ClientModal>
-            <br />
 
-            <Table
-                aria-label="simple table"
-                sx={{
-                    mt: 3,
-                    whiteSpace: "nowrap",
-                }}
-            >
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            <Typography color="textSecondary" variant="h6">
-                                Nome / Apelido
-                            </Typography>
-                        </TableCell>
-                        <TableCell>
-                            <Typography color="textSecondary" variant="h6">
-                                Empresa / Telefone
-                            </Typography>
-                        </TableCell>
+            <TableContainer>
 
-                        <TableCell>
-                            <Typography color="textSecondary" variant="h6">
-                                Debito
-                            </Typography>
-                        </TableCell>
+                <Table
+                    aria-label="simple table"
+                    sx={{
+                        mt: 3,
+                        whiteSpace: "nowrap",
+                    }}
+                >
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>
+                                <Typography color="textSecondary" variant="h6">
+                                    Nome / Apelido
+                                </Typography>
+                            </TableCell>
+                            <TableCell>
+                                <Typography color="textSecondary" variant="h6">
+                                    Empresa / Telefone
+                                </Typography>
+                            </TableCell>
 
-                        <TableCell align="center">
-                            <Typography color="textSecondary" variant="h6">
-                                Ações
-                            </Typography>
-                        </TableCell>
+                            <TableCell>
+                                <Typography color="textSecondary" variant="h6">
+                                    Debito
+                                </Typography>
+                            </TableCell>
 
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {clients.map((client) => (
-                        <StyledTableRow key={client.id} hover>
-                            <>
-                                <TableCell>
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                        }}
-                                    >
-                                        <Box>
-                                            <Typography
-                                                variant="h6"
+                            <TableCell align="center">
+                                <Typography color="textSecondary" variant="h6">
+                                    Ações
+                                </Typography>
+                            </TableCell>
+
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {clients
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map((client, index) => (
+                                <StyledTableRow key={client.id} hover>
+                                    <>
+                                        <TableCell>
+                                            <Box
                                                 sx={{
-                                                    fontWeight: "600",
+                                                    display: "flex",
+                                                    alignItems: "center",
                                                 }}
                                             >
-                                                {client.full_name}
-                                            </Typography>
-                                            <Typography
-                                                color="textSecondary"
+                                                <Box>
+                                                    <Typography
+                                                        variant="h6"
+                                                        sx={{
+                                                            fontWeight: "600",
+                                                        }}
+                                                    >
+                                                        {client.full_name}
+                                                    </Typography>
+                                                    <Typography
+                                                        color="textSecondary"
+                                                        sx={{
+                                                            fontSize: "13px",
+                                                        }}
+                                                    >
+                                                        {client.surname}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        </TableCell>
+
+                                        <TableCell>
+                                            <Box
                                                 sx={{
-                                                    fontSize: "13px",
+                                                    display: "flex",
+                                                    alignItems: "left"
                                                 }}
                                             >
-                                                {client.surname}
-                                            </Typography>
-                                        </Box>
-                                    </Box>
-                                </TableCell>
+                                                <Box>
+                                                    <Typography
+                                                        variant="h6"
+                                                        sx={{
+                                                            fontWeight: "600",
+                                                        }}
+                                                    >
+                                                        {client.fantasy_name}
+                                                    </Typography>
+                                                    <Typography
+                                                        color="textSecondary"
+                                                        sx={{
+                                                            fontSize: "12px",
+                                                        }}
+                                                    >
+                                                        {client.phone}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        </TableCell>
 
-                                <TableCell>
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            alignItems: "left"
-                                        }}
-                                    >
-                                        <Box>
-                                            <Typography
-                                                variant="h6"
-                                                sx={{
-                                                    fontWeight: "600",
-                                                }}
-                                            >
-                                                {client.fantasy_name}
-                                            </Typography>
-                                            <Typography
-                                                color="textSecondary"
-                                                sx={{
-                                                    fontSize: "12px",
-                                                }}
-                                            >
-                                                {client.phone}
-                                            </Typography>
-                                        </Box>
-                                    </Box>
-                                </TableCell>
+                                        <TableCell>
+                                            <Typography variant="h6">R$ {client.debit_balance}</Typography>
+                                        </TableCell>
 
-                                <TableCell>
-                                    <Typography variant="h6">R$ {client.debit_balance}</Typography>
-                                </TableCell>
+                                        <TableCell align="center">
+                                            <Box sx={{ "& button": { mx: 1 } }}>
 
-                                <TableCell align="center">
-                                    <Box sx={{ "& button": { mx: 1 } }}>
+                                                <Button onClick={() => { HandleEditClient(client) }} color="primary" size="medium" variant="contained">
+                                                    <FeatherIcon icon="edit" width="20" height="20" />
+                                                    Editar
+                                                </Button>
 
-                                        <Button onClick={() => { HandleEditClient(client) }} color="primary" size="medium" variant="contained">
-                                            <FeatherIcon icon="edit" width="20" height="20" />
-                                            Editar
-                                        </Button>
-
-                                        <Button onClick={() => { HandleInactiveClient(client) }} color="error" size="medium" variant="contained">
-                                            <FeatherIcon icon="trash" width="20" height="20" />
-                                            Inativar
-                                        </Button>
+                                                <Button onClick={() => { HandleInactiveClient(client) }} color="error" size="medium" variant="contained">
+                                                    <FeatherIcon icon="trash" width="20" height="20" />
+                                                    Inativar
+                                                </Button>
 
 
-                                    </Box>
-                                </TableCell>
-                            </>
+                                            </Box>
+                                        </TableCell>
+                                    </>
 
-                        </StyledTableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                                </StyledTableRow>
+                            ))}
+                    </TableBody>
+                </Table>
+                <TablePagination
+                    component="div"
+                    count={clients.length}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    rowsPerPage={rowsPerPage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </TableContainer>
             <ConfirmDialog
                 confirmDialog={confirmDialog}
                 setConfirmDialog={setConfirmDialog} />
