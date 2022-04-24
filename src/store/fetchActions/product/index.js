@@ -1,11 +1,18 @@
-import api from "../../../services/api";
+import { api } from "../../../services/api";
 import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
 import { getId } from '../../../components/helpers/formatt/getIdFromSelect';
 import { inactiveProduct, addProduct, editProduct, addProducts } from "../../ducks/products";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
+import { parseCookies } from "nookies";
+import { Router } from "next/router";
+
+function getToken() {
+    const { 'sysvendas.token': token } = parseCookies();    
+    token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
+}
 
 export const getAllProducts = () => {
-
+    getToken();
     const config = {
         transformResponse: [function (data) {
 
@@ -23,8 +30,8 @@ export const getAllProducts = () => {
 
     return (dispatch) => {
         dispatch(turnLoading())
-        api
-            .get('/products', config)
+        api 
+        .get('/products', config)
             .then((res) => {
                 dispatch(addProducts(res.data));
                 dispatch(turnLoading());
@@ -92,7 +99,7 @@ export const editProductFetch = (product, cleanForm) => {
                 dispatch(editProduct(product)),
                 dispatch(addMessage(`O produto ${product.name} foi atualizado com sucesso!`)),
                 dispatch(turnAlert()),
-                dispatch(turnLoading()), 
+                dispatch(turnLoading()),
                 cleanForm()
             ))
             .catch((error) => {

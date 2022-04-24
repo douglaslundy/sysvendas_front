@@ -34,20 +34,23 @@ const FullLayout = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = React.useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = React.useState(false);
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+
   return (
     <MainWrapper>
-      <Header
-        sx={{
-          paddingLeft: isSidebarOpen && lgUp ? "265px" : "",
-          backgroundColor: "#fbfbfb",
-        }}
-        toggleMobileSidebar={() => setMobileSidebarOpen(true)}
-      />
-      <Sidebar
-        isSidebarOpen={isSidebarOpen}
-        isMobileSidebarOpen={isMobileSidebarOpen}
-        onSidebarClose={() => setMobileSidebarOpen(false)}
-      />
+    
+          <Header
+            sx={{
+              paddingLeft: isSidebarOpen && lgUp ? "265px" : "",
+              backgroundColor: "#fbfbfb",
+            }}
+            toggleMobileSidebar={() => setMobileSidebarOpen(true)}
+          />
+          <Sidebar
+            isSidebarOpen={isSidebarOpen}
+            isMobileSidebarOpen={isMobileSidebarOpen}
+            onSidebarClose={() => setMobileSidebarOpen(false)}
+          />        
+      
       <PageWrapper>
         <Container
           maxWidth={false}

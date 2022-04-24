@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
     Typography,
     Box,
@@ -23,6 +23,7 @@ import { getAllClients, inactiveClientFetch } from "../../store/fetchActions/cli
 import { showClient } from "../../store/ducks/clients";
 import { changeTitleAlert, turnModal } from "../../store/ducks/Layout";
 import ConfirmDialog from "../confirmDialog";
+import { api } from "../../services/api";
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -44,20 +45,19 @@ export default () => {
 
 
     const dispatch = useDispatch();
-
     const { clients } = useSelector(state => state.clients);
 
     useEffect(() => {
-        dispatch(getAllClients());
+        dispatch(getAllClients(api));
     }, []);
 
     const HandleEditClient = async client => {
-        dispatch(showClient(client));
+        dispatch(showClient(client, api));
         dispatch(turnModal());
     }
 
     const HandleInactiveClient = async client => {
-        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Deseja Realmente inativar o cliente ${client.name}`, confirm: inactiveClientFetch(client) })
+        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Deseja Realmente inativar o cliente ${client.name}`, confirm: inactiveClientFetch(client, api) })
         dispatch(changeTitleAlert(`O cliente ${client.full_name} foi inativado com sucesso!`))
     }
 

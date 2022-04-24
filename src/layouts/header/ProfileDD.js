@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
 import userimg from "../../../assets/images/users/user3.jpg";
@@ -13,6 +13,23 @@ import {
   Button,
   Divider,
 } from "@mui/material";
+
+import { useSelector, useDispatch } from "react-redux";
+import Router from "next/router";
+import { parseCookies, setCookie, destroyCookie } from 'nookies'
+import { AuthContext } from "../../contexts/AuthContext";
+import { logoutFetch } from "../../store/fetchActions/auth";
+
+function logout(dispatch) {
+  dispatch(logoutFetch());
+  destroyCookie(null, 'sysvendas.id');
+  destroyCookie(null, 'sysvendas.token');
+  destroyCookie(null, 'sysvendas.username');
+  destroyCookie(null, 'sysvendas.profile');
+  // Router.push('/login');
+
+}
+
 const ProfileDD = () => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
 
@@ -23,6 +40,12 @@ const ProfileDD = () => {
   const handleClose4 = () => {
     setAnchorEl4(null);
   };
+
+  const dispatch = useDispatch();
+
+  const { username } = useContext(AuthContext);
+
+
   return (
     <>
       <Button
@@ -55,7 +78,7 @@ const ProfileDD = () => {
               fontWeight="400"
               sx={{ ml: 1 }}
             >
-              Hi,
+              Olá,
             </Typography>
             <Typography
               variant="h5"
@@ -64,7 +87,7 @@ const ProfileDD = () => {
                 ml: 1,
               }}
             >
-              Douglas Lundy
+              {username}
             </Typography>
             <FeatherIcon icon="chevron-down" width="20" height="20" />
           </Box>
@@ -106,7 +129,7 @@ const ProfileDD = () => {
           <Divider />
           <Box p={2}>
             <Link to="/">
-              <Button fullWidth variant="contained" color="primary">
+              <Button fullWidth variant="contained" color="primary" onClick={() => logout(dispatch)}>
                 Logout
               </Button>
             </Link>

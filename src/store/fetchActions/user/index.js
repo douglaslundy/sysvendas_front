@@ -1,19 +1,15 @@
 import { api } from "../../../services/api";
 
-import { inactiveUnit, addUnit, editUnit, addUnits } from "../../ducks/units";
+import { inactiveUser, addUser, editUser, addUsers } from "../../ducks/users";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
-import { parseCookies } from "nookies";
 
-const { 'sysvendas.token': token } = parseCookies();
-api.defaults.headers['Authorization'] = `Bearer ${token}`;
-
-export const getAllUnits = () => {
+export const getAllUsers = () => {
     return (dispatch) => {
         dispatch(turnLoading())
         api
-            .get('/units')
+            .get('/users')
             .then((res) => {
-                dispatch(addUnits(res.data));
+                dispatch(addUsers(res.data));
                 dispatch(turnLoading());
             })
             .catch((error) => {
@@ -22,27 +18,15 @@ export const getAllUnits = () => {
     }
 }
 
-export const getAllUnitsToSelect = () => {
-    return (dispatch) => {
-        api
-            .get('/units')
-            .then((res) => {
-                dispatch(addUnits(res.data));
-            })
-            .catch((error) => {
-            })
-    }
-}
-
-export const addUnitFetch = (unit, cleanForm) => {
+export const addUserFetch = (user, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading())
-        api.post('/units', unit)
+        api.post('/users', user)
             .then((res) =>
             (
 
-                dispatch(addUnit(res.data.unit)),
-                dispatch(addMessage(`A unidade ${res.data.unit.name} foi adicionado com sucesso!`)),
+                dispatch(addUser(res.data.user)),
+                dispatch(addMessage(`Usuário ${res.data.user.name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert()),
                 dispatch(turnLoading()),
                 cleanForm(),
@@ -56,14 +40,14 @@ export const addUnitFetch = (unit, cleanForm) => {
 };
 
 
-export const editUnitFetch = (unit, cleanForm) => {
+export const editUserFetch = (user, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading()),
-            api.put(`/units/${unit.id}`, unit)
+            api.put(`/users/${user.id}`, user)
                 .then((res) =>
                 (
-                    dispatch(editUnit(res.data.unit)),
-                    dispatch(addMessage(`A unidade ${res.data.unit.name} foi atualizado com sucesso!`)),
+                    dispatch(editUser(res.data.user)),
+                    dispatch(addMessage(`Usuário ${res.data.user.name} foi atualizado com sucesso!`)),
                     dispatch(turnAlert()),
                     dispatch(turnLoading()),
                     cleanForm()
@@ -76,14 +60,14 @@ export const editUnitFetch = (unit, cleanForm) => {
     };
 }
 
-export const inactiveUnitFetch = (unit) => {
+export const inactiveUserFetch = (user) => {
     return (dispatch) => {
         dispatch(turnLoading())
-        api.delete(`/units/${unit.id}`)
+        api.delete(`/users/${user.id}`)
             .then((res) =>
             (
-                dispatch(inactiveUnit(unit)),
-                dispatch(addMessage(`A unidade ${unit.name} foi deletada com sucesso!`)),
+                dispatch(inactiveUser(user)),
+                dispatch(addMessage(`Usuário ${user.name} foi deletado com sucesso!`)),
                 dispatch(turnAlert()),
                 dispatch(turnLoading())
             ))

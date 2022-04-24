@@ -33,14 +33,7 @@ export default createReducer(INITIAL_STATE, {
 
 	// [showClient.type]: (state, action) => ({client: [action.payload]}),
 	// levei um tempo para entender a logica deste reduce, eu nao estava retornando nele o estado atual com ...state
-	// eu retornava soemnte o clienteShow, assim eu zerava o estado e apagava array array de clientes, pois eu retornava um state somente com cliente show 
+	// eu retornava somente o clienteShow, assim eu zerava o estado e apagava array de clientes, pois eu retornava um state somente com cliente show 
 	[showClient.type]: (state, action) => ({ ...state, client: action.payload }),
 });
 
-
-
-
-// apagar este teste depois 
-export const sum = (a, b) => {
-	return a + b;
-} 

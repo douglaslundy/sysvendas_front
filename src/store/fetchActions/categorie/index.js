@@ -1,7 +1,11 @@
-import api from "../../../services/api";
+import { api } from "../../../services/api";
 
 import { inactiveCategorie, addCategorie, editCategorie, addCategories } from "../../ducks/categories";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
+import { parseCookies } from "nookies";
+
+const { 'sysvendas.token': token } = parseCookies();
+api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
 export const getAllCategories = () => {
     return (dispatch) => {
@@ -13,7 +17,7 @@ export const getAllCategories = () => {
                 dispatch(addCategories(res.data));
                 dispatch(turnLoading());
             })
-            .catch(() => {dispatch(turnLoading())})
+            .catch(() => { dispatch(turnLoading()) })
     }
 }
 
@@ -25,7 +29,7 @@ export const getAllCategoriesToSelect = () => {
             .then((res) => {
                 dispatch(addCategories(res.data));
             })
-            .catch(() => {})
+            .catch(() => { })
     }
 }
 
@@ -39,7 +43,7 @@ export const addCategorieFetch = (categorie, cleanForm) => {
                 dispatch(addCategorie(res.data.categorie)),
                 dispatch(addMessage(`A categoria ${res.data.categorie.name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert()),
-                dispatch(turnLoading()), 
+                dispatch(turnLoading()),
                 cleanForm()
             ))
             .catch((error) => {
@@ -59,9 +63,9 @@ export const editCategorieFetch = (categorie, cleanForm) => {
             .then((res) =>
             (
                 dispatch(editCategorie(res.data.categorie)),
-                dispatch(addMessage(`A categoria ${res.data.categorie.name} foi atualizado com sucesso!`)),      
+                dispatch(addMessage(`A categoria ${res.data.categorie.name} foi atualizado com sucesso!`)),
                 dispatch(turnAlert()),
-                dispatch(turnLoading()), 
+                dispatch(turnLoading()),
                 cleanForm()
             ))
             .catch((error) => {
@@ -78,7 +82,7 @@ export const inactiveCategorieFetch = (categorie) => {
 
         api.delete(`/categorie/${categorie.id}`)
             .then((res) =>
-            (   
+            (
                 dispatch(inactiveCategorie(categorie)),
                 dispatch(addMessage(`A categoria ${categorie.name} foi inativado com sucesso!`)),
                 dispatch(turnAlert()),

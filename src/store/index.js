@@ -5,6 +5,8 @@ import clientReducer from './ducks/clients';
 import categorieReducer from './ducks/categories';
 import productReducer from './ducks/products';
 import unitReducer from './ducks/units';
+import userReducer from './ducks/users';
+import authReducer from './ducks/auth';
 
 
 export default configureStore({
@@ -13,6 +15,8 @@ export default configureStore({
         layout: layoutReducer, 
         categories: categorieReducer,
         products: productReducer,
-        units: unitReducer
+        units: unitReducer,
+        users: userReducer,
+        auth: authReducer 
     },
 });

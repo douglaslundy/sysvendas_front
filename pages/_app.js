@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useContext, useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
 import { ThemeProvider } from "@mui/material/styles";
@@ -15,9 +15,19 @@ import store from "../src/store";
 import Messages from "../src/components/messages";
 import AlertDialog from "../src/components/alertDialog";
 import Loading from "../src/components/loading";
+import { parseCookies } from 'nookies';
+import { AuthContext, AuthProvider } from "../src/contexts/AuthContext";
 
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  // const [token, setToken] = useState();
+  const { 'sysvendas.token': token } = parseCookies();
+  // const { token } = useContext(AuthContext);
+
+  // useEffect(() => {
+  //   console.log('oiiii')
+  //   setToken(value);
+  // },[value, tokens])
 
   return (
     <CacheProvider value={emotionCache}>
@@ -26,17 +36,26 @@ export default function MyApp(props) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <FullLayout>
+        <AuthProvider>
+          <ThemeProvider theme={theme}>
+            {token ?
+              <>
+                <CssBaseline />
+                <FullLayout>
 
-            <Loading />
-            <AlertDialog />
-            <Messages />
+                  <Loading />
+                  <AlertDialog />
+                  <Messages />
 
-            <Component {...pageProps} />
-          </FullLayout>
-        </ThemeProvider>
+                  <Component {...pageProps} />
+
+                </FullLayout>
+              </>
+              :
+              <Component {...pageProps} />
+            }
+          </ThemeProvider>
+        </AuthProvider>
       </Provider>
     </CacheProvider>
   );
