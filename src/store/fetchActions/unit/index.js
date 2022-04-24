@@ -4,10 +4,13 @@ import { inactiveUnit, addUnit, editUnit, addUnits } from "../../ducks/units";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 import { parseCookies } from "nookies";
 
-const { 'sysvendas.token': token } = parseCookies();
-api.defaults.headers['Authorization'] = `Bearer ${token}`;
+function getToken() {
+    const { 'sysvendas.token': token } = parseCookies();    
+    token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
+}
 
 export const getAllUnits = () => {
+    getToken();
     return (dispatch) => {
         dispatch(turnLoading())
         api
@@ -48,9 +51,9 @@ export const addUnitFetch = (unit, cleanForm) => {
                 cleanForm(),
             ))
             .catch((error) => {
-                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
-                dispatch(turnLoading())
-                return error.response.data
+                dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                dispatch(turnLoading());
+                return error.response ? error.response.data : 'erro desconhecido';
             })
     };
 };
@@ -69,9 +72,9 @@ export const editUnitFetch = (unit, cleanForm) => {
                     cleanForm()
                 ))
                 .catch((error) => {
-                    dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
-                    dispatch(turnLoading())
-                    return error.response.data
+                    dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                    dispatch(turnLoading());
+                    return error.response ? error.response.data : 'erro desconhecido';
                 })
     };
 }

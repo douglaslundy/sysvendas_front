@@ -36,36 +36,32 @@ export const loginFetch = (dataUser) => {
 
 
                 dispatch(turnLoading()),
-                dispatch(isAuth(true)),
                 Router.push('/')
             ))
             .catch((error) => {
-                console.log('Erro ' + error.response.data.message),
-                    dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
-                dispatch(turnLoading())
-                return error.response.data
+
+                dispatch(addAlertMessage(error.response ? ` ${error.response.data.message} ` : 'Erro desconhecido'));
+                dispatch(turnLoading());
+                return error.response ? error.response.data : 'erro desconhecido';
             })
     };
 };
 
 export const logoutFetch = () => {
-    getToken()
+    getToken();
     return (dispatch) => {
         dispatch(turnLoading())
         api
             .post('/logout')
             .then((res) =>
             (
-                console.log('token deletado ' + res.data.message),
                 dispatch(turnLoading()),
-                dispatch(isAuth(true)),
                 Router.push('/login'),
             ))
             .catch((error) => {
-                console.log('erro ao deletar token')
-                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
-                dispatch(turnLoading())
-                return error.response.data
+                dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                dispatch(turnLoading());
+                return error.response ? error.response.data : 'erro desconhecido';
             })
     };
 };

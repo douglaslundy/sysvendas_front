@@ -20,14 +20,13 @@ import { AuthContext, AuthProvider } from "../src/contexts/AuthContext";
 
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  // const [token, setToken] = useState();
-  const { 'sysvendas.token': token } = parseCookies();
-  // const { token } = useContext(AuthContext);
+  const [token, setToken] = useState();
+  const { 'sysvendas.token': value } = parseCookies();
+  const { tokens } = useContext(AuthContext);
 
-  // useEffect(() => {
-  //   console.log('oiiii')
-  //   setToken(value);
-  // },[value, tokens])
+  useEffect(() => {
+    setToken(value);
+  },[value, tokens])
 
   return (
     <CacheProvider value={emotionCache}>

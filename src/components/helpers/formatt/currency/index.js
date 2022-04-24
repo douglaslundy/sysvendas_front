@@ -27,10 +27,18 @@ export function getCurrency(str) {
 
 export function convertToBrlCurrency(str) {
 
-    const number = str.replace(',','.');
+    const number = str.toString().replace(',','.');
     return parseFloat(number).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 }
 
+
+
+// export function convertToBrlCurrency(str) {
+
+//     const number = str.replace(',','.');
+//     return parseFloat(number).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+// }
 
 

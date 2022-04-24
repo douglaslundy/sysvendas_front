@@ -67,9 +67,9 @@ export const addProductFetch = (product, cleanForm) => {
                 cleanForm()
             ))
             .catch((error) => {
-                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
-                dispatch(turnLoading())
-                return error.response.data
+                dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                dispatch(turnLoading());
+                return error.response ? error.response.data : 'erro desconhecido';
             })
     };
 };
@@ -103,9 +103,9 @@ export const editProductFetch = (product, cleanForm) => {
                 cleanForm()
             ))
             .catch((error) => {
-                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `))
-                dispatch(turnLoading())
-                return error.response.data
+                dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                dispatch(turnLoading());
+                return error.response ? error.response.data : 'erro desconhecido';
             })
     };
 }

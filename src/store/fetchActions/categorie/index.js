@@ -4,10 +4,13 @@ import { inactiveCategorie, addCategorie, editCategorie, addCategories } from ".
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 import { parseCookies } from "nookies";
 
-const { 'sysvendas.token': token } = parseCookies();
-api.defaults.headers['Authorization'] = `Bearer ${token}`;
+function getToken() {
+    const { 'sysvendas.token': token } = parseCookies();    
+    token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
+}
 
 export const getAllCategories = () => {
+    getToken();
     return (dispatch) => {
         dispatch(turnLoading());
 
@@ -47,9 +50,9 @@ export const addCategorieFetch = (categorie, cleanForm) => {
                 cleanForm()
             ))
             .catch((error) => {
-                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `));
+                dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
                 dispatch(turnLoading());
-                return error.response.data
+                return error.response ? error.response.data : 'erro desconhecido';
             })
     };
 };
@@ -69,9 +72,9 @@ export const editCategorieFetch = (categorie, cleanForm) => {
                 cleanForm()
             ))
             .catch((error) => {
-                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `));
-                dispatch(turnLoading())
-                return error.response.data
+                dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                dispatch(turnLoading());
+                return error.response ? error.response.data : 'erro desconhecido';
             })
     };
 }

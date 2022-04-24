@@ -12,6 +12,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { parseCookies } from 'nookies';
+import AlertModal from '../src/components/messagesModal';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -67,7 +68,9 @@ export default function SignIn() {
                 <Typography component="h1" variant="h5">
                     Login 
                 </Typography>
+               
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                     <AlertModal />
                     <TextField
                         margin="normal"
                         required
