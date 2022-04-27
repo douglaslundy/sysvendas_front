@@ -1,17 +1,18 @@
 import { Grid } from "@mui/material";
-import SalesOverview from "../src/components/dashboard/SalseOverview";
-import Provisoria from "../src/components/dashboard/Provisoria";
+import Users from "../src/components/users";
 import { parseCookies } from 'nookies';
 
-export default function Index() {
+const Tables = () => {
   return (
     <Grid container spacing={0}>
       <Grid item xs={12} lg={12}>
-        <Provisoria />
-      </Grid>      
+        <Users />
+      </Grid>
     </Grid>
   );
-}
+};
+
+export default Tables;
 
 export async function getServerSideProps(context) {
 

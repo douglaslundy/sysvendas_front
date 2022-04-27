@@ -123,6 +123,10 @@ export default function CategorieModal(props) {
                                         value={name ? name : ''}
                                         onChange={changeItem}
                                         required
+                                        
+                                        inputProps={{ 
+                                            style: { textTransform: "uppercase" 
+                                        } }}
                                     />                                    
                                 </Stack>
                                 {/* </FormGroup> */}

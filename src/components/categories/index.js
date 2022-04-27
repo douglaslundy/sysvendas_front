@@ -77,7 +77,7 @@ export default () => {
 
             <CategorieModal>
                 <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
-                    <FeatherIcon icon="user-plus" />
+                    <FeatherIcon icon="plus" />
                 </Fab>
             </CategorieModal>
 
@@ -127,7 +127,7 @@ export default () => {
                                                                 fontWeight: "600",
                                                             }}
                                                         >
-                                                            {categorie.name}
+                                                            {categorie.name ? categorie.name.toUpperCase() : ''}
                                                         </Typography>
                                                     </Box>
                                                 </Box>

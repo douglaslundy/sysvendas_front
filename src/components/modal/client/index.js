@@ -143,6 +143,9 @@ export default function ClientModal(props) {
                                         value={full_name ? full_name : ''}
                                         onChange={changeItem}
                                         required
+                                        inputProps={{ 
+                                            style: { textTransform: "uppercase" 
+                                        } }}
                                     />
                                     <TextField
                                         id="surname"
@@ -151,6 +154,9 @@ export default function ClientModal(props) {
                                         name="surname"
                                         value={surname ? surname : ''}
                                         onChange={changeItem}
+                                        inputProps={{ 
+                                            style: { textTransform: "uppercase" 
+                                        } }}
                                     />
                                     <TextField
                                         id="email"
@@ -199,6 +205,9 @@ export default function ClientModal(props) {
                                         name="fantasy_name"
                                         value={fantasy_name ? fantasy_name : ''}
                                         onChange={changeItem}
+                                        inputProps={{ 
+                                            style: { textTransform: "uppercase" 
+                                        } }}
                                     />
 
                                     <Currency value={limit}
@@ -215,6 +224,9 @@ export default function ClientModal(props) {
                                         value={obs ? obs : ''}
                                         name="obs"
                                         onChange={changeItem}
+                                        inputProps={{ 
+                                            style: { textTransform: "uppercase" 
+                                        } }}
                                     />
                                 </Stack>
                                 {/* </FormGroup> */}

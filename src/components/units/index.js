@@ -76,7 +76,7 @@ export default () => {
 
             <UnitModal>
                 <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
-                    <FeatherIcon icon="user-plus" />
+                    <FeatherIcon icon="plus" />
                 </Fab>
             </UnitModal>
 

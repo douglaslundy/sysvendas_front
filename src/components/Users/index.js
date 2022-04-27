@@ -17,11 +17,11 @@ import {
 
 import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
-import ClientModal from "../modal/client";
+import UserModal from "../modal/user";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { getAllClients, inactiveClientFetch } from "../../store/fetchActions/client";
-import { showClient } from "../../store/ducks/clients";
+import { getAllUsers, inactiveUserFetch } from "../../store/fetchActions/user";
+import { showUser } from "../../store/ducks/users";
 import { changeTitleAlert, turnModal } from "../../store/ducks/Layout";
 import ConfirmDialog from "../confirmDialog";
 
@@ -44,29 +44,29 @@ export default () => {
     });
 
     const dispatch = useDispatch();
-    const { clients } = useSelector(state => state.clients);
+    const { users } = useSelector(state => state.users);
     const [searchValue, setSearchValue] = useState();
-    const [allClients, setAllProducts] = useState(clients);
+    const [allUsers, setAllProducts] = useState(users);
 
     useEffect(() => {
-        dispatch(getAllClients());
+        dispatch(getAllUsers());
     }, []);
 
-    const HandleEditClient = async client => {
-        dispatch(showClient(client));
+    const HandleEditUser = async user => {
+        dispatch(showUser(user));
         dispatch(turnModal());
     }
 
-    const HandleInactiveClient = async client => {
-        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Deseja Realmente inativar o cliente ${client.name}`, confirm: inactiveClientFetch(client) })
-        dispatch(changeTitleAlert(`O cliente ${client.full_name} foi inativado com sucesso!`))
+    const HandleInactiveUser = async user => {
+        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Deseja Realmente inativar o usuario ${user.name}`, confirm: inactiveUserFetch(user) })
+        dispatch(changeTitleAlert(`O usuário ${user.name} foi inativado com sucesso!`))
     }
 
 
     // const searchProducts = async () => {
-    const searchClients = ({ target }) => {
+    const searchUsers = ({ target }) => {
         setSearchValue(target.value.toLowerCase());
-        setAllProducts([...clients.filter(cli => cli.full_name.toLowerCase().indexOf( searchValue) > -1)]);
+        setAllProducts([...users.filter(use => use.name.toLowerCase().indexOf( searchValue) > -1)]);
     }
 
     const [page, setPage] = useState(0);
@@ -82,7 +82,7 @@ export default () => {
     };
 
     return (
-        <BaseCard title="Clientes">
+        <BaseCard title="Usuários">
 
             <Box sx={{
                 '& > :not(style)': { m: 2 },
@@ -91,18 +91,18 @@ export default () => {
             }}>
                 <TextField
                     sx={{ width: "85%" }}
-                    label="Pesquisar cliente"
+                    label="Pesquisar usuarios"
                     name="search"
                     value={searchValue}
-                    onChange={searchClients}
+                    onChange={searchUsers}
                     
                 />
 
-                <ClientModal>
+                <UserModal>
                     <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
                         <FeatherIcon icon="user-plus" />
                     </Fab>
-                </ClientModal>
+                </UserModal>
             </Box>
 
             <TableContainer>
@@ -118,18 +118,12 @@ export default () => {
                         <TableRow>
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Nome / Apelido
+                                    Nome / Perfil
                                 </Typography>
                             </TableCell>
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Empresa / Telefone
-                                </Typography>
-                            </TableCell>
-
-                            <TableCell>
-                                <Typography color="textSecondary" variant="h6">
-                                    Debito
+                                    CPF / E-mail
                                 </Typography>
                             </TableCell>
 
@@ -142,10 +136,10 @@ export default () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {allClients
+                        {allUsers
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((client, index) => (
-                                <StyledTableRow key={client.id} hover>
+                            .map((user, index) => (
+                                <StyledTableRow key={user.id} hover>
                                     <>
                                         <TableCell>
                                             <Box
@@ -161,7 +155,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {client.full_name ? client.full_name.toUpperCase(): ''}
+                                                        {user.name ? user.name.toUpperCase(): ''}
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"
@@ -169,7 +163,7 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {client.surname ? client.surname.toUpperCase() : ''}
+                                                        {user.profile ? user.profile.toUpperCase() : ''}
                                                     </Typography>
                                                 </Box>
                                             </Box>
@@ -189,7 +183,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {client.fantasy_name ? client.fantasy_name.toUpperCase() : ''}
+                                                        {user.cpf}
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"
@@ -197,25 +191,21 @@ export default () => {
                                                             fontSize: "12px",
                                                         }}
                                                     >
-                                                        {client.phone}
+                                                        {user.email}
                                                     </Typography>
                                                 </Box>
                                             </Box>
                                         </TableCell>
 
-                                        <TableCell>
-                                            <Typography variant="h6">R$ {client.debit_balance}</Typography>
-                                        </TableCell>
-
                                         <TableCell align="center">
                                             <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                <Button onClick={() => { HandleEditClient(client) }} color="primary" size="medium" variant="contained">
+                                                <Button onClick={() => { HandleEditUser(user) }} color="primary" size="medium" variant="contained">
                                                     <FeatherIcon icon="edit" width="20" height="20" />
                                                     Editar
                                                 </Button>
 
-                                                <Button onClick={() => { HandleInactiveClient(client) }} color="error" size="medium" variant="contained">
+                                                <Button onClick={() => { HandleInactiveUser(user) }} color="error" size="medium" variant="contained">
                                                     <FeatherIcon icon="trash" width="20" height="20" />
                                                     Inativar
                                                 </Button>
@@ -231,7 +221,7 @@ export default () => {
                 </Table>
                 <TablePagination
                     component="div"
-                    count={allClients.length}
+                    count={allUsers.length}
                     page={page}
                     onPageChange={handleChangePage}
                     rowsPerPage={rowsPerPage}

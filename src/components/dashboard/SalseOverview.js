@@ -104,7 +104,7 @@ const SalesOverview = () => {
     },
   ];
   return (
-    <BaseCard title="Sales Overview">
+    <BaseCard title="Resumo de Vendas">
       <Chart
         options={optionssalesoverview}
         series={seriessalesoverview}

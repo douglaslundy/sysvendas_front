@@ -11,7 +11,8 @@ import {
     Button,
     styled,
     TableContainer,
-    TablePagination
+    TablePagination,
+    TextField
 } from "@mui/material";
 
 import BaseCard from "../baseCard/BaseCard";
@@ -35,6 +36,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
+
 export default () => {
     const [confirmDialog, setConfirmDialog] = useState({
         isOpen: false,
@@ -43,8 +45,9 @@ export default () => {
     });
 
     const dispatch = useDispatch();
-
     const { products } = useSelector(state => state.products);
+    const [searchValue, setSearchValue] = useState();
+    const [allProducts, setAllProducts] = useState(products);
 
     useEffect(() => {
         dispatch(getAllProducts());
@@ -60,6 +63,11 @@ export default () => {
         dispatch(changeTitleAlert(`O produto ${product.name} foi inativado com sucesso!`));
     }
 
+    // const searchProducts = async () => {
+    const searchProducts = ({ target }) => {
+        setSearchValue(target.value.toLowerCase());
+        setAllProducts([...products.filter(item => item.name.toLowerCase().indexOf(searchValue) > -1)]);
+    }
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -75,12 +83,25 @@ export default () => {
     return (
         <BaseCard title="Produtos">
 
+            <Box sx={{
+                '& > :not(style)': { m: 2 },
+                'display': 'flex',
+                'justify-content': 'stretch'
+            }}>
+                <TextField
+                    sx={{ width: "85%" }}
+                    label="Pesquisar produto"
+                    name="search"
+                    value={searchValue}
+                    onChange={searchProducts}
+                />
 
-            <ProductModal>
-                <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
-                    <FeatherIcon icon="user-plus" />
-                </Fab>
-            </ProductModal>
+                <ProductModal>
+                    <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
+                        <FeatherIcon icon="plus" />
+                    </Fab>
+                </ProductModal>
+            </Box>
 
             <TableContainer>
                 <Table
@@ -126,7 +147,7 @@ export default () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {products
+                        {allProducts
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((product, index) => (
                                 <StyledTableRow key={product.id} hover>
@@ -244,7 +265,7 @@ export default () => {
                 </Table>
                 <TablePagination
                     component="div"
-                    count={products.length}
+                    count={allProducts.length}
                     page={page}
                     onPageChange={handleChangePage}
                     rowsPerPage={rowsPerPage}

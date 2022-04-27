@@ -163,6 +163,9 @@ export default function ProductModal(props) {
                                         value={name ? name : ''}
                                         onChange={changeItem}
                                         required
+                                        inputProps={{ 
+                                            style: { textTransform: "uppercase" 
+                                        } }}
                                     />
                                     <TextField
                                         id="bar_code"
