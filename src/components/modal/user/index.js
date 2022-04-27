@@ -71,7 +71,6 @@ export default function UserModal(props) {
     const [texto, setTexto] = useState();
 
     const changeItem = ({ target }) => {
-        console.log(`O Valor ${target.value} mudou`)
         setForm({ ...form, [target.name]: target.value });
     };
 
