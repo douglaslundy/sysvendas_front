@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
     Typography,
     Box,
@@ -11,18 +11,20 @@ import {
     Button,
     styled,
     TableContainer,
-    TablePagination
+    TablePagination, 
+    TextField
 } from "@mui/material";
 
 import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
-import UnitModal from "../modal/unit";
-import { useDispatch, useSelector } from "react-redux";
+import UserModal from "../modal/user";
 
-import { getAllUnits, inactiveUnitFetch } from "../../store/fetchActions/unit";
-import { showUnit } from "../../store/ducks/units";
+import { useSelector, useDispatch } from 'react-redux';
+import { getAllUsers, inactiveUserFetch } from "../../store/fetchActions/user";
+import { showUser } from "../../store/ducks/users";
 import { changeTitleAlert, turnModal } from "../../store/ducks/Layout";
 import ConfirmDialog from "../confirmDialog";
+
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -35,27 +37,36 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default () => {
-
     const [confirmDialog, setConfirmDialog] = useState({
         isOpen: false,
         title: 'Deseja realmente excluir',
         subTitle: 'Esta ação não poderá ser desfeita',
     });
+
     const dispatch = useDispatch();
-    const { units } = useSelector(state => state.units);
+    const { users } = useSelector(state => state.users);
+    const [searchValue, setSearchValue] = useState();
+    const [allUsers, setAllProducts] = useState(users);
 
     useEffect(() => {
-        dispatch(getAllUnits());
+        dispatch(getAllUsers());
     }, []);
 
-    const HandleEditUnit = async unit => {
-        dispatch(showUnit(unit));
+    const HandleEditUser = async user => {
+        dispatch(showUser(user));
         dispatch(turnModal());
     }
 
-    const HandleInactiveUnit = async unit => {
-        setConfirmDialog({...confirmDialog, isOpen: true, title: `Deseja Realmente excluir a unidade ${unit.name}`, confirm: inactiveUnitFetch(unit)})
-        dispatch(changeTitleAlert(`A Categoria ${unit.name} foi excluido com sucesso!`))
+    const HandleInactiveUser = async user => {
+        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Deseja Realmente inativar o usuario ${user.name}`, confirm: inactiveUserFetch(user) })
+        dispatch(changeTitleAlert(`O usuário ${user.name} foi inativado com sucesso!`))
+    }
+
+
+    // const searchProducts = async () => {
+    const searchUsers = ({ target }) => {
+        setSearchValue(target.value.toLowerCase());
+        setAllProducts([...users.filter(use => use.name.toLowerCase().indexOf( searchValue) > -1)]);
     }
 
     const [page, setPage] = useState(0);
@@ -70,93 +81,147 @@ export default () => {
         setPage(0);
     };
 
-
     return (
-        <BaseCard title="Unidades">
+        <BaseCard title="Usuários">
 
-            <UnitModal>
-                <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
-                    <FeatherIcon icon="plus" />
-                </Fab>
-            </UnitModal>
+            <Box sx={{
+                '& > :not(style)': { m: 2 },
+                'display': 'flex',
+                'justify-content': 'stretch'
+            }}>
+                <TextField
+                    sx={{ width: "85%" }}
+                    label="Pesquisar usuarios"
+                    name="search"
+                    value={searchValue}
+                    onChange={searchUsers}
+                    
+                />
+
+                <UserModal>
+                    <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
+                        <FeatherIcon icon="user-plus" />
+                    </Fab>
+                </UserModal>
+            </Box>
 
             <TableContainer>
-            <Table
-                aria-label="simple table"
-                sx={{
-                    mt: 3,
-                    whiteSpace: "nowrap",
-                }}
-            >
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            <Typography color="textSecondary" variant="h6">
-                                Nome / Apelido
-                            </Typography>
-                        </TableCell>
 
-                        <TableCell align="center">
-                            <Typography color="textSecondary" variant="h6">
-                                Ações
-                            </Typography>
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
+                <Table
+                    aria-label="simple table"
+                    sx={{
+                        mt: 3,
+                        whiteSpace: "nowrap",
+                    }}
+                >
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>
+                                <Typography color="textSecondary" variant="h6">
+                                    Nome / Perfil
+                                </Typography>
+                            </TableCell>
+                            <TableCell>
+                                <Typography color="textSecondary" variant="h6">
+                                    CPF / E-mail
+                                </Typography>
+                            </TableCell>
 
-                <TableBody>
-                    {units
+                            <TableCell align="center">
+                                <Typography color="textSecondary" variant="h6">
+                                    Ações
+                                </Typography>
+                            </TableCell>
+
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {allUsers
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((unit, index) => (
-                        <StyledTableRow key={unit.id} hover>
-                            {unit &&
-                                <>
-                                    <TableCell>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Box>
-                                                <Typography
-                                                    variant="h6"
-                                                    sx={{
-                                                        fontWeight: "600",
-                                                    }}
-                                                >
-                                                    {unit.name}
-                                                </Typography>
+                            .map((user, index) => (
+                                <StyledTableRow key={user.id} hover>
+                                    <>
+                                        <TableCell>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                <Box>
+                                                    <Typography
+                                                        variant="h6"
+                                                        sx={{
+                                                            fontWeight: "600",
+                                                        }}
+                                                    >
+                                                        {user.name ? user.name.toUpperCase(): ''}
+                                                    </Typography>
+                                                    <Typography
+                                                        color="textSecondary"
+                                                        sx={{
+                                                            fontSize: "13px",
+                                                        }}
+                                                    >
+                                                        {user.profile ? user.profile.toUpperCase() : ''}
+                                                    </Typography>
+                                                </Box>
                                             </Box>
-                                        </Box>
-                                    </TableCell>
+                                        </TableCell>
 
-                                    <TableCell align="center">
-                                        <Box sx={{ "& button": { mx: 1 } }}>
+                                        <TableCell>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "left"
+                                                }}
+                                            >
+                                                <Box>
+                                                    <Typography
+                                                        variant="h6"
+                                                        sx={{
+                                                            fontWeight: "600",
+                                                        }}
+                                                    >
+                                                        {user.cpf}
+                                                    </Typography>
+                                                    <Typography
+                                                        color="textSecondary"
+                                                        sx={{
+                                                            fontSize: "12px",
+                                                        }}
+                                                    >
+                                                        {user.email}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        </TableCell>
 
-                                            <Button onClick={() => { HandleEditUnit(unit) }} color="primary" size="medium" variant="contained">
-                                                <FeatherIcon icon="edit" width="20" height="20" />
-                                                Editar
-                                            </Button>
+                                        <TableCell align="center">
+                                            <Box sx={{ "& button": { mx: 1 } }}>
 
-                                            <Button onClick={() => { HandleInactiveUnit(unit) }} color="error" size="medium" variant="contained">
-                                                <FeatherIcon icon="trash" width="20" height="20" />
-                                                Inativar
-                                            </Button>
+                                                <Button onClick={() => { HandleEditUser(user) }} color="primary" size="medium" variant="contained">
+                                                    <FeatherIcon icon="edit" width="20" height="20" />
+                                                    Editar
+                                                </Button>
+
+                                                <Button onClick={() => { HandleInactiveUser(user) }} color="error" size="medium" variant="contained">
+                                                    <FeatherIcon icon="trash" width="20" height="20" />
+                                                    Inativar
+                                                </Button>
 
 
-                                        </Box>
-                                    </TableCell>
-                                </>
-                            }
+                                            </Box>
+                                        </TableCell>
+                                    </>
 
-                        </StyledTableRow >
-                    ))}
-                </TableBody>
-            </Table>
-            <TablePagination
+                                </StyledTableRow>
+                            ))}
+                    </TableBody>
+                </Table>
+                <TablePagination
                     component="div"
-                    count={units.length}
+                    count={allUsers.length}
                     page={page}
                     onPageChange={handleChangePage}
                     rowsPerPage={rowsPerPage}
