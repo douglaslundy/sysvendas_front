@@ -54,7 +54,7 @@ export default () => {
     }, []);
 
     useEffect(() => {
-        setAllProducts(products);
+        setAllProducts(searchValue ?  [...products.filter(item => item.name.toLowerCase().indexOf(searchValue) > -1)] : products);
     }, [products]);
 
     const HandleEditProduct = async product => {
@@ -169,7 +169,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {product.name}
+                                                        {product.name.toUpperCase()} 
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"

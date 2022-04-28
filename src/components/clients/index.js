@@ -53,7 +53,7 @@ export default () => {
     }, []);
 
     useEffect(() => {
-        setAllClients(clients);
+        setAllClients(searchValue ? [...clients.filter(cli => cli.full_name.toLowerCase().indexOf( searchValue) > -1)] :clients);
     }, [clients]);
 
     const HandleEditClient = async client => {
