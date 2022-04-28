@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Fab, Box, Stack, TextField } from "@mui/material";
-
 import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
 import InputSelect from "../../components/inputs/inputSelect";
@@ -8,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { getId } from "../helpers/formatt/getIdFromSelect";
 import { summedPercentage } from "../helpers/functions/percent";
 import { setCurrency } from "../helpers/formatt/currency";
-
 
 export default () => {
 
@@ -38,8 +36,6 @@ export default () => {
         }
     }
 
-
-
     const Exibe = ({ prod }) => {
         const { name, bar_code, unity, category, cost_value, sale_value, percent, stock } = prod;
         return (
@@ -47,14 +43,11 @@ export default () => {
             prod.name !== "" &&
 
             <Stack spacing={3}>
-                {/* <TextField
-                    id="name"
-                    label="Nome do Produto"
-                    variant="outlined"
-                    name="name"
-                    value={name ? name : ''}
-                /> */}
+
                 <h1>{name}</h1>
+                <h3>{` VALOR: R$  ${sale_value}`}</h3>
+                <br />
+
                 <TextField
                     id="bar_code"
                     label="Código de Barras"
@@ -79,25 +72,25 @@ export default () => {
                 >
 
                     <TextField
-                        value={cost_value ?  `R$  ${cost_value}` : ''}
+                        value={cost_value ? `R$  ${cost_value}` : ''}
                         label={'Valor de Custo'}
                         name={'cost_value'}
-                        sx={{width: "36%"}}
-                        
+                        sx={{ width: "36%" }}
+
                     />
 
                     <TextField
                         value={summedPercentage(setCurrency(cost_value), setCurrency(sale_value)) + " %"}
                         label={'Percentual'}
                         name={'percent'}
-                        sx={{width: "24%"}}
+                        sx={{ width: "24%" }}
                     />
 
                     <TextField
                         value={sale_value ? `R$  ${sale_value}` : ''}
                         label={'Valor de Venda'}
                         name={'sale_value'}
-                        sx={{width: "36%"}}
+                        sx={{ width: "36%" }}
                     />
                 </Box>
 

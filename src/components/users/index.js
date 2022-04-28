@@ -11,7 +11,7 @@ import {
     Button,
     styled,
     TableContainer,
-    TablePagination, 
+    TablePagination,
     TextField
 } from "@mui/material";
 
@@ -46,11 +46,15 @@ export default () => {
     const dispatch = useDispatch();
     const { users } = useSelector(state => state.users);
     const [searchValue, setSearchValue] = useState();
-    const [allUsers, setAllProducts] = useState(users);
+    const [allUsers, setAllUsers] = useState(users);
 
     useEffect(() => {
         dispatch(getAllUsers());
     }, []);
+
+    useEffect(() => {
+        setAllUsers(users);
+    }, [users]);
 
     const HandleEditUser = async user => {
         dispatch(showUser(user));
@@ -63,10 +67,9 @@ export default () => {
     }
 
 
-    // const searchProducts = async () => {
     const searchUsers = ({ target }) => {
         setSearchValue(target.value.toLowerCase());
-        setAllProducts([...users.filter(use => use.name.toLowerCase().indexOf( searchValue) > -1)]);
+        setAllUsers([...users.filter(use => use.name.toLowerCase().indexOf(searchValue) > -1)]);
     }
 
     const [page, setPage] = useState(0);
@@ -95,7 +98,8 @@ export default () => {
                     name="search"
                     value={searchValue}
                     onChange={searchUsers}
-                    
+                    autoComplete={false}
+
                 />
 
                 <UserModal>
@@ -155,7 +159,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {user.name ? user.name.toUpperCase(): ''}
+                                                        {user.name ? user.name.toUpperCase() : ''}
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"

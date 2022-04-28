@@ -1,11 +1,11 @@
 import { api } from "../../../services/api";
-
+import { cleanCpfCnpj } from "../../../components/helpers/formatt/cpf_cnpj";
 import { inactiveUser, addUser, editUser, addUsers } from "../../ducks/users";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 import { parseCookies } from "nookies";
 
 function getToken() {
-    const { 'sysvendas.token': token } = parseCookies();    
+    const { 'sysvendas.token': token } = parseCookies();
     token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
 }
 
@@ -28,10 +28,13 @@ export const getAllUsers = () => {
 export const addUserFetch = (user, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading())
+        user = {
+            ...user,
+            cpf: cleanCpfCnpj(user.cpf),
+        };
         api.post('/users', user)
             .then((res) =>
             (
-
                 dispatch(addUser(res.data.user)),
                 dispatch(addMessage(`Usuário ${res.data.user.name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert()),
@@ -50,6 +53,11 @@ export const addUserFetch = (user, cleanForm) => {
 export const editUserFetch = (user, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading()),
+        user = {
+            ...user,
+            cpf: cleanCpfCnpj(user.cpf),
+        };
+
             api.put(`/users/${user.id}`, user)
                 .then((res) =>
                 (
@@ -61,8 +69,8 @@ export const editUserFetch = (user, cleanForm) => {
                 ))
                 .catch((error) => {
                     dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
-                dispatch(turnLoading());
-                return error.response ? error.response.data : 'erro desconhecido';
+                    dispatch(turnLoading());
+                    return error.response ? error.response.data : 'erro desconhecido';
                 })
     };
 }

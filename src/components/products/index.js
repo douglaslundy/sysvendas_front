@@ -53,6 +53,10 @@ export default () => {
         dispatch(getAllProducts());
     }, []);
 
+    useEffect(() => {
+        setAllProducts(products);
+    }, [products]);
+
     const HandleEditProduct = async product => {
         dispatch(showProduct(product));
         dispatch(turnModal());
@@ -63,7 +67,6 @@ export default () => {
         dispatch(changeTitleAlert(`O produto ${product.name} foi inativado com sucesso!`));
     }
 
-    // const searchProducts = async () => {
     const searchProducts = ({ target }) => {
         setSearchValue(target.value.toLowerCase());
         setAllProducts([...products.filter(item => item.name.toLowerCase().indexOf(searchValue) > -1)]);

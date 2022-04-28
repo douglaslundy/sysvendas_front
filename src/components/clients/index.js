@@ -46,11 +46,15 @@ export default () => {
     const dispatch = useDispatch();
     const { clients } = useSelector(state => state.clients);
     const [searchValue, setSearchValue] = useState();
-    const [allClients, setAllProducts] = useState(clients);
+    const [allClients, setAllClients] = useState(clients);
 
     useEffect(() => {
         dispatch(getAllClients());
     }, []);
+
+    useEffect(() => {
+        setAllClients(clients);
+    }, [clients]);
 
     const HandleEditClient = async client => {
         dispatch(showClient(client));
@@ -63,10 +67,9 @@ export default () => {
     }
 
 
-    // const searchProducts = async () => {
     const searchClients = ({ target }) => {
         setSearchValue(target.value.toLowerCase());
-        setAllProducts([...clients.filter(cli => cli.full_name.toLowerCase().indexOf( searchValue) > -1)]);
+        setAllClients([...clients.filter(cli => cli.full_name.toLowerCase().indexOf( searchValue) > -1)]);
     }
 
     const [page, setPage] = useState(0);
