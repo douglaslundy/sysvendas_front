@@ -14,11 +14,11 @@ import {
     TablePagination,
     TextField
 } from "@mui/material";
-
+import { getAllCategoriesToSelect } from "../../store/fetchActions/categorie";
 import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
 import ProductModal from "../modal/product";
-
+import Select from '../inputs/selects';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProducts, inactiveProductFetch } from "../../store/fetchActions/product";
 import { showProduct } from "../../store/ducks/products";
@@ -48,14 +48,20 @@ export default () => {
     const { products } = useSelector(state => state.products);
     const [searchValue, setSearchValue] = useState();
     const [allProducts, setAllProducts] = useState(products);
+    const [idCategory, setIdCategory] = useState(0);
+
+
+    const { categories } = useSelector(state => state.categories);
 
     useEffect(() => {
         dispatch(getAllProducts());
     }, []);
 
     useEffect(() => {
-        setAllProducts(searchValue ?  [...products.filter(item => item.name.toLowerCase().indexOf(searchValue) > -1)] : products);
-    }, [products]);
+
+        searchProdutPerParameter();
+        
+    }, [products, idCategory]);
 
     const HandleEditProduct = async product => {
         dispatch(showProduct(product));
@@ -69,7 +75,7 @@ export default () => {
 
     const searchProducts = ({ target }) => {
         setSearchValue(target.value.toLowerCase());
-        setAllProducts([...products.filter(item => item.name.toLowerCase().indexOf(searchValue) > -1)]);
+        searchProdutPerParameter();
     }
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -83,6 +89,15 @@ export default () => {
         setPage(0);
     };
 
+    const changeItem = ({target}) =>{
+        setIdCategory(target.value);
+    }
+
+    const searchProdutPerParameter = () => {        
+        const data = idCategory !== 0 ? [...products.filter(item => item.id_category === idCategory)] : [...products];
+        setAllProducts(searchValue ? [...data.filter(item => item.name.toLowerCase().indexOf(searchValue) > -1)] : data);
+    }
+
     return (
         <BaseCard title="Produtos">
 
@@ -92,19 +107,30 @@ export default () => {
                 'justify-content': 'stretch'
             }}>
                 <TextField
-                    sx={{ width: "85%" }}
+                    sx={{ width: "55%" }}
                     label="Pesquisar produto"
                     name="search"
                     value={searchValue}
                     onChange={searchProducts}
                 />
-
+                <Select value={idCategory}
+                    label={'Filtrar por categoria'}
+                    name={'Filtro'}
+                    store={categories}
+                    getAllSelects={getAllCategoriesToSelect}
+                    changeItem={changeItem}
+                    wd={"30%"}
+                    valueDefault={"TODAS"}
+                    valueNull={"SEM CATEGORIA"}
+                />
                 <ProductModal>
                     <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
                         <FeatherIcon icon="plus" />
                     </Fab>
                 </ProductModal>
+
             </Box>
+
 
             <TableContainer>
                 <Table
@@ -169,7 +195,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {product.name.toUpperCase()} 
+                                                        {product.name.toUpperCase()}
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"
@@ -177,7 +203,7 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {product.category.name}
+                                                        {product.category ? product.category.name : ''}
                                                     </Typography>
                                                 </Box>
                                             </Box>
@@ -236,7 +262,7 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {product.unity.name}
+                                                        {product.unity ? product.unity.name : ''}
                                                     </Typography>
                                                 </Box>
                                             </Box>

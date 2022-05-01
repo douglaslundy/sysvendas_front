@@ -127,7 +127,6 @@ export default function ProductModal(props) {
     useEffect(() => {
         changePercentPerValue()
     }, [cost_value, sale_value]);
-
     return (
         <div>
             {props.children}
@@ -139,9 +138,7 @@ export default function ProductModal(props) {
                 aria-describedby="keep-mounted-modal-description"
             >
                 <Box sx={style}>
-
                     <AlertModal />
-
                     <Grid container spacing={0}>
                         <Grid item xs={12} lg={12}>
                             <BaseCard title={product && product.id ? "Editar Produto" : "Cadastrar Produto"}>
@@ -150,9 +147,7 @@ export default function ProductModal(props) {
                                         {texto}
                                     </Alert>
                                 }
-
                                 <br />
-
                                 {/* <FormGroup > */}
                                 <Stack spacing={3}>
                                     <TextField
@@ -163,9 +158,11 @@ export default function ProductModal(props) {
                                         value={name ? name : ''}
                                         onChange={changeItem}
                                         required
-                                        inputProps={{ 
-                                            style: { textTransform: "uppercase" 
-                                        } }}
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            }
+                                        }}
                                     />
                                     <TextField
                                         id="bar_code"
@@ -176,8 +173,6 @@ export default function ProductModal(props) {
                                         onChange={changeItem}
                                         required
                                     />
-
-
                                     <Select value={id_category}
                                         label={'Categoria'}
                                         name={'id_category'}
@@ -185,21 +180,18 @@ export default function ProductModal(props) {
                                         getAllSelects={getAllCategoriesToSelect}
                                         changeItem={changeItem}
                                     />
-
                                     <Box sx={{
                                         '& > :not(style)': { mb: 2 },
                                         'display': 'flex',
                                         'justify-content': 'space-between'
                                     }}
                                     >
-
                                         <Currency value={cost_value}
                                             label={'Valor de Custo'}
                                             name={'cost_value'}
                                             changeItem={changeItem}
                                             wd={"36%"}
                                         />
-
                                         <Currency value={sale_value}
                                             label={'Valor de Venda'}
                                             name={'sale_value'}
@@ -213,7 +205,6 @@ export default function ProductModal(props) {
                                             wd={"24%"}
                                         />
                                     </Box>
-
                                     <Select value={id_unity}
                                         label={'Unidade'}
                                         name={'id_unity'}
@@ -221,7 +212,6 @@ export default function ProductModal(props) {
                                         getAllSelects={getAllUnitsToSelect}
                                         changeItem={changeItem}
                                     />
-
                                     <TextField
                                         id="stock"
                                         label="Estoque"

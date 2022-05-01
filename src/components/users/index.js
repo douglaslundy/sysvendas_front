@@ -98,7 +98,6 @@ export default () => {
                     name="search"
                     value={searchValue}
                     onChange={searchUsers}
-                    autoComplete={false}
 
                 />
 

@@ -150,9 +150,10 @@ export default function UserModal(props) {
                                             name="profile"
                                             label="Perfil do Usuário"
                                             onChange={changeItem}
+                                            variant="outlined"
                                         >
                                             {profiles.map((d) => (
-                                                <MenuItem value={d.id}>{d.name}</MenuItem>
+                                                <MenuItem key={d.id} value={d.id}>{d.name}</MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
@@ -198,7 +199,6 @@ export default function UserModal(props) {
                                         value={password}
                                         onChange={changeItem}
                                         id="password"
-                                    // autoComplete="current-password"
                                     />
 
                                 </Stack>

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 export default function BasicSelect(props) {
   
-  const { label, store,  name, value, changeItem, getAllSelects } = props;
+  const { label, store,  name, value, changeItem, getAllSelects, valueDefault, wd } = props;
   const dispatch = useDispatch();
 
    useEffect(() => {
@@ -18,7 +18,7 @@ export default function BasicSelect(props) {
   }, []);
 
   return (
-    <Box sx={{ minWidth: 120 }}>
+    <Box sx={{ minWidth: 120, width:wd }}>
       <FormControl fullWidth required>
         <InputLabel >{label}</InputLabel>
         <Select
@@ -28,8 +28,10 @@ export default function BasicSelect(props) {
           label={label}
           onChange={changeItem}
         >
+          {valueDefault && <MenuItem key={0} value={0}>{valueDefault}</MenuItem> }
+
           {store.map((d) => (
-             <MenuItem value={d.id}>{d.name}</MenuItem>
+             <MenuItem key={d.id} value={d.id}>{d.name}</MenuItem>
           ))}
         </Select>
       </FormControl>

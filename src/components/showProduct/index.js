@@ -26,7 +26,6 @@ export default () => {
 
     const changeItem = ({ target }) => {
         setId(getId(target.value));
-        console.log('id e ' + id)
     };
 
     const show = () => {

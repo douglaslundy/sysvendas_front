@@ -11,28 +11,33 @@ const Menuitems = [
   },
   {
     title: "Clientes", 
-    icon: "users",
+    icon: "list",
     href: "/clients",
   },
   {
     title: "Produtos", 
-    icon: "box",
+    icon: "list",
     href: "/products",
   },
   {
     title: "Pesquisar Produtos", 
-    icon: "box",
+    icon: "search",
     href: "/searchProd",
   },
   {
     title: "Categorias", 
-    icon: "box",
+    icon: "list",
     href: "/categories",
   },
   {
     title: "Unidades", 
-    icon: "box",
+    icon: "list",
     href: "/units",
+  },
+  {
+    title: "Preço / Categoria", 
+    icon: "list",
+    href: "/valueCategory",
   },
 
   // {

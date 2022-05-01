@@ -27,7 +27,6 @@ export const getAllProducts = () => {
         }]
     }
 
-
     return (dispatch) => {
         dispatch(turnLoading())
         api 
@@ -74,6 +73,31 @@ export const addProductFetch = (product, cleanForm) => {
     };
 };
 
+export const valueUpdatePerCategoy = (data, cleanForm) => {
+    return (dispatch) => {
+        dispatch(turnLoading());
+
+        data = {
+            ...data,
+            percent: data.percent.replace(" %", ""),
+        };
+        
+        api.post('/products/updateValueCategories', data)
+            .then((res) =>
+            (  
+                dispatch(addMessage(`O Preço dos produtos da Categoria selecionada foram atualizados em ${data.percent} com sucesso!`)),
+                dispatch(turnAlert()),
+                dispatch(turnLoading()),
+                cleanForm()
+            ))
+            .catch((error) => {
+                dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                dispatch(turnLoading());
+                return error.response ? error.response.data : 'erro desconhecido';
+            })
+    };
+};
+
 
 export const editProductFetch = (product, cleanForm) => {
     return (dispatch) => {
@@ -85,7 +109,6 @@ export const editProductFetch = (product, cleanForm) => {
             sale_value: setCurrency(product.sale_value)
             // id_category: getId(product.id_category)
         };
-
 
         api.put(`/products/${product.id}`, product)
             .then((res) =>
