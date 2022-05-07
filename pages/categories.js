@@ -11,3 +11,5 @@ const Tables = () => {
     </Grid>
   );
 };
+
+export default Tables;
