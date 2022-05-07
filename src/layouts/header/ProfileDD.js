@@ -16,18 +16,11 @@ import {
 
 import { useSelector, useDispatch } from "react-redux";
 import Router from "next/router";
-import { parseCookies, setCookie, destroyCookie } from 'nookies'
 import { AuthContext } from "../../contexts/AuthContext";
 import { logoutFetch } from "../../store/fetchActions/auth";
 
 function logout(dispatch) {
   dispatch(logoutFetch());
-  destroyCookie(null, 'sysvendas.id');
-  destroyCookie(null, 'sysvendas.token');
-  destroyCookie(null, 'sysvendas.username');
-  destroyCookie(null, 'sysvendas.profile');
-  // Router.push('/login');
-
 }
 
 const ProfileDD = () => {

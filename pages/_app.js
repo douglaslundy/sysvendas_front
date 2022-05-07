@@ -15,8 +15,10 @@ import store from "../src/store";
 import Messages from "../src/components/messages";
 import AlertDialog from "../src/components/alertDialog";
 import Loading from "../src/components/loading";
-import { parseCookies } from 'nookies';
+import { parseCookies, destroyCookie } from 'nookies';
 import { AuthContext, AuthProvider } from "../src/contexts/AuthContext";
+import { api } from "../src/services/api";
+import Router from "next/router";
 
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
@@ -25,8 +27,36 @@ export default function MyApp(props) {
   const { tokens } = useContext(AuthContext);
 
   useEffect(() => {
+    getToken();
     setToken(value);
   },[value, tokens])
+
+  function getToken() {
+    const { 'sysvendas.token': token } = parseCookies();
+    token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
+
+    api
+        .post('/validate', token)
+        .then((res) => {
+
+
+            console.log('Token valido');
+        })
+        .catch((error) => {
+            const erro = 'Request failed with status code 401';
+
+            if (erro == error.message) {
+                destroyCookie(null, 'sysvendas.id'),
+                    destroyCookie(null, 'sysvendas.token'),
+                    destroyCookie(null, 'sysvendas.username'),
+                    destroyCookie(null, 'sysvendas.profile'),
+
+                    Router.push('/login')
+            }
+
+        })
+
+}
 
   return (
     <CacheProvider value={emotionCache}>
@@ -65,3 +95,21 @@ MyApp.propTypes = {
   emotionCache: PropTypes.object,
   pageProps: PropTypes.object.isRequired,
 };
+
+
+export async function getServerSideProps(context) {
+
+  const { 'sysvendas.token': token } = parseCookies(context);
+  
+  if(!token){
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false, 
+      }
+    }
+  }
+  return {
+    props: {}, // will be passed to the page component as props
+  }
+}

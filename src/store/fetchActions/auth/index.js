@@ -1,15 +1,12 @@
 import { api } from "../../../services/api";
-import { setCookie } from 'nookies';
-import { inactiveUser, addUser, editUser, addUsers } from "../../ducks/users";
 import { turnLoading, addAlertMessage } from "../../ducks/Layout";
-import { isAuth } from "../../ducks/auth";
 import Router from "next/router";
-import { parseCookies } from "nookies";
+import { parseCookies, setCookie, destroyCookie } from 'nookies'
 
-function getToken() {
-    const { 'sysvendas.token': token } = parseCookies();
-    api.defaults.headers['Authorization'] = `Bearer ${token}`;
-}
+// function getToken() {
+//     const { 'sysvendas.token': token } = parseCookies();
+//     api.defaults.headers['Authorization'] = `Bearer ${token}`;
+// }
 
 export const loginFetch = (dataUser) => {
     return (dispatch) => {
@@ -48,7 +45,6 @@ export const loginFetch = (dataUser) => {
 };
 
 export const logoutFetch = () => {
-    getToken();
     return (dispatch) => {
         dispatch(turnLoading())
         api
@@ -56,6 +52,10 @@ export const logoutFetch = () => {
             .then((res) =>
             (
                 dispatch(turnLoading()),
+                destroyCookie(null, 'sysvendas.id'),
+                destroyCookie(null, 'sysvendas.token'),
+                destroyCookie(null, 'sysvendas.username'),
+                destroyCookie(null, 'sysvendas.profile'),
                 Router.push('/login'),
             ))
             .catch((error) => {

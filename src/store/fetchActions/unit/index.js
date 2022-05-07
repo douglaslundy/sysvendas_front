@@ -1,16 +1,16 @@
 import { api } from "../../../services/api";
-
+import  Router from "next/router";
 import { inactiveUnit, addUnit, editUnit, addUnits } from "../../ducks/units";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 import { parseCookies } from "nookies";
 
-function getToken() {
-    const { 'sysvendas.token': token } = parseCookies();    
-    token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
-}
+// function getToken() {
+//     const { 'sysvendas.token': token } = parseCookies();    
+//     token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
+// }
 
 export const getAllUnits = () => {
-    getToken();
+    // getToken();
     return (dispatch) => {
         dispatch(turnLoading())
         api

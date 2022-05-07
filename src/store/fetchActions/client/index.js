@@ -5,14 +5,15 @@ import { api } from "../../../services/api";
 import { inactiveClient, addClient, editClient, addClients } from "../../ducks/clients";
 import { turnAlert, addMessage, addAlertMessage, turnLoading } from "../../ducks/Layout";
 import { parseCookies } from "nookies";
+import  Router from "next/router";
 
-function getToken() {
-    const { 'sysvendas.token': token } = parseCookies();    
-    token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
-}
+// function getToken() {
+//     const { 'sysvendas.token': token } = parseCookies();    
+//     token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
+// }
 
 export const getAllClients = () => {
-    getToken();
+//     getToken();
     const config = {
         transformResponse: [function (data) {
 

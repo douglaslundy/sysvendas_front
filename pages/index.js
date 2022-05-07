@@ -12,20 +12,3 @@ export default function Index() {
     </Grid>
   );
 }
-
-export async function getServerSideProps(context) {
-
-  const { 'sysvendas.token': token } = parseCookies(context);
-  
-  if(!token){
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false, 
-      }
-    }
-  }
-  return {
-    props: {}, // will be passed to the page component as props
-  }
-}

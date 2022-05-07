@@ -1,16 +1,16 @@
 import { api } from "../../../services/api";
-
+import  Router from "next/router";
 import { inactiveCategorie, addCategorie, editCategorie, addCategories } from "../../ducks/categories";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 import { parseCookies } from "nookies";
 
-function getToken() {
-    const { 'sysvendas.token': token } = parseCookies();    
-    token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
-}
+// function getToken() {
+//     const { 'sysvendas.token': token } = parseCookies();    
+//     token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
+// }
 
 export const getAllCategories = () => {
-    getToken();
+    // getToken();
     return (dispatch) => {
         dispatch(turnLoading());
 

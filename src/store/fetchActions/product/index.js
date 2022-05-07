@@ -4,15 +4,15 @@ import { getId } from '../../../components/helpers/formatt/getIdFromSelect';
 import { inactiveProduct, addProduct, editProduct, addProducts } from "../../ducks/products";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 import { parseCookies } from "nookies";
-import { Router } from "next/router";
+import  Router from "next/router";
 
-function getToken() {
-    const { 'sysvendas.token': token } = parseCookies();    
-    token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
-}
+// function getToken() {
+//     const { 'sysvendas.token': token } = parseCookies();    
+//     token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
+// }
 
 export const getAllProducts = () => {
-    getToken();
+    // getToken();
     const config = {
         transformResponse: [function (data) {
 
