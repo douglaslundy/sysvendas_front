@@ -3,10 +3,11 @@ import { Fab, Box, Stack, TextField } from "@mui/material";
 import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
 import InputSelect from "../../components/inputs/inputSelect";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getId } from "../helpers/formatt/getIdFromSelect";
 import { summedPercentage } from "../helpers/functions/percent";
 import { setCurrency } from "../helpers/formatt/currency";
+import { getAllProducts } from "../../store/fetchActions/product";
 
 export default () => {
 
@@ -22,7 +23,13 @@ export default () => {
 
     const [id, setId] = useState();
 
+    const dispatch = useDispatch();
     const { products } = useSelector(state => state.products);
+
+    useEffect(() => {
+        dispatch(getAllProducts());
+    }, []);
+
 
     const changeItem = ({ target }) => {
         setId(getId(target.value));
