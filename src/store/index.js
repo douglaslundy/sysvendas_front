@@ -7,6 +7,7 @@ import productReducer from './ducks/products';
 import unitReducer from './ducks/units';
 import userReducer from './ducks/users';
 import authReducer from './ducks/auth';
+import cartReducer from './ducks/cart';
 
 
 export default configureStore({
@@ -17,6 +18,7 @@ export default configureStore({
         products: productReducer,
         units: unitReducer,
         users: userReducer,
-        auth: authReducer 
+        auth: authReducer,
+        cart: cartReducer 
     },
 });

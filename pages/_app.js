@@ -38,9 +38,7 @@ export default function MyApp(props) {
     api
         .post('/validate', token)
         .then((res) => {
-
-
-            console.log('Token valido');
+          // desenvover aqui se o usuario existe
         })
         .catch((error) => {
             const erro = 'Request failed with status code 401';

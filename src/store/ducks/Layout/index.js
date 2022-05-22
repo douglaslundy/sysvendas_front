@@ -6,7 +6,7 @@ const INITIAL_STATE = {
     isOpenLoading: false,
     isOpenModal: false, 
     isOpenAlert: false,
-    titleAlert: "Cliente Cadastrado com sucesso!",
+    titleAlert: "Cadastro realizado com sucesso!",
     subTitleAlert: "Clique em ok para fechar!"
 };
 

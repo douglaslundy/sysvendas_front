@@ -34,11 +34,3 @@ export function convertToBrlCurrency(str) {
 
 
 
-// export function convertToBrlCurrency(str) {
-
-//     const number = str.replace(',','.');
-//     return parseFloat(number).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-// }
-
-

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Currency from '../../inputs/textFields/currency';
+import Stock from '../../inputs/textFields/stock-qtd';
 import Percent from '../../inputs/textFields/percent';
 import Select from '../../inputs/selects';
 import { summedPercentage, valueSaleSummedFromPercent } from '../../helpers/functions/percent';
@@ -127,6 +128,7 @@ export default function ProductModal(props) {
     useEffect(() => {
         changePercentPerValue()
     }, [cost_value, sale_value]);
+    
     return (
         <div>
             {props.children}
@@ -212,13 +214,12 @@ export default function ProductModal(props) {
                                         getAllSelects={getAllUnitsToSelect}
                                         changeItem={changeItem}
                                     />
-                                    <TextField
-                                        id="stock"
+                                    <Stock
                                         label="Estoque"
                                         variant="outlined"
                                         name="stock"
                                         value={stock ? stock : ''}
-                                        onChange={changeItem}
+                                        changeItem={changeItem}
                                         required
                                     />
 

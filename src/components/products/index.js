@@ -58,9 +58,7 @@ export default () => {
     }, []);
 
     useEffect(() => {
-
-        searchProdutPerParameter();
-        
+        searchProductPerParameter();        
     }, [products, idCategory]);
 
     const HandleEditProduct = async product => {
@@ -75,7 +73,7 @@ export default () => {
 
     const searchProducts = ({ target }) => {
         setSearchValue(target.value.toLowerCase());
-        searchProdutPerParameter();
+        searchProductPerParameter();
     }
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -93,7 +91,7 @@ export default () => {
         setIdCategory(target.value);
     }
 
-    const searchProdutPerParameter = () => {        
+    const searchProductPerParameter = () => {        
         const data = idCategory !== 0 ? [...products.filter(item => item.id_category === idCategory)] : [...products];
         setAllProducts(searchValue ? [...data.filter(item => item.name.toLowerCase().indexOf(searchValue) > -1)] : data);
     }

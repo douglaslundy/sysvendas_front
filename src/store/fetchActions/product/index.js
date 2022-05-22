@@ -3,24 +3,16 @@ import { getCurrency, setCurrency } from "../../../components/helpers/formatt/cu
 import { getId } from '../../../components/helpers/formatt/getIdFromSelect';
 import { inactiveProduct, addProduct, editProduct, addProducts } from "../../ducks/products";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
-import { parseCookies } from "nookies";
-import  Router from "next/router";
-
-// function getToken() {
-//     const { 'sysvendas.token': token } = parseCookies();    
-//     token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
-// }
 
 export const getAllProducts = () => {
-    // getToken();
     const config = {
         transformResponse: [function (data) {
-
             const payload = JSON.parse(data).map(d => {
                 return {
                     ...d,
                     "cost_value": getCurrency(d.cost_value),
                     "sale_value": getCurrency(d.sale_value),
+                    "stock": getCurrency(d.stock)
                 }
             })
             return payload;
@@ -31,7 +23,7 @@ export const getAllProducts = () => {
         dispatch(turnLoading())
         api 
         .get('/products', config)
-            .then((res) => {
+            .then((res) => {            
                 dispatch(addProducts(res.data));
                 dispatch(turnLoading());
             })
@@ -46,7 +38,8 @@ export const addProductFetch = (product, cleanForm) => {
         product = {
             ...product,
             cost_value: setCurrency(product.cost_value),
-            sale_value: setCurrency(product.sale_value)
+            sale_value: setCurrency(product.sale_value),
+            "stock": setCurrency(d.stock)
             // id_category: getId(product.id_category)
         };
 
@@ -56,7 +49,8 @@ export const addProductFetch = (product, cleanForm) => {
                 product = {
                     ...res.data.product,
                     cost_value: getCurrency(res.data.product.cost_value),
-                    sale_value: getCurrency(res.data.product.sale_value)
+                    sale_value: getCurrency(res.data.product.sale_value),
+                    stock: getCurrency(res.data.product.stock)
                 },
 
                 dispatch(addProduct(product)),
@@ -106,7 +100,8 @@ export const editProductFetch = (product, cleanForm) => {
         product = {
             ...product,
             cost_value: setCurrency(product.cost_value),
-            sale_value: setCurrency(product.sale_value)
+            sale_value: setCurrency(product.sale_value),
+            stock: setCurrency(product.stock)
             // id_category: getId(product.id_category)
         };
 
@@ -116,7 +111,8 @@ export const editProductFetch = (product, cleanForm) => {
                 product = {
                     ...res.data.product,
                     cost_value: getCurrency(res.data.product.cost_value),
-                    sale_value: getCurrency(res.data.product.sale_value)
+                    sale_value: getCurrency(res.data.product.sale_value),
+                    stock: getCurrency(res.data.product.stock)
                 },
 
                 dispatch(editProduct(product)),

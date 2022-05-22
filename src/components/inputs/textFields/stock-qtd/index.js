@@ -5,13 +5,13 @@ import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 import { TextField } from "@mui/material";
 
 const defaultMaskOptions = {
-  prefix: 'R$ ',
+  prefix: '',
   suffix: '',
   includeThousandsSeparator: true,
   thousandsSeparatorSymbol: '.',
   allowDecimal: true,
   decimalSymbol: ',',
-  decimalLimit: 2, // how many digits allowed after the decimal
+  decimalLimit: 3, // how many digits allowed after the decimal
 //   integerLimit: 9, // limit length of integer numbers
   allowNegative: false,
   allowLeadingZeroes: false,
@@ -36,7 +36,7 @@ export default function index(props) {
     const { label, name, value, changeItem, wd, disabled } = props;
     return (
         <TextField
-            id="currency"
+            id="qtd"
             label={label}
             variant="outlined"
             name={name}

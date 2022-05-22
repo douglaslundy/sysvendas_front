@@ -4,8 +4,6 @@ import { cleanPhone } from "../../../components/helpers/formatt/phone";
 import { api } from "../../../services/api";
 import { inactiveClient, addClient, editClient, addClients } from "../../ducks/clients";
 import { turnAlert, addMessage, addAlertMessage, turnLoading } from "../../ducks/Layout";
-import { parseCookies } from "nookies";
-import  Router from "next/router";
 
 // function getToken() {
 //     const { 'sysvendas.token': token } = parseCookies();    

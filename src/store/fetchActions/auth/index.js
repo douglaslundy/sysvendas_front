@@ -14,7 +14,6 @@ export const loginFetch = (dataUser) => {
         api.post('/login', dataUser)
             .then((res) =>
             (
-                // localStorage.setItem('token', res.data.token),
 
                 setCookie(undefined, 'sysvendas.token', res.data.token, {
                     maxAge: 60 * 60 * 72, // 72 hour

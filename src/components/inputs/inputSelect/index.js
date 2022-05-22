@@ -22,7 +22,7 @@ export default function index(props) {
     }
 
     (async () => {
-      await sleep(1e3); // For demo purposes.
+      await sleep(1e3); 
 
       if (active) {
         setOptions([...products]);
@@ -41,12 +41,13 @@ export default function index(props) {
     }
   }, [open]);
   
-  const { label,  name, value, changeItem, products } = props;
+  const { label,  name, value, changeItem, products, wd } = props;
 
   return (
     <Autocomplete
       id="product"
-      sx={{ width: "85%" }}
+      // sx={{ width: "85%" }}
+      sx={wd ? { width: wd } : { width: "85%" }}
       open={open}
       onOpen={() => {
         setOpen(true);
@@ -55,7 +56,7 @@ export default function index(props) {
         setOpen(false);
       }}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      getOptionLabel={(option) => `${option.id} - ${option.name} - Código ${option.bar_code}`}
+      getOptionLabel={(option) => `${option.id} - ${option.name} - Preço ${option.sale_value}`}
       noOptionsText={"Categoria Indisponível"}
       options={options}
       loading={loading}
