@@ -10,9 +10,10 @@ export const getAllProducts = () => {
             const payload = JSON.parse(data).map(d => {
                 return {
                     ...d,
-                    "cost_value": getCurrency(d.cost_value),
-                    "sale_value": getCurrency(d.sale_value),
-                    "stock": getCurrency(d.stock)
+                    cost_value: getCurrency(d.cost_value),
+                    sale_value: getCurrency(d.sale_value),
+                    reason: getCurrency(d.reason),
+                    stock: getCurrency(d.stock)
                 }
             })
             return payload;
@@ -39,7 +40,8 @@ export const addProductFetch = (product, cleanForm) => {
             ...product,
             cost_value: setCurrency(product.cost_value),
             sale_value: setCurrency(product.sale_value),
-            "stock": setCurrency(d.stock)
+            reason: setCurrency(d.reason),
+            stock: setCurrency(d.stock)
             // id_category: getId(product.id_category)
         };
 
@@ -50,6 +52,7 @@ export const addProductFetch = (product, cleanForm) => {
                     ...res.data.product,
                     cost_value: getCurrency(res.data.product.cost_value),
                     sale_value: getCurrency(res.data.product.sale_value),
+                    reason: getCurrency(res.data.product.reason),
                     stock: getCurrency(res.data.product.stock)
                 },
 
@@ -101,6 +104,7 @@ export const editProductFetch = (product, cleanForm) => {
             ...product,
             cost_value: setCurrency(product.cost_value),
             sale_value: setCurrency(product.sale_value),
+            reason: setCurrency(product.reason),
             stock: setCurrency(product.stock)
             // id_category: getId(product.id_category)
         };
@@ -112,6 +116,7 @@ export const editProductFetch = (product, cleanForm) => {
                     ...res.data.product,
                     cost_value: getCurrency(res.data.product.cost_value),
                     sale_value: getCurrency(res.data.product.sale_value),
+                    reason: getCurrency(res.data.product.reason),
                     stock: getCurrency(res.data.product.stock)
                 },
 

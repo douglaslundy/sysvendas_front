@@ -10,7 +10,7 @@ export function setCurrency(str) {
     // conversão aqui e realizada em float e nao em int para que nao mperca os digitos depois da virgula
     multiplier = parseFloat(multiplier).toFixed(2);
 
-    //testa se tem o . separando as casas decimais, se tiver remove convertendo em inteiro, ou seja total de centas
+    //testa se tem o . separando as casas decimais, se tiver remove convertendo em inteiro, ou seja total de centavos
     // se de alguma forma nao veio o . multiplica por 100 para converter em centavos
 
     return multiplier.includes('.') ? parseInt(multiplier.replace('.', '')) : parseInt(multiplier) * 100;
@@ -22,8 +22,6 @@ export function getCurrency(str) {
     let divider = (str / 100).toString();
     return divider.replace(".", ",");
 }
-
-
 
 export function convertToBrlCurrency(str) {
 

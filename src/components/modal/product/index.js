@@ -21,6 +21,7 @@ import { showProduct } from '../../../store/ducks/products';
 import { editProductFetch, addProductFetch } from '../../../store/fetchActions/product';
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
 import { getCurrency, setCurrency } from '../../helpers/formatt/currency';
+import { convertStock } from '../../helpers/stock';
 import { getAllUnitsToSelect } from "../../../store/fetchActions/unit";
 import { getAllCategoriesToSelect } from "../../../store/fetchActions/categorie";
 
@@ -47,6 +48,7 @@ export default function ProductModal(props) {
         id_category: "",
         cost_value: "",
         sale_value: "",
+        reason: 1,
         stock: ""
     });
     const { product } = useSelector(state => state.products);
@@ -56,7 +58,7 @@ export default function ProductModal(props) {
     const { isOpenModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
-    const { name, bar_code, id_unity, id_category, cost_value, sale_value, stock } = form;
+    const { name, bar_code, id_unity, id_category, cost_value, sale_value, reason, stock } = form;
     const [texto, setTexto] = useState();
     const [percent, setPercent] = useState();
 
@@ -93,6 +95,7 @@ export default function ProductModal(props) {
             id_category: "",
             cost_value: "",
             sale_value: "",
+            reason: 1,
             stock: ""
         });
         setTexto('');
@@ -215,12 +218,27 @@ export default function ProductModal(props) {
                                         changeItem={changeItem}
                                     />
                                     <Stock
-                                        label="Estoque"
+                                        label="Razão"
+                                        variant="outlined"
+                                        name="reason"
+                                        value={reason ? reason : ''}
+                                        changeItem={changeItem}
+                                        required
+                                    />
+                                    <Stock
+                                        label="Estoque Real"
                                         variant="outlined"
                                         name="stock"
                                         value={stock ? stock : ''}
                                         changeItem={changeItem}
                                         required
+                                    />
+                                    <TextField
+                                        label="Estoque Praticado"
+                                        variant="outlined"
+                                        name="stock"
+                                        value={convertStock(stock, reason ? reason : 1)}
+                                        disabled={true}
                                     />
 
                                 </Stack>
