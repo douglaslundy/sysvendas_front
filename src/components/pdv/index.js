@@ -27,6 +27,7 @@ import { getAllProducts } from "../../store/fetchActions/product";
 import { convertToBrlCurrency } from "../helpers/formatt/currency";
 import AlertModal from "../messagesModal";
 import { addAlertMessage, changeTitleAlert } from "../../store/ducks/Layout";
+import { blue } from "@mui/material/colors";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -93,6 +94,22 @@ export default () => {
         setPage(0);
     };
 
+
+
+
+    // deletar depois 
+
+    const payMetods = [{
+        'id': '1',
+        'name': 'cartao'
+    }, {
+        'id': '2',
+        'name': 'cheque'
+    }, {
+        'id': '3',
+        'name': 'dinheiro'
+    }]
+
     return (
         <>
             <AlertModal />
@@ -127,195 +144,229 @@ export default () => {
 
             </BaseCard >
 
+            <Box sx={{
+                '& > :not(style)': { m: 2 },
+                'display': 'flex',
+                justifyContent: "space-evenly",
+                alignItems: "flex-start",
+            }}>
 
-            <BaseCard title="Ponto De Venda">
-                <Box sx={{
-                    '& > :not(style)': { m: 2 },
-                    'display': 'flex',
-                    'justify-content': 'stretch'
-                }}
-                >
+                <BaseCard title="Ponto De Venda">
+                    <Box
+                        sx={{
+                            '& > :not(style)': { m: 2 },
+                            'display': 'flex',
+                            'justify-content': 'stretch',
+                            // 'minWidth': 800
+                        }}
+                    >
 
-                    <TableContainer>
-                        <Table
-                            aria-label="simple table"
-                            sx={{
-                                mt: 0,
-                                whiteSpace: "nowrap",
-                            }}
-                        >
-                            <TableHead>
-                                <TableRow>
+                        <TableContainer>
+                            <Table
+                                aria-label="simple table"
+                                sx={{
+                                    mt: 0,
+                                    whiteSpace: "nowrap",
+                                }}
+                            >
+                                <TableHead>
+                                    <TableRow>
 
-                                    <TableCell>
-                                        <Typography variant="h4">
-                                            Produto
-                                        </Typography>
-                                    </TableCell>
+                                        <TableCell>
+                                            <Typography variant="h4">
+                                                Produto
+                                            </Typography>
+                                        </TableCell>
 
-                                    <TableCell>
-                                        <Typography variant="h4">
-                                            Preço
-                                        </Typography>
-                                    </TableCell>
+                                        <TableCell>
+                                            <Typography variant="h4">
+                                                Preço
+                                            </Typography>
+                                        </TableCell>
 
-                                    <TableCell>
-                                        <Typography variant="h4">
-                                            QTD
-                                        </Typography>
-                                    </TableCell>
+                                        <TableCell>
+                                            <Typography variant="h4">
+                                                QTD
+                                            </Typography>
+                                        </TableCell>
 
-                                    <TableCell align="left">
-                                        <Typography variant="h4">
-                                            Total
-                                        </Typography>
-                                    </TableCell>
+                                        <TableCell align="left">
+                                            <Typography variant="h4">
+                                                Total
+                                            </Typography>
+                                        </TableCell>
 
-                                    <TableCell align="center">
-                                        <Typography variant="h4">
-                                            Ações
-                                        </Typography>
-                                    </TableCell>
+                                        <TableCell align="center">
+                                            <Typography variant="h4">
+                                                Ações
+                                            </Typography>
+                                        </TableCell>
 
-                                </TableRow>
-                            </TableHead>
+                                    </TableRow>
+                                </TableHead>
 
-                            <TableBody>
-                                {productsCart
-                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((product, index) => (
-                                        <StyledTableRow key={product.id} hover>
-                                            <>
-                                                <TableCell>
-                                                    <Box
-                                                        sx={{
-                                                            display: "flex",
-                                                            alignItems: "center",
-                                                        }}
-                                                    >
-                                                        <Box>
-                                                            <Typography
-                                                                variant="h6"
-                                                                sx={{
-                                                                    fontWeight: "600",
-                                                                }}
-                                                            >
-                                                                {product.product.name.toUpperCase()}
-                                                            </Typography>
-                                                            <Typography
-                                                                color="textSecondary"
-                                                                sx={{
-                                                                    fontSize: "13px",
-                                                                }}
-                                                            >
-                                                                {product.category ? product.category.name : ''}
-                                                            </Typography>
+                                <TableBody>
+                                    {productsCart
+                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .map((product, index) => (
+                                            <StyledTableRow key={product.id} hover>
+                                                <>
+                                                    <TableCell>
+                                                        <Box
+                                                            sx={{
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                            }}
+                                                        >
+                                                            <Box>
+                                                                <Typography
+                                                                    variant="h6"
+                                                                    sx={{
+                                                                        fontWeight: "600",
+                                                                    }}
+                                                                >
+                                                                    {product.product.name.toUpperCase()}
+                                                                </Typography>
+                                                                <Typography
+                                                                    color="textSecondary"
+                                                                    sx={{
+                                                                        fontSize: "13px",
+                                                                    }}
+                                                                >
+                                                                    {product.category ? product.category.name : ''}
+                                                                </Typography>
+                                                            </Box>
                                                         </Box>
-                                                    </Box>
-                                                </TableCell>
+                                                    </TableCell>
 
-
-
-                                                <TableCell>
-                                                    <Box
-                                                        sx={{
-                                                            display: "flex",
-                                                            alignItems: "center",
-                                                        }}
-                                                    >
-                                                        <Box>
-                                                            <Typography
-                                                                variant="h6"
-                                                                sx={{
-                                                                    fontWeight: "600",
-                                                                }}
-                                                            >
-                                                                {convertToBrlCurrency(getCurrency(product.product.sale_value))}
-                                                            </Typography>
+                                                    <TableCell>
+                                                        <Box
+                                                            sx={{
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                            }}
+                                                        >
+                                                            <Box>
+                                                                <Typography
+                                                                    variant="h6"
+                                                                    sx={{
+                                                                        fontWeight: "600",
+                                                                    }}
+                                                                >
+                                                                    {convertToBrlCurrency(getCurrency(product.product.sale_value))}
+                                                                </Typography>
+                                                            </Box>
                                                         </Box>
-                                                    </Box>
-                                                </TableCell>
+                                                    </TableCell>
 
 
-                                                <TableCell>
-                                                    <Box
-                                                        sx={{
-                                                            display: "flex",
-                                                            alignItems: "center",
-                                                        }}
-                                                    >
-                                                        <Box>
-                                                            <Typography
-                                                                variant="h6"
-                                                                sx={{
-                                                                    fontWeight: "600",
-                                                                }}
-                                                            >
-                                                                {getCurrency(product.qtd)}
-                                                            </Typography>
-                                                            <Typography
-                                                                color="textSecondary"
-                                                                sx={{
-                                                                    fontSize: "13px",
-                                                                }}
-                                                            >
-                                                                {product.unity ? product.unity.name : ''}
-                                                            </Typography>
+                                                    <TableCell>
+                                                        <Box
+                                                            sx={{
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                            }}
+                                                        >
+                                                            <Box>
+                                                                <Typography
+                                                                    variant="h6"
+                                                                    sx={{
+                                                                        fontWeight: "600",
+                                                                    }}
+                                                                >
+                                                                    {getCurrency(product.qtd)}
+                                                                </Typography>
+                                                                <Typography
+                                                                    color="textSecondary"
+                                                                    sx={{
+                                                                        fontSize: "13px",
+                                                                    }}
+                                                                >
+                                                                    {product.unity ? product.unity.name : ''}
+                                                                </Typography>
+                                                            </Box>
                                                         </Box>
-                                                    </Box>
-                                                </TableCell>
-                                                <TableCell>
+                                                    </TableCell>
+                                                    <TableCell>
 
-                                                    <Box
-                                                        sx={{
-                                                            display: "flex",
-                                                            alignItems: "center",
-                                                        }}
-                                                    >
-                                                        <Box>
-                                                            <Typography
-                                                                variant="h6"
-                                                                sx={{
-                                                                    fontWeight: "600",
-                                                                }}
-                                                            >
-                                                                {convertToBrlCurrency(getCurrency( product.product.sale_value * product.qtd / 100 ))}
-                                                            </Typography>
+                                                        <Box
+                                                            sx={{
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                            }}
+                                                        >
+                                                            <Box>
+                                                                <Typography
+                                                                    variant="h6"
+                                                                    sx={{
+                                                                        fontWeight: "600",
+                                                                    }}
+                                                                >
+                                                                    {convertToBrlCurrency(getCurrency(product.product.sale_value * product.qtd / 100))}
+                                                                </Typography>
+                                                            </Box>
                                                         </Box>
-                                                    </Box>
-                                                </TableCell>
+                                                    </TableCell>
 
 
-                                                <TableCell align="center">
-                                                    <Box sx={{ "& button": { mx: 1 } }}>
+                                                    <TableCell align="center">
+                                                        <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                        <Button onClick={() => { HandleEditProduct(product) }} color="primary" size="medium" variant="contained">
-                                                            <FeatherIcon icon="edit" width="20" height="20" />
-                                                        </Button>
+                                                            {/* <Button onClick={() => { HandleEditProduct(product) }} color="primary" size="medium" variant="contained">
+                                                                <FeatherIcon icon="edit" width="20" height="20" />
+                                                            </Button> */}
 
-                                                        <Button onClick={() => { HandleDeleteProduct(product) }} color="error" size="medium" variant="contained">
-                                                            <FeatherIcon icon="trash" width="20" height="20" />
-                                                        </Button>
-                                                    </Box>
-                                                </TableCell>
-                                            </>
+                                                            <Button onClick={() => { HandleDeleteProduct(product) }} color="error" size="medium" variant="contained">
+                                                                <FeatherIcon icon="trash" width="20" height="20" />
+                                                            </Button>
+                                                        </Box>
+                                                    </TableCell>
+                                                </>
 
-                                        </StyledTableRow>
-                                    ))}
-                            </TableBody>
-                        </Table>
-                        <TablePagination
-                            component="div"
-                            count={productsCart.length}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            rowsPerPage={rowsPerPage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
+                                            </StyledTableRow>
+                                        ))}
+                                </TableBody>
+                            </Table>
+                            <TablePagination
+                                component="div"
+                                count={productsCart.length}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                rowsPerPage={rowsPerPage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                            />
+                        </TableContainer>
+
+                    </Box>
+                </BaseCard >
+
+                <BaseCard title="Total">
+                    <Box sx={{
+                        '& > :not(style)': { m: 2 },
+                        'display': 'grid',
+                        'minWidth': 300,
+                        // 'justify-content': 'stretch'
+                    }}
+                    >
+                        <h4>R$ 1.000,55</h4>
+                        <hr />
+                        <InputSelect
+                            label="Meios de Pagamento"
+                            name="product"
+                            products={payMetods}
+                            changeItem={changeItem}
                         />
-                    </TableContainer>
 
-                </Box>
-            </BaseCard >
+                        <Button onClick={() => { HandleDeleteProduct(product) }} color="secondary" size="medium" variant="contained">
+                            <FeatherIcon icon="save" width="20" height="20" />
+                            Confirmar
+                        </Button>
+
+                    </Box>
+
+                </BaseCard >
+            </Box>
+
         </>
     );
 };
