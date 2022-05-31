@@ -4,11 +4,11 @@ const Menuitems = [
     icon: "home",
     href: "/",
   },
-  {
-    title: "PDV",
-    icon: "home",
-    href: "/pdv",
-  },
+  // {
+  //   title: "PDV",
+  //   icon: "home",
+  //   href: "/pdv",
+  // },
   {
     title: "Usuarios", 
     icon: "users",

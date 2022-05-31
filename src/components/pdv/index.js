@@ -28,6 +28,7 @@ import { convertToBrlCurrency } from "../helpers/formatt/currency";
 import AlertModal from "../messagesModal";
 import { addAlertMessage, changeTitleAlert } from "../../store/ducks/Layout";
 import { blue } from "@mui/material/colors";
+import { getTotal } from "../helpers/checkout";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -50,13 +51,17 @@ export default () => {
         product: '',
         qtd: 1
     });
-
     const { product, qtd } = form;
+    const [total, setTotal] = useState(0);
 
     useEffect(() => {
         dispatch(getListProductsCart());
         dispatch(getAllProducts());
     }, []);
+
+    useEffect(() => {
+        setTotal(getTotal(productsCart))
+    }, [productsCart]);
 
     const changeItem = ({ target }) => {
         setForm({ ...form, [target.name]: target.value });
@@ -93,9 +98,6 @@ export default () => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
-
-
 
     // deletar depois 
 
@@ -157,7 +159,7 @@ export default () => {
                             '& > :not(style)': { m: 2 },
                             'display': 'flex',
                             'justify-content': 'stretch',
-                            // 'minWidth': 800
+                            'minWidth': "50Em"
                         }}
                     >
 
@@ -348,7 +350,7 @@ export default () => {
                         // 'justify-content': 'stretch'
                     }}
                     >
-                        <h4>R$ 1.000,55</h4>
+                        <h4>{convertToBrlCurrency(total)}</h4>
                         <hr />
                         <InputSelect
                             label="Meios de Pagamento"
