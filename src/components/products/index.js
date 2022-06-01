@@ -252,7 +252,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {product.stock}
+                                                        {product.stock != null ? product.stock.stock : null}
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"

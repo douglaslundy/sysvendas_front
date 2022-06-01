@@ -13,7 +13,7 @@ export const getAllProducts = () => {
                     cost_value: getCurrency(d.cost_value),
                     sale_value: getCurrency(d.sale_value),
                     reason: getCurrency(d.reason),
-                    stock: getCurrency(d.stock)
+                    // stock: getCurrency(d.stock)
                 }
             })
             return payload;
@@ -40,8 +40,8 @@ export const addProductFetch = (product, cleanForm) => {
             ...product,
             cost_value: setCurrency(product.cost_value),
             sale_value: setCurrency(product.sale_value),
-            reason: setCurrency(d.reason),
-            stock: setCurrency(d.stock)
+            reason: setCurrency(product.reason),
+            stock: setCurrency(product.stock)
             // id_category: getId(product.id_category)
         };
 
