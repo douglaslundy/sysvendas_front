@@ -13,7 +13,7 @@ export const getAllProducts = () => {
                     cost_value: getCurrency(d.cost_value),
                     sale_value: getCurrency(d.sale_value),
                     reason: getCurrency(d.reason),
-                    // stock: getCurrency(d.stock)
+                    stock: getCurrency(d.stock !== null ? d.stock.stock : 0)
                 }
             })
             return payload;

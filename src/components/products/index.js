@@ -121,7 +121,7 @@ export default () => {
                     valueDefault={"TODAS"}
                     valueNull={"SEM CATEGORIA"}
                 />
-                <ProductModal>
+                <ProductModal products={products}>
                     <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
                         <FeatherIcon icon="plus" />
                     </Fab>
@@ -252,7 +252,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {product.stock != null ? product.stock.stock : null}
+                                                        {product.stock ? product.stock / product.reason : 0}
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"

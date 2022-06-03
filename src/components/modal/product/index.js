@@ -14,6 +14,9 @@ import {
     TextField,
     Alert,
     Button,
+    FormGroup,
+    FormControlLabel,
+    Checkbox,
 } from "@mui/material";
 
 import BaseCard from "../../baseCard/BaseCard";
@@ -24,6 +27,8 @@ import { getCurrency, setCurrency } from '../../helpers/formatt/currency';
 import { convertStock } from '../../helpers/stock';
 import { getAllUnitsToSelect } from "../../../store/fetchActions/unit";
 import { getAllCategoriesToSelect } from "../../../store/fetchActions/categorie";
+import InputSelect from '../../../components/inputs/inputSelect';
+import { getId } from '../../helpers/formatt/getIdFromSelect';
 
 const style = {
     position: 'absolute',
@@ -49,7 +54,8 @@ export default function ProductModal(props) {
         cost_value: "",
         sale_value: "",
         reason: 1,
-        stock: ""
+        stock: "",
+        id_product_stock: ""
     });
     const { product } = useSelector(state => state.products);
     const { categories } = useSelector(state => state.categories);
@@ -58,7 +64,7 @@ export default function ProductModal(props) {
     const { isOpenModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
-    const { name, bar_code, id_unity, id_category, cost_value, sale_value, reason, stock } = form;
+    const { name, bar_code, id_unity, id_category, cost_value, sale_value, reason, stock, id_product_stock } = form;
     const [texto, setTexto] = useState();
     const [percent, setPercent] = useState();
 
@@ -86,7 +92,6 @@ export default function ProductModal(props) {
             setPercent(parseFloat(summedPercentage(setCurrency(cost_value), setCurrency(sale_value))));
         }
     }
-
     const cleanForm = () => {
         setForm({
             name: "",
@@ -96,7 +101,8 @@ export default function ProductModal(props) {
             cost_value: "",
             sale_value: "",
             reason: 1,
-            stock: ""
+            stock: "",
+            id_product_stock: ""
         });
         setTexto('');
         dispatch(turnModal());
@@ -131,7 +137,14 @@ export default function ProductModal(props) {
     useEffect(() => {
         changePercentPerValue()
     }, [cost_value, sale_value]);
-    
+
+    const [isVisible, setIsVisible] = useState(false);
+
+    const products = props.products;
+    const getProduct = ({ target }) => {
+        setForm({ ...form, ['id_product_stock']: products.filter((prod) => prod.id == prod.id_product_stock || prod.id == getId(target.value)) });
+    }
+
     return (
         <div>
             {props.children}
@@ -225,6 +238,25 @@ export default function ProductModal(props) {
                                         changeItem={changeItem}
                                         required
                                     />
+                                    <FormGroup>
+                                        <FormControlLabel
+                                            control={<Checkbox
+                                            onClick={() => setIsVisible(!isVisible)}
+                                                 />}
+                                            label="Integrar estoque"
+                                        />
+                                    </FormGroup>
+
+                                    {isVisible &&
+                                        <InputSelect
+                                            label="Produtos"
+                                            name="id_product_stock"
+                                            products={products}
+                                            changeItem={getProduct}
+                                            wd={"100%"}
+                                        />
+                                    }
+
                                     <Stock
                                         label="Estoque Real"
                                         variant="outlined"
@@ -237,7 +269,7 @@ export default function ProductModal(props) {
                                         label="Estoque Praticado"
                                         variant="outlined"
                                         name="stock"
-                                        value={convertStock(stock, reason ? reason : 1)}
+                                        value={convertStock(stock ? stock : 0, reason ? reason : 1)}
                                         disabled={true}
                                     />
 
