@@ -53,7 +53,7 @@ export const addProductFetch = (product, cleanForm) => {
                     cost_value: getCurrency(res.data.product.cost_value),
                     sale_value: getCurrency(res.data.product.sale_value),
                     reason: getCurrency(res.data.product.reason),
-                    stock: getCurrency(res.data.product.stock)
+                    stock: getCurrency(res.data.product.stock.stock)
                 },
 
                 dispatch(addProduct(product)),
@@ -117,7 +117,7 @@ export const editProductFetch = (product, cleanForm) => {
                     cost_value: getCurrency(res.data.product.cost_value),
                     sale_value: getCurrency(res.data.product.sale_value),
                     reason: getCurrency(res.data.product.reason),
-                    stock: getCurrency(res.data.product.stock)
+                    stock: getCurrency(res.data.product.stock.stock)
                 },
 
                 dispatch(editProduct(product)),

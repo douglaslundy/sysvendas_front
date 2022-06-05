@@ -64,7 +64,7 @@ export default function ProductModal(props) {
     const { isOpenModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
-    const { name, bar_code, id_unity, id_category, cost_value, sale_value, reason, stock, id_product_stock } = form;
+    const { name, bar_code, id_unity, id_category, cost_value, sale_value, reason, stock } = form;
     const [texto, setTexto] = useState();
     const [percent, setPercent] = useState();
 
@@ -121,29 +121,46 @@ export default function ProductModal(props) {
     const handlePutData = async () => {
         dispatch(changeTitleAlert(`O produto ${form.name} foi atualizado com sucesso!`));
         dispatch(editProductFetch(form, cleanForm));
+        // console.log(JSON.stringify(form))
     };
 
     const handleClose = () => {
         cleanForm();
     };
 
+    const handleIsVisible = () => {
+        setIsVisible(!isVisible);
+    }
+
+    const [isVisible, setIsVisible] = useState(false);
+    const products = props.products.filter((prod) => prod.id == prod.id_product_stock);
+
+    const getProductStock = id => {
+        return { ...products.filter((prod) => prod.id == id)[0] };
+    }
+
+    const getProduct = ({ target }) => {
+        const id = getId(target.value);
+        setForm({ ...form, ['id_product_stock']: id, ['stock']: getProductStock(id).stock });
+    }
+    
     useEffect(() => {
-
-        if (product && product.id)
+        if (product && product.id) {
             setForm(product);
-
+            product.id_product_stock != null && product.id != product.id_product_stock ? setIsVisible(true) : setIsVisible(false);
+        } else {
+            setIsVisible(false);
+        }
     }, [product]);
 
     useEffect(() => {
         changePercentPerValue()
     }, [cost_value, sale_value]);
 
-    const [isVisible, setIsVisible] = useState(false);
+    useEffect(() => {
+        !isVisible ? setForm({ ...form, ['id_product_stock']: null }) : setForm({ ...form, ['stock']: stock });
+    }, [isVisible]);
 
-    const products = props.products;
-    const getProduct = ({ target }) => {
-        setForm({ ...form, ['id_product_stock']: products.filter((prod) => prod.id == prod.id_product_stock || prod.id == getId(target.value)) });
-    }
 
     return (
         <div>
@@ -241,15 +258,16 @@ export default function ProductModal(props) {
                                     <FormGroup>
                                         <FormControlLabel
                                             control={<Checkbox
-                                            onClick={() => setIsVisible(!isVisible)}
-                                                 />}
+                                                checked={isVisible}
+                                                onClick={handleIsVisible}
+                                            />}
                                             label="Integrar estoque"
                                         />
                                     </FormGroup>
 
                                     {isVisible &&
                                         <InputSelect
-                                            label="Produtos"
+                                            label={product ? getProductStock(product.id_product_stock).name : "Selecione o produto a integrar"}
                                             name="id_product_stock"
                                             products={products}
                                             changeItem={getProduct}
@@ -257,14 +275,16 @@ export default function ProductModal(props) {
                                         />
                                     }
 
-                                    <Stock
-                                        label="Estoque Real"
-                                        variant="outlined"
-                                        name="stock"
-                                        value={stock ? stock : ''}
-                                        changeItem={changeItem}
-                                        required
-                                    />
+                                    {!isVisible &&
+                                        <Stock
+                                            label="Estoque Real"
+                                            variant="outlined"
+                                            name="stock"
+                                            value={stock ? stock : ''}
+                                            changeItem={changeItem}
+                                            required
+                                        />
+                                    }
                                     <TextField
                                         label="Estoque Praticado"
                                         variant="outlined"

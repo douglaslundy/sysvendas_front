@@ -176,7 +176,7 @@ export default () => {
                     <TableBody>
                         {allProducts
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((product, index) => (
+                            .map((product) => (
                                 <StyledTableRow key={product.id} hover>
                                     <>
                                         <TableCell>

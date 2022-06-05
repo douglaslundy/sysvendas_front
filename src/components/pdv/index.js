@@ -20,15 +20,14 @@ import InputSelect from "../../components/inputs/inputSelect";
 import QTD from "../../components/inputs/textFields/stock-qtd";
 import { useSelector, useDispatch } from 'react-redux';
 import { getId } from "../helpers/formatt/getIdFromSelect";
-import { summedPercentage } from "../helpers/functions/percent";
 import { getCurrency, setCurrency } from "../helpers/formatt/currency";
 import { addProductCartFetch, getListProductsCart, deleteProductFromCart } from "../../store/fetchActions/cart";
 import { getAllProducts } from "../../store/fetchActions/product";
 import { convertToBrlCurrency } from "../helpers/formatt/currency";
 import AlertModal from "../messagesModal";
 import { addAlertMessage, changeTitleAlert } from "../../store/ducks/Layout";
-import { blue } from "@mui/material/colors";
 import { getTotal } from "../helpers/checkout";
+import Select from '../inputs/selects';
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -47,11 +46,18 @@ export default () => {
     const { productsCart } = useSelector(state => state.cart);
     const { products } = useSelector(state => state.products);
 
-    const [form, setForm] = useState({
+    const [formCart, setFormCart] = useState({
         product: '',
         qtd: 1
     });
-    const { product, qtd } = form;
+
+    const [formSale, setFormSale] = useState({
+        id_pay_metod: 1
+    });
+
+    const { product, qtd } = formCart;
+    const { id_pay_metod } = formSale;
+
     const [total, setTotal] = useState(0);
 
     useEffect(() => {
@@ -64,22 +70,26 @@ export default () => {
     }, [productsCart]);
 
     const changeItem = ({ target }) => {
-        setForm({ ...form, [target.name]: target.value });
+        setFormCart({ ...formCart, [target.name]: target.value });
+    };
+
+    const changeSale = ({ target }) => {
+        setFormSale({ ...formSale, [target.name]: target.value });
     };
 
     const getProduct = ({ target }) => {
-        setForm({ ...form, ['product']: products.filter((prod) => prod.id == getId(target.value)) });
+        setFormCart({ ...formCart, ['product']: products.filter((prod) => prod.id == getId(target.value)) });
     }
 
     const cleanForm = () => {
-        setForm({
+        setFormCart({
             product: '',
             qtd: 1
         });
     }
 
     const addProdutCart = () => {
-        product[0] ? dispatch(addProductCartFetch(form, cleanForm)) : dispatch(addAlertMessage('Selecione o produto que deseja inserir no carrinho!'));
+        product[0] ? dispatch(addProductCartFetch(formCart, cleanForm)) : dispatch(addAlertMessage('Selecione o produto que deseja inserir no carrinho!'));
         product[0] ? dispatch(changeTitleAlert(`${product[0].name} foi inserido no carrinho!`)) : '';
     }
 
@@ -102,15 +112,18 @@ export default () => {
     // deletar depois 
 
     const payMetods = [{
-        'id': '1',
+        'id': 1,
+        'name': 'dinheiro'
+    }, {
+        'id': 2,
         'name': 'cartao'
     }, {
-        'id': '2',
+        'id': 3,
         'name': 'cheque'
     }, {
-        'id': '3',
-        'name': 'dinheiro'
-    }]
+        'id': 4,
+        'name': 'a prazo'
+    }];
 
     return (
         <>
@@ -352,16 +365,18 @@ export default () => {
                     >
                         <h4>{convertToBrlCurrency(total)}</h4>
                         <hr />
-                        <InputSelect
+
+                        <Select
+                            value={id_pay_metod}
                             label="Meios de Pagamento"
-                            name="product"
-                            products={payMetods}
-                            changeItem={changeItem}
+                            name="id_pay_metod"
+                            store={payMetods}
+                            changeItem={changeSale}
                         />
 
                         <Button onClick={() => { HandleDeleteProduct(product) }} color="secondary" size="medium" variant="contained">
                             <FeatherIcon icon="save" width="20" height="20" />
-                            Confirmar
+                            CONFIRMAR
                         </Button>
 
                     </Box>

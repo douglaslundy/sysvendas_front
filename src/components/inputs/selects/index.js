@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 export default function BasicSelect(props) {
   
@@ -13,8 +13,7 @@ export default function BasicSelect(props) {
   const dispatch = useDispatch();
 
    useEffect(() => {
-    dispatch(getAllSelects());
-    
+    getAllSelects ? dispatch(getAllSelects()) : '';    
   }, []);
 
   return (
@@ -31,7 +30,7 @@ export default function BasicSelect(props) {
           {valueDefault && <MenuItem key={0} value={0}>{valueDefault}</MenuItem> }
 
           {store.map((d) => (
-             <MenuItem key={d.id} value={d.id}>{d.name}</MenuItem>
+             <MenuItem key={d.id} value={d.id}>{d.name.toUpperCase()}</MenuItem>
           ))}
         </Select>
       </FormControl>

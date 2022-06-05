@@ -8,7 +8,7 @@ export default function Messages() {
     const { messages } = useSelector(state => state.layout);
     return (
         <div className='messages'>
-            {messages.map((msg, index) => <Message message={msg} />)}
+            {messages.map((msg, index) => <Message key={index} message={msg} />)}
         </div>
     )
 }
