@@ -16,7 +16,8 @@ import {
 } from "@mui/material";
 import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
-import InputSelect from "../../components/inputs/inputSelect";
+import InputSelectProduct from "../inputs/inputSelectProduct";
+import InputSelectClient from "../inputs/inputSelectClient";
 import QTD from "../../components/inputs/textFields/stock-qtd";
 import { useSelector, useDispatch } from 'react-redux';
 import { getId } from "../helpers/formatt/getIdFromSelect";
@@ -28,6 +29,9 @@ import AlertModal from "../messagesModal";
 import { addAlertMessage, changeTitleAlert } from "../../store/ducks/Layout";
 import { getTotal } from "../helpers/checkout";
 import Select from '../inputs/selects';
+import Currency from '../inputs/textFields/currency';
+import { getAllClients } from "../../store/fetchActions/client";
+import { addSale } from "../../store/fetchActions/sale";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -39,35 +43,69 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
+// $table -> integer('id_user');
+// $table -> integer('id_client');
+// $table -> timestamp('sale_date');
+// $table ->enum('paied', ['yes', 'no']);
+// $table ->enum('type_sale', ['in_cash', 'on_term']);
+// $table -> timestamp('due_date') -> nullable();
+// $table -> timestamp('pay_date') -> nullable();
+// $table -> integer('chek') -> nullable() ->default (0);
+// $table -> integer('cash') -> nullable() ->default (0);
+// $table -> integer('card') -> nullable() ->default (0);
+// $table -> integer('total_sale') ->default (0);
+
+// id_user
+// id_client
+// paied ? yes | no
+// type_sale ? in_cash |on_term
+// chek
+// cash
+// card
+// total_sale
+
 
 export default () => {
 
     const dispatch = useDispatch();
     const { productsCart } = useSelector(state => state.cart);
     const { products } = useSelector(state => state.products);
+    const { clients } = useSelector(state => state.clients);
 
     const [formCart, setFormCart] = useState({
         product: '',
         qtd: 1
     });
 
-    const [formSale, setFormSale] = useState({
-        id_pay_metod: 1
+    const [formSale, setFormSale] = useState({        
+        id_pay_metod: "cash",
+        id_client: null,
+        pay_value: 0,
+        type_sale: 'in_cash',
+        total_sale: 0,
+        check: 0,
+        cash: 0,
+        card: 0
+
     });
 
     const { product, qtd } = formCart;
-    const { id_pay_metod } = formSale;
-
-    const [total, setTotal] = useState(0);
+    const { id_pay_metod, id_client, pay_value, type_sale, total_sale, check, cash, card } = formSale;
 
     useEffect(() => {
         dispatch(getListProductsCart());
         dispatch(getAllProducts());
+        dispatch(getAllClients());
     }, []);
 
     useEffect(() => {
-        setTotal(getTotal(productsCart))
+        setFormSale({ ...formSale, ['total_sale']: getTotal(productsCart) })
     }, [productsCart]);
+
+    useEffect(() => {
+        id_pay_metod == "on_term" ? setFormSale({ ...formSale, 'paied': 'no', 'type_sale': 'on_term', cash: 0, card: 0, check: 0 }) :
+            setFormSale({ ...formSale, paied: 'yes', id_client: null,  type_sale: 'in_cash', pay_value: 0, cash: 0, card: 0, check: 0 });
+    }, [id_pay_metod])
 
     const changeItem = ({ target }) => {
         setFormCart({ ...formCart, [target.name]: target.value });
@@ -77,14 +115,31 @@ export default () => {
         setFormSale({ ...formSale, [target.name]: target.value });
     };
 
+    const changePayValue = ({ target }) => {
+        setFormSale({ ...formSale, ['pay_value']: target.value, [id_pay_metod]: target.value });
+    };
+
     const getProduct = ({ target }) => {
         setFormCart({ ...formCart, ['product']: products.filter((prod) => prod.id == getId(target.value)) });
+    }
+    const getClient = ({ target }) => {
+        setFormSale({ ...formSale, ['id_client']: getId(target.value) });
     }
 
     const cleanForm = () => {
         setFormCart({
             product: '',
             qtd: 1
+        });
+
+        setFormSale({
+            id_pay_metod: "cash",
+            pay_value: 0,
+            type_sale: 'in_cash',
+            total_sale: 0,
+            check: 0,
+            cash: 0,
+            card: 0
         });
     }
 
@@ -112,18 +167,23 @@ export default () => {
     // deletar depois 
 
     const payMetods = [{
-        'id': 1,
+        'id': "cash",
         'name': 'dinheiro'
     }, {
-        'id': 2,
+        'id': "card",
         'name': 'cartao'
     }, {
-        'id': 3,
+        'id': "check",
         'name': 'cheque'
     }, {
-        'id': 4,
+        'id': "on_term",
         'name': 'a prazo'
     }];
+
+    const confirmSale = () => {
+        dispatch(changeTitleAlert(`Venda realizada com sucesso!`));
+        dispatch(addSale(formSale, cleanForm));      
+    }
 
     return (
         <>
@@ -135,7 +195,7 @@ export default () => {
                     'justify-content': 'stretch'
                 }}
                 >
-                    <InputSelect
+                    <InputSelectProduct
                         label="Produtos"
                         name="product"
                         products={products}
@@ -363,7 +423,7 @@ export default () => {
                         // 'justify-content': 'stretch'
                     }}
                     >
-                        <h4>{convertToBrlCurrency(total)}</h4>
+                        <h4>{convertToBrlCurrency(total_sale)}</h4>
                         <hr />
 
                         <Select
@@ -372,9 +432,28 @@ export default () => {
                             name="id_pay_metod"
                             store={payMetods}
                             changeItem={changeSale}
+                            wd={"90%"}
                         />
 
-                        <Button onClick={() => { HandleDeleteProduct(product) }} color="secondary" size="medium" variant="contained">
+                        {type_sale !== 'on_term' &&
+                            <Currency value={pay_value}
+                                label={'Valor Pago'}
+                                name={'pay_value'}
+                                changeItem={changePayValue}
+                                wd={"90%"}
+                            />
+                        }
+                        {type_sale == 'on_term' &&
+                            <InputSelectClient
+                                label="Clientes"
+                                name="client"
+                                products={clients}
+                                changeItem={getClient}
+                                wd={"90%"}
+                            />
+                        }
+
+                        <Button onClick={confirmSale} color="secondary" size="medium" variant="contained">
                             <FeatherIcon icon="save" width="20" height="20" />
                             CONFIRMAR
                         </Button>

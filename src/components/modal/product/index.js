@@ -7,6 +7,7 @@ import Currency from '../../inputs/textFields/currency';
 import Stock from '../../inputs/textFields/stock-qtd';
 import Percent from '../../inputs/textFields/percent';
 import Select from '../../inputs/selects';
+import Switch from '@mui/material/Switch';
 import { summedPercentage, valueSaleSummedFromPercent } from '../../helpers/functions/percent';
 import {
     Grid,
@@ -27,7 +28,7 @@ import { getCurrency, setCurrency } from '../../helpers/formatt/currency';
 import { convertStock } from '../../helpers/stock';
 import { getAllUnitsToSelect } from "../../../store/fetchActions/unit";
 import { getAllCategoriesToSelect } from "../../../store/fetchActions/categorie";
-import InputSelect from '../../../components/inputs/inputSelect';
+import InputSelectProduct from '../../../components/inputs/inputSelectProduct';
 import { getId } from '../../helpers/formatt/getIdFromSelect';
 
 const style = {
@@ -127,7 +128,7 @@ export default function ProductModal(props) {
     const handleClose = () => {
         cleanForm();
     };
-
+    
     const handleIsVisible = () => {
         setIsVisible(!isVisible);
     }
@@ -143,7 +144,7 @@ export default function ProductModal(props) {
         const id = getId(target.value);
         setForm({ ...form, ['id_product_stock']: id, ['stock']: getProductStock(id).stock });
     }
-    
+
     useEffect(() => {
         if (product && product.id) {
             setForm(product);
@@ -255,18 +256,30 @@ export default function ProductModal(props) {
                                         changeItem={changeItem}
                                         required
                                     />
+
+
+
                                     <FormGroup>
-                                        <FormControlLabel
-                                            control={<Checkbox
-                                                checked={isVisible}
-                                                onClick={handleIsVisible}
-                                            />}
-                                            label="Integrar estoque"
-                                        />
+                                        <FormControlLabel control={<Switch checked={isVisible}
+                                            onClick={handleIsVisible} />} label="Integrar estoque" />
                                     </FormGroup>
 
+                                    {/* <FormGroup>
+                                        <FormControlLabel
+                                            control={
+                                                
+                                            // <Checkbox
+                                            //     checked={isVisible}
+                                            //     onClick={handleIsVisible}
+                                            // />
+                                        
+                                        }
+                                            label="Integrar estoque"
+                                        /> */}
+                                    {/* </FormGroup> */}
+
                                     {isVisible &&
-                                        <InputSelect
+                                        <InputSelectProduct
                                             label={product ? getProductStock(product.id_product_stock).name : "Selecione o produto a integrar"}
                                             name="id_product_stock"
                                             products={products}

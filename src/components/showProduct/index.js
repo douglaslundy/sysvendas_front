@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Fab, Box, Stack, TextField } from "@mui/material";
 import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
-import InputSelect from "../../components/inputs/inputSelect";
+import InputSelectProduct from "../../components/inputs/inputSelectProduct";
 import { useSelector, useDispatch } from 'react-redux';
 import { getId } from "../helpers/formatt/getIdFromSelect";
 import { summedPercentage } from "../helpers/functions/percent";
@@ -128,7 +128,7 @@ export default () => {
                 'justify-content': 'stretch'
             }}
             >
-                <InputSelect
+                <InputSelectProduct
                     label="Produtos"
                     name="product"
                     products={products}
