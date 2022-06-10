@@ -1,8 +1,9 @@
 import { api } from "../../../services/api";
 import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
 // import { inactiveProduct, addProduct, editProduct, addProducts } from "../../ducks/products";
-import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
+import { turnLoading, turnAlert, addMessage, addAlertMessage, changeTitleAlert } from "../../ducks/Layout";
 import { parseCookies } from 'nookies';
+import { cleanProductsCart } from "../../ducks/cart";
 
 // export const getAllProducts = () => {
 //     const config = {
@@ -50,23 +51,25 @@ export const addSale = (sale, cleanForm) => {
         api.post('/sales', sale)
             .then((res) =>
             (
-                sale = {
-                    ...res.data.sale,
-                    check: getCurrency(res.data.product.check),
-                    card: getCurrency(res.data.product.card),
-                    cash: getCurrency(res.data.product.cash),
-                    pay_value: getCurrency(res.data.product.stock.pay_value),
-                    total_sale: getCurrency(res.data.product.stock.total_sale)
-                },
+                // sale = {
+                //     ...res.data,
+                //     check: getCurrency(res.datacheck),
+                //     card: getCurrency(res.data.card),
+                //     cash: getCurrency(res.data.cash),
+                //     pay_value: getCurrency(res.data.pay_value),
+                //     total_sale: getCurrency(res.data.total_sale)
+                // },
 
-                // dispatch(addProduct(product)),
-                dispatch(addMessage(`Venda realizada com sucesso!`)),
+                // // dispatch(addSale(sale)),
                 dispatch(turnAlert()),
                 dispatch(turnLoading()),
+                dispatch(cleanProductsCart()),
                 cleanForm()
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                // dispatch(changeTitleAlert(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                // dispatch(turnAlert()),
                 dispatch(turnLoading());
                 return error.response ? error.response.data : 'erro desconhecido';
             })

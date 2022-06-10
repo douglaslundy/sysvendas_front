@@ -43,28 +43,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-// $table -> integer('id_user');
-// $table -> integer('id_client');
-// $table -> timestamp('sale_date');
-// $table ->enum('paied', ['yes', 'no']);
-// $table ->enum('type_sale', ['in_cash', 'on_term']);
-// $table -> timestamp('due_date') -> nullable();
-// $table -> timestamp('pay_date') -> nullable();
-// $table -> integer('chek') -> nullable() ->default (0);
-// $table -> integer('cash') -> nullable() ->default (0);
-// $table -> integer('card') -> nullable() ->default (0);
-// $table -> integer('total_sale') ->default (0);
-
-// id_user
-// id_client
-// paied ? yes | no
-// type_sale ? in_cash |on_term
-// chek
-// cash
-// card
-// total_sale
-
-
 export default () => {
 
     const dispatch = useDispatch();
@@ -73,11 +51,11 @@ export default () => {
     const { clients } = useSelector(state => state.clients);
 
     const [formCart, setFormCart] = useState({
-        product: '',
-        qtd: 1
+        product: [],
+        qtd: ''
     });
 
-    const [formSale, setFormSale] = useState({        
+    const [formSale, setFormSale] = useState({
         id_pay_metod: "cash",
         id_client: null,
         pay_value: 0,
@@ -104,7 +82,7 @@ export default () => {
 
     useEffect(() => {
         id_pay_metod == "on_term" ? setFormSale({ ...formSale, 'paied': 'no', 'type_sale': 'on_term', cash: 0, card: 0, check: 0 }) :
-            setFormSale({ ...formSale, paied: 'yes', id_client: null,  type_sale: 'in_cash', pay_value: 0, cash: 0, card: 0, check: 0 });
+            setFormSale({ ...formSale, paied: 'yes', id_client: null, type_sale: 'in_cash', pay_value: 0, cash: 0, card: 0, check: 0 });
     }, [id_pay_metod])
 
     const changeItem = ({ target }) => {
@@ -116,11 +94,11 @@ export default () => {
     };
 
     const changePayValue = ({ target }) => {
-        setFormSale({ ...formSale, ['pay_value']: target.value, [id_pay_metod]: target.value });
+        setFormSale({ ...formSale, pay_value: target.value, [id_pay_metod]: target.value });
     };
 
     const getProduct = ({ target }) => {
-        setFormCart({ ...formCart, ['product']: products.filter((prod) => prod.id == getId(target.value)) });
+        setFormCart({ ...formCart, ['product']: products.filter((prod) => prod.id == getId(target.value)), qtd: 1 });
     }
     const getClient = ({ target }) => {
         setFormSale({ ...formSale, ['id_client']: getId(target.value) });
@@ -128,24 +106,26 @@ export default () => {
 
     const cleanForm = () => {
         setFormCart({
-            product: '',
+            product: [],
             qtd: 1
         });
 
         setFormSale({
             id_pay_metod: "cash",
             pay_value: 0,
-            type_sale: 'in_cash',
-            total_sale: 0,
+            type_sale: "in_cash",
+            paied: "yes",
+            total_sale: getTotal(productsCart),
             check: 0,
             cash: 0,
             card: 0
         });
+        // setFormSale({ ...formSale, ['total_sale']:  });
     }
 
     const addProdutCart = () => {
-        product[0] ? dispatch(addProductCartFetch(formCart, cleanForm)) : dispatch(addAlertMessage('Selecione o produto que deseja inserir no carrinho!'));
         product[0] ? dispatch(changeTitleAlert(`${product[0].name} foi inserido no carrinho!`)) : '';
+        product[0] ? dispatch(addProductCartFetch(formCart, cleanForm)) : dispatch(addAlertMessage('Selecione o produto que deseja inserir no carrinho!'));
     }
 
     const HandleDeleteProduct = product => {
@@ -181,8 +161,12 @@ export default () => {
     }];
 
     const confirmSale = () => {
-        dispatch(changeTitleAlert(`Venda realizada com sucesso!`));
-        dispatch(addSale(formSale, cleanForm));      
+        if (productsCart.length > 0) {
+            dispatch(changeTitleAlert(`Venda realizada com sucesso!`));
+            dispatch(addSale(formSale, cleanForm));
+        } {
+            dispatch(addAlertMessage("Insira pelo menos 1 produto ao carrinho!"))
+        }
     }
 
     return (
@@ -196,7 +180,7 @@ export default () => {
                 }}
                 >
                     <InputSelectProduct
-                        label="Produtos"
+                        label="Selecione o produto"
                         name="product"
                         products={products}
                         changeItem={getProduct}
@@ -207,7 +191,7 @@ export default () => {
                         sx={{ width: "30%" }}
                         label="QTD"
                         name="qtd"
-                        value={qtd ? qtd : 1}
+                        value={qtd}
                         changeItem={changeItem}
                     />
 
@@ -436,18 +420,19 @@ export default () => {
                         />
 
                         {type_sale !== 'on_term' &&
-                            <Currency value={pay_value}
-                                label={'Valor Pago'}
-                                name={'pay_value'}
+                            <Currency
+                                value={pay_value}
+                                label="Valor Pago"
+                                name="pay_value"
                                 changeItem={changePayValue}
-                                wd={"90%"}
+                                wd="90%"
                             />
                         }
                         {type_sale == 'on_term' &&
                             <InputSelectClient
-                                label="Clientes"
+                                label="Selecione o cliente"
                                 name="client"
-                                products={clients}
+                                clients={clients}
                                 changeItem={getClient}
                                 wd={"90%"}
                             />

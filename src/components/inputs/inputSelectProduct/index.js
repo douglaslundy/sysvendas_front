@@ -55,9 +55,9 @@ export default function index(props) {
       onClose={() => {
         setOpen(false);
       }}
-      isOptionEqualToValue={(option, value) => option.id === value.id}
+      // isOptionEqualToValue={(option, value) => option.id === value.id}
       getOptionLabel={(option) => `${option.id} - ${option.name} - Preço ${option.sale_value}`}
-      noOptionsText={"Categoria Indisponível"}
+      noOptionsText={"Produto inexistente!"}
       options={options}
       loading={loading}
       renderInput={(params) => (

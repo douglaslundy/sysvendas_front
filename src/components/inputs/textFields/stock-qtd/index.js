@@ -33,23 +33,23 @@ const Currency = React.forwardRef((props, ref) => {
 
 export default function index(props) {
 
-    const { label, name, value, changeItem, wd, disabled } = props;
-    return (
-        <TextField
-            id="qtd"
-            label={label}
-            variant="outlined"
-            name={name}
-            value={value ? value : ''}
-            onChange={changeItem}
-            sx={{ width: wd }}
-            required
-            disabled={disabled ? disabled : false}
+  const { label, name, value, changeItem, wd, disabled } = props;
+  return (
+    <TextField
+      id="qtd"
+      label={label}
+      variant="outlined"
+      name={name}
+      value={value}
+      onChange={changeItem}
+      sx={{ width: wd }}
+      required
+      disabled={disabled ? disabled : false}
 
-            InputProps={{
-                inputComponent: Currency,
-            }}
+      InputProps={{
+        inputComponent: Currency,
+      }}
 
-        />
-    )
+    />
+  )
 }

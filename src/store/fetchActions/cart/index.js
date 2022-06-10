@@ -50,12 +50,12 @@ export const addProductCartFetch = (cart, cleanForm) => {
                         active: cart.product[0].active,
                     }
                 },
-
+                cleanForm(),
                 dispatch(addProductCart(res)),
                 dispatch(addMessage(`O produto ${res.product.name} foi adicionado ao carrinho!`)),
                 dispatch(turnAlert()),
-                dispatch(turnLoading()),
-                cleanForm()
+                dispatch(turnLoading())
+                
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));

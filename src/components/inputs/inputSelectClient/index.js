@@ -25,7 +25,7 @@ export default function index(props) {
       await sleep(1e3); 
 
       if (active) {
-        setOptions([...products]);
+        setOptions([...clients]);
       }
     })();
 
@@ -41,11 +41,11 @@ export default function index(props) {
     }
   }, [open]);
   
-  const { label,  name, value, changeItem, products, wd } = props;
+  const { label,  name, value, changeItem, clients, wd } = props;
 
   return (
     <Autocomplete
-      id="product"
+      id="client"
       // sx={{ width: "85%" }}
       sx={wd ? { width: wd } : { width: "85%" }}
       open={open}
@@ -57,14 +57,14 @@ export default function index(props) {
       }}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       getOptionLabel={(option) => `${option.id} - ${option.full_name}`}
-      noOptionsText={"Categoria Indisponível"}
+      noOptionsText={"Cliente inexistente!!!"}
       options={options}
       loading={loading}
       renderInput={(params) => (
 
         <TextField
           {...params}
-          id="product"
+          id="client"
           label={label}
           name={name}
           value={value}
