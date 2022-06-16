@@ -44,6 +44,11 @@ const Menuitems = [
     icon: "list",
     href: "/valueCategory",
   },
+  {
+    title: "Vendas", 
+    icon: "list",
+    href: "/sales",
+  },
 
   // {
   //   title: "Vendas", 
