@@ -6,7 +6,7 @@ const Menuitems = [
   },
   {
     title: "PDV",
-    icon: "home",
+    icon: "monitor",
     href: "/pdv",
   },
   {
@@ -16,12 +16,12 @@ const Menuitems = [
   },
   {
     title: "Clientes", 
-    icon: "list",
+    icon: "smile",
     href: "/clients",
   },
   {
     title: "Produtos", 
-    icon: "list",
+    icon: "package",
     href: "/products",
   },
   {
@@ -31,22 +31,22 @@ const Menuitems = [
   },
   {
     title: "Categorias", 
-    icon: "list",
+    icon: "tool",
     href: "/categories",
   },
   {
     title: "Unidades", 
-    icon: "list",
+    icon: "underline",
     href: "/units",
   },
   {
     title: "Preço / Categoria", 
-    icon: "list",
+    icon: "dollar-sign",
     href: "/valueCategory",
   },
   {
     title: "Vendas", 
-    icon: "list",
+    icon: "activity",
     href: "/sales",
   },
 

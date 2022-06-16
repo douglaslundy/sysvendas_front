@@ -17,7 +17,7 @@ import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
 
 // import { useSelector, useDispatch } from 'react-redux';
-import { getAllSales, inactivesaleFetch } from "../../store/fetchActions/sales";
+import { getAllSales, inactivesaleFetch } from "../../store/fetchActions/sale";
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -65,11 +65,13 @@ export default () => {
                 >
                     <TableHead>
                         <TableRow>
+                            
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Data da venda
+                                   Cliente / Data da venda
                                 </Typography>
                             </TableCell>
+
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
                                     Tipo da venda
@@ -96,11 +98,12 @@ export default () => {
                             .map((sale, index) => (
                                 <StyledTableRow key={index} hover>
                                     <>
+                                    
                                         <TableCell>
                                             <Box
                                                 sx={{
                                                     display: "flex",
-                                                    alignItems: "center",
+                                                    alignItems: "left",
                                                 }}
                                             >
                                                 <Box>
@@ -110,7 +113,38 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {sale.sale_date}
+                                                    {sale.client !== null ? sale.client.full_name.toUpperCase() : 'VENDA NO BALCÃO'}
+                                                    </Typography>
+                                                    
+                                                    <Typography
+                                                        color="textSecondary"
+                                                        sx={{
+                                                            fontSize: "13px",
+                                                        }}
+                                                    >
+                                                    {sale.sale_date}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        </TableCell>
+
+
+
+
+                                        <TableCell align="center">
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                }}
+                                            >
+                                                <Box>
+                                                    <Typography
+                                                        variant="h6"
+                                                        sx={{
+                                                            fontWeight: "600",
+                                                        }}
+                                                    >
+                                                        <Typography variant="h6">{sale.type_sale == "in_cash" ? "A Vista" : "A Prazo"}</Typography>
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"
@@ -118,15 +152,13 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {/* {sale.surname ? sale.surname.toUpperCase() : ''} */}
+                                                        {sale.paied == "yes" ? "Recebido" : "A Receber"}
                                                     </Typography>
                                                 </Box>
                                             </Box>
-                                        </TableCell>                                        
-
-                                        <TableCell>
-                                            <Typography variant="h6">{sale.type_sale == "in_cash" ? "A Vista" : "A Prazo"}</Typography>
                                         </TableCell>
+
+
 
                                         <TableCell>
                                             <Box
@@ -160,13 +192,11 @@ export default () => {
                                             <Box sx={{ "& button": { mx: 1 } }}>
 
                                                 <Button onClick={() => { HandleEditsale(sale) }} color="primary" size="medium" variant="contained">
-                                                    <FeatherIcon icon="edit" width="20" height="20" />
-                                                    Editar
+                                                    <FeatherIcon icon="eye" width="20" height="20" />
                                                 </Button>
 
                                                 <Button onClick={() => { HandleInactivesale(sale) }} color="error" size="medium" variant="contained">
-                                                    <FeatherIcon icon="trash" width="20" height="20" />
-                                                    Inativar
+                                                    <FeatherIcon icon="printer" width="20" height="20" />
                                                 </Button>
 
 

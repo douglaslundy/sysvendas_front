@@ -1,37 +1,10 @@
 import { api } from "../../../services/api";
 import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
-// import { inactiveProduct, addProduct, editProduct, addProducts } from "../../ducks/products";
-import { turnLoading, turnAlert, addMessage, addAlertMessage, changeTitleAlert } from "../../ducks/Layout";
 import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
-
-// export const getAllProducts = () => {
-//     const config = {
-//         transformResponse: [function (data) {
-//             const payload = JSON.parse(data).map(d => {
-//                 return {
-//                     ...d,
-//                     cost_value: getCurrency(d.cost_value),
-//                     sale_value: getCurrency(d.sale_value),
-//                     reason: getCurrency(d.reason),
-//                     stock: getCurrency(d.stock !== null ? d.stock.stock : 0)
-//                 }
-//             })
-//             return payload;
-//         }]
-//     }
-
-//     return (dispatch) => {
-//         dispatch(turnLoading())
-//         api 
-//         .get('/products', config)
-//             .then((res) => {            
-//                 dispatch(addProducts(res.data));
-//                 dispatch(turnLoading());
-//             })
-//             .catch(() => { dispatch(turnLoading()) })
-//     }
-// }
+import { editSale, addSales } from "../../ducks/sales";
+import { turnAlert, addMessage, addAlertMessage, turnLoading } from "../../ducks/Layout";
+import { parseISO, format } from 'date-fns';
 
 export const addSale = (sale, cleanForm) => {
     const { 'sysvendas.id': user } = parseCookies();
@@ -68,12 +41,58 @@ export const addSale = (sale, cleanForm) => {
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
-                // dispatch(changeTitleAlert(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
-                // dispatch(turnAlert()),
                 dispatch(turnLoading());
                 return error.response ? error.response.data : 'erro desconhecido';
             })
     };
 };
 
+export const getAllSales = () => {
+    const config = {
+        transformResponse: [function (data) {
 
+            const payload = JSON.parse(data).map(s => {
+                return {
+                    ...s,
+                    "total_sale": getCurrency(s.total_sale),
+                    "sale_date": format(parseISO(s.sale_date), 'dd/MM/yyyy hh:mm:ss')
+                }
+            })
+            return payload;
+        }]
+    }
+
+    return (dispatch) => {
+        dispatch(turnLoading());
+
+        api
+            .get('/sales', config)
+            .then((res) => {
+                dispatch(addSales(res.data));
+                dispatch(turnLoading());
+            })
+            .catch(() => { dispatch(turnLoading()) })
+    }
+}
+
+export const editSaleFetch = (sale, cleanForm) => {
+    return (dispatch) => {
+        dispatch(turnLoading());
+
+
+        api.put(`/sale/${sale.id}`, sale)
+            .then((res) =>
+            (
+                dispatch(editSale(sale)),
+                dispatch(addMessage(`Venda foi atualizada com sucesso!`)),
+                dispatch(turnAlert()),
+                dispatch(turnLoading()),
+                cleanForm()
+            ))
+            .catch((error) => {
+                dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                dispatch(turnLoading());
+                return error.response ? error.response.data : 'erro desconhecido';
+            })
+    };
+}
