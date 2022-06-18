@@ -17,8 +17,11 @@ import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
 
 // import { useSelector, useDispatch } from 'react-redux';
-import { getAllSales, inactivesaleFetch } from "../../store/fetchActions/sale";
+import { getAllSales } from "../../store/fetchActions/sale";
 import { useDispatch, useSelector } from "react-redux";
+
+import Receipt from "../modal/salesReceipt";
+import { turnModal } from "../../store/ducks/Layout";
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -32,10 +35,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default () => {
-
-
+    
     const { sales } = useSelector(state => state.sales);
     const dispatch = useDispatch();
+    const [sale, setSale] = useState();
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10); const handleChangePage = (event, newPage) => {
@@ -49,10 +52,19 @@ export default () => {
 
     useEffect(() => {
         dispatch(getAllSales());
-    }, [])
+    }, []);
+
+    const HandleViewsale = sale => {
+        dispatch(turnModal());
+        setSale(sale);
+    }
 
     return (
         <BaseCard title="Vendas">
+
+            {sale &&
+                <Receipt sale={sale} />
+            }
 
             <TableContainer>
 
@@ -65,10 +77,10 @@ export default () => {
                 >
                     <TableHead>
                         <TableRow>
-                            
+
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                   Cliente / Data da venda
+                                    Cliente / Data da venda
                                 </Typography>
                             </TableCell>
 
@@ -93,12 +105,13 @@ export default () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sales
+                        {sales &&
+                        sales
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((sale, index) => (
-                                <StyledTableRow key={index} hover>
+                                <StyledTableRow key={sale.id} hover>
                                     <>
-                                    
+
                                         <TableCell>
                                             <Box
                                                 sx={{
@@ -113,16 +126,16 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                    {sale.client !== null ? sale.client.full_name.toUpperCase() : 'VENDA NO BALCÃO'}
+                                                        {sale.client != null ? sale.client.full_name.toUpperCase() : 'VENDA NO BALCÃO'}
                                                     </Typography>
-                                                    
+
                                                     <Typography
                                                         color="textSecondary"
                                                         sx={{
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                    {sale.sale_date}
+                                                        {sale.sale_date}
                                                     </Typography>
                                                 </Box>
                                             </Box>
@@ -144,7 +157,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        <Typography variant="h6">{sale.type_sale == "in_cash" ? "A Vista" : "A Prazo"}</Typography>
+                                                        {sale.type_sale == "in_cash" ? "A Vista" : "A Prazo"}
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"
@@ -191,11 +204,17 @@ export default () => {
                                         <TableCell align="center">
                                             <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                <Button onClick={() => { HandleEditsale(sale) }} color="primary" size="medium" variant="contained">
+                                                {/* <Receipt sale={sale}>
+                                                    <Button onClick={() => { dispatch(turnModal()) }} color="primary" size="medium" variant="contained">
+                                                        <FeatherIcon icon="eye" width="20" height="20" />
+                                                    </Button>
+                                                </Receipt> */}
+
+                                                <Button title="Visualiar venda" onClick={() => HandleViewsale(sale)} color="primary" size="medium" variant="contained">
                                                     <FeatherIcon icon="eye" width="20" height="20" />
                                                 </Button>
 
-                                                <Button onClick={() => { HandleInactivesale(sale) }} color="error" size="medium" variant="contained">
+                                                <Button title="Imprimir venda" onClick={() => {alert('estamos desenvolvendo essa funcionalidade')  }} color="error" size="medium" variant="contained">
                                                     <FeatherIcon icon="printer" width="20" height="20" />
                                                 </Button>
 
@@ -210,7 +229,7 @@ export default () => {
                 </Table>
                 <TablePagination
                     component="div"
-                    count={sales.length}
+                    count={sales ? sales.length : 0}
                     page={page}
                     onPageChange={handleChangePage}
                     rowsPerPage={rowsPerPage}

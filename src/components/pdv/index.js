@@ -120,7 +120,7 @@ export default () => {
             cash: 0,
             card: 0
         });
-        // setFormSale({ ...formSale, ['total_sale']:  });
+        dispatch(getListProductsCart());
     }
 
     const addProdutCart = () => {
@@ -164,7 +164,7 @@ export default () => {
         if (productsCart.length > 0) {
             dispatch(changeTitleAlert(`Venda realizada com sucesso!`));
             dispatch(addSale(formSale, cleanForm));
-        } {
+        } else {
             dispatch(addAlertMessage("Insira pelo menos 1 produto ao carrinho!"))
         }
     }
@@ -312,7 +312,7 @@ export default () => {
                                                                         fontWeight: "600",
                                                                     }}
                                                                 >
-                                                                    {convertToBrlCurrency(getCurrency(product.product.sale_value))}
+                                                                    {convertToBrlCurrency(getCurrency(product.sale_value))}
                                                                 </Typography>
                                                             </Box>
                                                         </Box>
@@ -361,7 +361,7 @@ export default () => {
                                                                         fontWeight: "600",
                                                                     }}
                                                                 >
-                                                                    {convertToBrlCurrency(getCurrency(product.product.sale_value * product.qtd / 100))}
+                                                                    {convertToBrlCurrency(getCurrency(product.sale_value * product.qtd / 100))}
                                                                 </Typography>
                                                             </Box>
                                                         </Box>

@@ -203,14 +203,12 @@ export default () => {
                                         <TableCell align="center">
                                             <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                <Button onClick={() => { HandleEditUser(user) }} color="primary" size="medium" variant="contained">
+                                                <Button title="Editar usuário" onClick={() => { HandleEditUser(user) }} color="primary" size="medium" variant="contained">
                                                     <FeatherIcon icon="edit" width="20" height="20" />
-                                                    Editar
                                                 </Button>
 
-                                                <Button onClick={() => { HandleInactiveUser(user) }} color="error" size="medium" variant="contained">
+                                                <Button title="Inativar usuário" onClick={() => { HandleInactiveUser(user) }} color="error" size="medium" variant="contained">
                                                     <FeatherIcon icon="trash" width="20" height="20" />
-                                                    Inativar
                                                 </Button>
 
 

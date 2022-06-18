@@ -2,8 +2,8 @@ import { api } from "../../../services/api";
 import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
 import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
-import { editSale, addSales } from "../../ducks/sales";
-import { turnAlert, addMessage, addAlertMessage, turnLoading } from "../../ducks/Layout";
+import { editSale, addSales, addSalesPerClient } from "../../ducks/sales";
+import { turnAlert, addMessage, addAlertMessage, turnLoading, turnModalGetSales } from "../../ducks/Layout";
 import { parseISO, format } from 'date-fns';
 
 export const addSale = (sale, cleanForm) => {
@@ -69,6 +69,35 @@ export const getAllSales = () => {
             .get('/sales', config)
             .then((res) => {
                 dispatch(addSales(res.data));
+                dispatch(turnLoading());
+            })
+            .catch(() => { dispatch(turnLoading()) })
+    }
+}
+
+export const getAllSalesPerClient = (client, paied = "all") => {
+    const config = {
+        transformResponse: [function (data) {
+
+            const payload = JSON.parse(data).map(s => {
+                return {
+                    ...s,
+                    "total_sale": getCurrency(s.total_sale),
+                    "sale_date": format(parseISO(s.sale_date), 'dd/MM/yyyy hh:mm:ss')
+                }
+            })
+            return payload;
+        }]
+    }
+
+    return (dispatch) => {
+        dispatch(turnLoading());
+
+        api
+            .get(`/sales/salesPerClient/${client.id}/${paied}`, config)
+            .then((res) => {
+                dispatch(addSalesPerClient(res.data));
+                dispatch(turnModalGetSales());
                 dispatch(turnLoading());
             })
             .catch(() => { dispatch(turnLoading()) })

@@ -86,13 +86,11 @@ export default function ClientModal(props) {
     }
 
     const handlePostData = async () => {
-
         dispatch(changeTitleAlert(`O cliente ${form.full_name} foi Cadastrado com sucesso!`));
         dispatch(addClientFetch(form, cleanForm));
     };
 
     const handlePutData = async () => {
-
         dispatch(changeTitleAlert(`O cliente ${form.full_name} foi atualizado com sucesso!`));
         dispatch(editClientFetch(form, cleanForm));
     };

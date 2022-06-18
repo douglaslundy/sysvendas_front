@@ -134,14 +134,12 @@ export default () => {
                                     <TableCell align="center">
                                         <Box sx={{ "& button": { mx: 1 } }}>
 
-                                            <Button onClick={() => { HandleEditUnit(unit) }} color="primary" size="medium" variant="contained">
+                                            <Button title="Editar unidade" onClick={() => { HandleEditUnit(unit) }} color="primary" size="medium" variant="contained">
                                                 <FeatherIcon icon="edit" width="20" height="20" />
-                                                Editar
                                             </Button>
 
-                                            <Button onClick={() => { HandleInactiveUnit(unit) }} color="error" size="medium" variant="contained">
+                                            <Button title="Inativar unidade" onClick={() => { HandleInactiveUnit(unit) }} color="error" size="medium" variant="contained">
                                                 <FeatherIcon icon="trash" width="20" height="20" />
-                                                Inativar
                                             </Button>
 
 

@@ -11,14 +11,15 @@ import { turnAlert, addMessage, addAlertMessage, turnLoading } from "../../ducks
 // }
 
 export const getAllClients = () => {
-//     getToken();
+    //     getToken();
     const config = {
         transformResponse: [function (data) {
 
             const payload = JSON.parse(data).map(d => {
                 return {
                     ...d,
-                    "limit": getCurrency(d.limit)
+                    "limit": getCurrency(d.limit),
+                    "debit_balance": getCurrency(d.debit_balance),
                 }
             })
             return payload;
@@ -57,7 +58,6 @@ export const addClientFetch = (client, cleanForm) => {
                     limit: getCurrency(res.data.client.limit)
                 },
 
-
                 dispatch(addClient(client)),
                 dispatch(addMessage(`O cliente ${client.full_name} foi adicionado com sucesso!`)),
                 dispatch(turnAlert()),
@@ -72,7 +72,6 @@ export const addClientFetch = (client, cleanForm) => {
     };
 };
 
-
 export const editClientFetch = (client, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
@@ -80,6 +79,7 @@ export const editClientFetch = (client, cleanForm) => {
         client = {
             ...client,
             limit: setCurrency(client.limit),
+            debit_balance: setCurrency(client.debit_balance),
             cpf_cnpj: cleanCpfCnpj(client.cpf_cnpj),
             phone: cleanPhone(client.phone)
         };
@@ -89,7 +89,8 @@ export const editClientFetch = (client, cleanForm) => {
             (
                 client = {
                     ...res.data.client,
-                    limit: getCurrency(res.data.client.limit)
+                    limit: getCurrency(res.data.client.limit),
+                    debit_balance: getCurrency(res.data.client.debit_balance),
                 },
 
                 dispatch(editClient(client)),

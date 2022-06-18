@@ -136,14 +136,12 @@ export default () => {
                                             <TableCell align="center">
                                                 <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                    <Button onClick={() => { HandleEditCategorie(categorie) }} color="primary" size="medium" variant="contained">
+                                                    <Button title="Editar categoria" onClick={() => { HandleEditCategorie(categorie) }} color="primary" size="medium" variant="contained">
                                                         <FeatherIcon icon="edit" width="20" height="20" />
-                                                        Editar
                                                     </Button>
 
-                                                    <Button onClick={() => { HandleInactiveCategorie(categorie) }} color="error" size="medium" variant="contained">
+                                                    <Button title="Inativar categoria" onClick={() => { HandleInactiveCategorie(categorie) }} color="error" size="medium" variant="contained">
                                                         <FeatherIcon icon="trash" width="20" height="20" />
-                                                        Inativar
                                                     </Button>
 
 

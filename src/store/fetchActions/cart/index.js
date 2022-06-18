@@ -25,10 +25,11 @@ export const addProductCartFetch = (cart, cleanForm) => {
     const { 'sysvendas.id': user } = parseCookies();
     return (dispatch) => {
         dispatch(turnLoading());
-
+        
         const prod = {
             id_user: user,
             qtd: setCurrency(cart.qtd),
+            sale_value: setCurrency(cart.product[0].sale_value),
             id_product: cart.product[0] ? cart.product[0].id : ''
         };
 

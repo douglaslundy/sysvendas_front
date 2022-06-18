@@ -58,7 +58,7 @@ export default () => {
     }, []);
 
     useEffect(() => {
-        searchProductPerParameter();        
+        searchProductPerParameter();
     }, [products, idCategory]);
 
     const HandleEditProduct = async product => {
@@ -87,11 +87,11 @@ export default () => {
         setPage(0);
     };
 
-    const changeItem = ({target}) =>{
+    const changeItem = ({ target }) => {
         setIdCategory(target.value);
     }
 
-    const searchProductPerParameter = () => {        
+    const searchProductPerParameter = () => {
         const data = idCategory !== 0 ? [...products.filter(item => item.id_category === idCategory)] : [...products];
         setAllProducts(searchValue ? [...data.filter(item => item.name.toLowerCase().indexOf(searchValue) > -1)] : data);
     }
@@ -253,6 +253,11 @@ export default () => {
                                                         }}
                                                     >
                                                         {product.stock ? product.stock / product.reason : 0}
+
+                                                        {/* <Button title="Entrada no estoque" onClick={() => { HandleEditProduct(product) }} color="primary" size="medium" variant="contained">
+                                                            {product.stock ? product.stock / product.reason : 0}
+                                                        </Button> */}
+
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"
@@ -273,14 +278,12 @@ export default () => {
                                         <TableCell align="center">
                                             <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                <Button onClick={() => { HandleEditProduct(product) }} color="primary" size="medium" variant="contained">
+                                                <Button title="Editar produto" onClick={() => { HandleEditProduct(product) }} color="primary" size="medium" variant="contained">
                                                     <FeatherIcon icon="edit" width="20" height="20" />
-                                                    Editar
                                                 </Button>
 
-                                                <Button onClick={() => { HandleInactiveProduct(product) }} color="error" size="medium" variant="contained">
+                                                <Button title="Inativar produto" onClick={() => { HandleInactiveProduct(product) }} color="error" size="medium" variant="contained">
                                                     <FeatherIcon icon="trash" width="20" height="20" />
-                                                    Inativar
                                                 </Button>
                                             </Box>
                                         </TableCell>

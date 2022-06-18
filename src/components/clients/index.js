@@ -11,18 +11,20 @@ import {
     Button,
     styled,
     TableContainer,
-    TablePagination, 
+    TablePagination,
     TextField
 } from "@mui/material";
 
 import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
 import ClientModal from "../modal/client";
+import SalesPerClient from "../modal/salesPerClient";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllClients, inactiveClientFetch } from "../../store/fetchActions/client";
+import { getAllSalesPerClient } from "../../store/fetchActions/sale";
 import { showClient } from "../../store/ducks/clients";
-import { changeTitleAlert, turnModal } from "../../store/ducks/Layout";
+import { changeTitleAlert, turnModal, turnModalGetSales } from "../../store/ducks/Layout";
 import ConfirmDialog from "../confirmDialog";
 
 
@@ -44,7 +46,7 @@ export default () => {
     });
 
     const dispatch = useDispatch();
-    const { clients } = useSelector(state => state.clients);
+    const { clients, client } = useSelector(state => state.clients);
     const [searchValue, setSearchValue] = useState();
     const [allClients, setAllClients] = useState(clients);
 
@@ -53,8 +55,13 @@ export default () => {
     }, []);
 
     useEffect(() => {
-        setAllClients(searchValue ? [...clients.filter(cli => cli.full_name.toLowerCase().indexOf( searchValue) > -1)] :clients);
+        setAllClients(searchValue ? [...clients.filter(cli => cli.full_name.toLowerCase().indexOf(searchValue) > -1)] : clients);
     }, [clients]);
+    
+    const HandleGetSales = async client => {
+        dispatch(getAllSalesPerClient(client, 'no'));
+        dispatch(showClient(client));
+    }
 
     const HandleEditClient = async client => {
         dispatch(showClient(client));
@@ -69,7 +76,7 @@ export default () => {
 
     const searchClients = ({ target }) => {
         setSearchValue(target.value.toLowerCase());
-        setAllClients([...clients.filter(cli => cli.full_name.toLowerCase().indexOf( searchValue) > -1)]);
+        setAllClients([...clients.filter(cli => cli.full_name.toLowerCase().indexOf(searchValue) > -1)]);
     }
 
     const [page, setPage] = useState(0);
@@ -98,8 +105,12 @@ export default () => {
                     name="search"
                     value={searchValue}
                     onChange={searchClients}
-                    
+
                 />
+
+                {client &&
+                    <SalesPerClient />
+                }
 
                 <ClientModal>
                     <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
@@ -164,7 +175,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {client.full_name ? client.full_name.toUpperCase(): ''}
+                                                        {client.full_name ? client.full_name.toUpperCase() : ''}
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"
@@ -213,14 +224,16 @@ export default () => {
                                         <TableCell align="center">
                                             <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                <Button onClick={() => { HandleEditClient(client) }} color="primary" size="medium" variant="contained">
-                                                    <FeatherIcon icon="edit" width="20" height="20" />
-                                                    Editar
+                                                <Button title="Receber" onClick={() => { HandleGetSales(client) }} color="primary" size="medium" variant="contained">
+                                                    <FeatherIcon icon="dollar-sign" width="20" height="20" />
                                                 </Button>
 
-                                                <Button onClick={() => { HandleInactiveClient(client) }} color="error" size="medium" variant="contained">
+                                                <Button title="Editar cliente" onClick={() => { HandleEditClient(client) }} color="primary" size="medium" variant="contained">
+                                                    <FeatherIcon icon="edit" width="20" height="20" />
+                                                </Button>
+
+                                                <Button title="Inativar cliente" onClick={() => { HandleInactiveClient(client) }} color="error" size="medium" variant="contained">
                                                     <FeatherIcon icon="trash" width="20" height="20" />
-                                                    Inativar
                                                 </Button>
 
 
