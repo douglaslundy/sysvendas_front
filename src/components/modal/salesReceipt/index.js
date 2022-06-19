@@ -15,7 +15,7 @@ import {
     TableContainer
 } from "@mui/material";
 
-import { turnModal } from '../../../store/ducks/Layout';
+import { turnModalGetSale } from '../../../store/ducks/Layout';
 import { convertToBrlCurrency, getCurrency } from '../../helpers/formatt/currency';
 
 
@@ -46,11 +46,11 @@ const style = {
 export default function SalesReceipt(props) {
 
     const dispatch = useDispatch();
-    const { isOpenModal } = useSelector(state => state.layout);
+    const { isOpenModalGetSale } = useSelector(state => state.layout);
     const { id, sale_date, type_sale, paied, total_sale, client, itens } = props.sale;
 
     const handleClose = () => {
-        dispatch(turnModal());
+        dispatch(turnModalGetSale());
     };
 
     return (
@@ -58,7 +58,7 @@ export default function SalesReceipt(props) {
             {props.children}
             <Modal
                 keepMounted
-                open={isOpenModal}
+                open={isOpenModalGetSale}
                 onClose={handleClose}
                 aria-labelledby="keep-mounted-modal-title"
                 aria-describedby="keep-mounted-modal-description"

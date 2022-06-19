@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import AlertModal from '../../messagesModal'
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from '@mui/material/Modal';
+import Switch from '@mui/material/Switch';
 import {
     Grid,
     Typography,
@@ -15,14 +16,16 @@ import {
     styled,
     TableContainer,
     TablePagination,
+    FormGroup,
+    FormControlLabel,
 } from "@mui/material";
 
 import BaseCard from "../../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
-
+import Receipt from "../../modal/salesReceipt";
 import { showClient } from '../../../store/ducks/clients';
-import { turnModalGetSales } from '../../../store/ducks/Layout';
-import { convertToBrlCurrency } from '../../helpers/formatt/currency';
+import { turnModal, turnModalGetSale, turnModalGetSales } from '../../../store/ducks/Layout';
+import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -33,7 +36,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         border: 0,
     },
 }));
-
 
 const style = {
     position: 'absolute',
@@ -55,9 +57,19 @@ export default function (props) {
     const { client } = useSelector(state => state.clients);
     const { isOpenModalGetSales } = useSelector(state => state.layout);
     const [totalSale, setTotalSale] = useState(0);
+
     const dispatch = useDispatch();
+    const [sale, setSale] = useState();
+
+    const [salesToPay, setSalesToPay] = useState([]);
+
+    const handleIsVisible = (sale) => {
+        salesToPay.includes(sale.id) ? (setSalesToPay([...salesToPay.filter(s => s != sale.id)]), setTotalSale(totalSale - setCurrency(sale.total_sale))) : (setSalesToPay([...salesToPay, sale.id]), setTotalSale(totalSale + setCurrency(sale.total_sale)));
+    }
 
     const cleanForm = () => {
+        setTotalSale(0);
+        setSalesToPay([]);
         dispatch(turnModalGetSales());
         dispatch(showClient({}));
     }
@@ -76,13 +88,22 @@ export default function (props) {
         setPage(0);
     };
 
+    const HandleViewSale = sale => {
+        dispatch(turnModalGetSale());
+        setSale(sale);
+    }
+
     return (
         <div>
+            {sale &&
+                <Receipt sale={sale} />
+            }
+
             {props.children}
             <Modal
                 keepMounted
                 open={isOpenModalGetSales}
-                onClose={handleClose}
+                // onClose={handleClose}
                 aria-labelledby="keep-mounted-modal-title"
                 aria-describedby="keep-mounted-modal-description"
             >
@@ -105,6 +126,12 @@ export default function (props) {
                                     >
                                         <TableHead>
                                             <TableRow>
+
+                                                <TableCell>
+                                                    <Typography color="textSecondary" variant="h6">
+                                                        Pagar
+                                                    </Typography>
+                                                </TableCell>
 
                                                 <TableCell>
                                                     <Typography color="textSecondary" variant="h6">
@@ -140,6 +167,13 @@ export default function (props) {
                                                     .map((sale, index) => (
                                                         <StyledTableRow key={sale.id} hover>
                                                             <>
+
+                                                                <TableCell align="center">
+                                                                    <Box sx={{ "& button": { mx: 1 } }}>
+                                                                        <FormControlLabel control={<Switch checked={salesToPay.includes(sale.id)}
+                                                                            onClick={() => handleIsVisible(sale)} />} />
+                                                                    </Box>
+                                                                </TableCell>
 
                                                                 <TableCell>
                                                                     <Box
@@ -233,15 +267,13 @@ export default function (props) {
                                                                 <TableCell align="center">
                                                                     <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                                        <Button title="Visualiar venda" onClick={() => HandleViewsale(sale)} color="primary" size="medium" variant="contained">
+                                                                        <Button title="Visualiar venda" onClick={() => HandleViewSale(sale)} color="primary" size="medium" variant="contained">
                                                                             <FeatherIcon icon="eye" width="20" height="20" />
                                                                         </Button>
 
                                                                         <Button title="Imprimir venda" onClick={() => { alert('estamos desenvolvendo essa funcionalidade') }} color="error" size="medium" variant="contained">
                                                                             <FeatherIcon icon="printer" width="20" height="20" />
                                                                         </Button>
-
-
                                                                     </Box>
                                                                 </TableCell>
                                                             </>
@@ -260,9 +292,22 @@ export default function (props) {
                                     />
                                 </TableContainer>
 
-                                <h5>Total a Pagar: {convertToBrlCurrency(totalSale)}</h5>
+                                <h5>Total a Pagar: {convertToBrlCurrency(getCurrency(totalSale))}</h5>
 
                             </BaseCard>
+                            <Box sx={{ "& button": { mx: 1, mt: 5 } }}>
+                                <Button onClick={() => { handleClose() }} variant="outlined" mt={2}>
+                                    Fechar
+                                </Button>
+
+                                {
+                                    totalSale > 0 &&
+                                    <Button onClick={() => { handleClose() }} variant="outlined" mt={2}>
+                                        Efetuar pagamento
+                                    </Button>
+
+                                }
+                            </Box>
                         </Grid>
                     </Grid>
 

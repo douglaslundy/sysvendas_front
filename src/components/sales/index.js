@@ -21,7 +21,7 @@ import { getAllSales } from "../../store/fetchActions/sale";
 import { useDispatch, useSelector } from "react-redux";
 
 import Receipt from "../modal/salesReceipt";
-import { turnModal } from "../../store/ducks/Layout";
+import { turnModalGetSale } from "../../store/ducks/Layout";
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -54,8 +54,8 @@ export default () => {
         dispatch(getAllSales());
     }, []);
 
-    const HandleViewsale = sale => {
-        dispatch(turnModal());
+    const HandleViewSale = sale => {
+        dispatch(turnModalGetSale());
         setSale(sale);
     }
 
@@ -210,7 +210,7 @@ export default () => {
                                                     </Button>
                                                 </Receipt> */}
 
-                                                <Button title="Visualiar venda" onClick={() => HandleViewsale(sale)} color="primary" size="medium" variant="contained">
+                                                <Button title="Visualiar venda" onClick={() => HandleViewSale(sale)} color="primary" size="medium" variant="contained">
                                                     <FeatherIcon icon="eye" width="20" height="20" />
                                                 </Button>
 

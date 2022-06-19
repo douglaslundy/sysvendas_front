@@ -129,12 +129,12 @@ export default function ProductModal(props) {
         cleanForm();
     };
     
+    const [isVisible, setIsVisible] = useState(false);
+    const products = props.products.filter((prod) => prod.id == prod.id_product_stock);
+
     const handleIsVisible = () => {
         setIsVisible(!isVisible);
     }
-
-    const [isVisible, setIsVisible] = useState(false);
-    const products = props.products.filter((prod) => prod.id == prod.id_product_stock);
 
     const getProductStock = id => {
         return { ...products.filter((prod) => prod.id == id)[0] };

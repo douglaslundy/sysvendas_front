@@ -6,6 +6,7 @@ const INITIAL_STATE = {
     isOpenLoading: false,
     isOpenModal: false, 
     isOpenModalGetSales: false, 
+    isOpenModalGetSale: false, 
     isOpenAlert: false,
     titleAlert: "Cadastro realizado com sucesso!",
     subTitleAlert: "Clique em ok para fechar!"
@@ -24,6 +25,8 @@ export const turnModal = createAction('IS_OPEN_MODAL');
 
 export const turnModalGetSales = createAction('IS_OPEN_MODAL_GET_SALES');
 
+export const turnModalGetSale = createAction('IS_OPEN_MODAL_GET_SALE');
+
 export const turnAlert = createAction('IS_OPEN_ALERT');
 
 export const changeTitleAlert = createAction('CHANGE_TITLE_ALERT');
@@ -40,6 +43,8 @@ export default createReducer(INITIAL_STATE, {
    [turnLoading.type] : (state, action) => ({...state, isOpenLoading: ( !state.isOpenLoading)}),
 
    [turnModal.type] : (state, action) => ({...state, isOpenModal: ( !state.isOpenModal)}),
+   
+   [turnModalGetSale.type] : (state, action) => ({...state, isOpenModalGetSale: ( !state.isOpenModalGetSale)}),
    
    [turnModalGetSales.type] : (state, action) => ({...state, isOpenModalGetSales: ( !state.isOpenModalGetSales)}),
 
