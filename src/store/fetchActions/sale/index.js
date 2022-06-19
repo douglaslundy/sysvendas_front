@@ -3,7 +3,7 @@ import { getCurrency, setCurrency } from "../../../components/helpers/formatt/cu
 import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
 import { editSale, addSales, addSalesPerClient } from "../../ducks/sales";
-import { turnAlert, addMessage, addAlertMessage, turnLoading, turnModalGetSales } from "../../ducks/Layout";
+import { turnAlert, addMessage, addAlertMessage, turnLoading, turnModalGetSales, changeTitleAlert } from "../../ducks/Layout";
 import { parseISO, format } from 'date-fns';
 
 export const addSale = (sale, cleanForm) => {
@@ -104,16 +104,25 @@ export const getAllSalesPerClient = (client, paied = "all") => {
     }
 }
 
-export const editSaleFetch = (sale, cleanForm) => {
+export const toPaySalesFetch = (form, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
 
+        form = {
+            ...form,
+            check: setCurrency(form.check),
+            cash: setCurrency(form.cash),
+            card: setCurrency(form.card)
+        };
 
-        api.put(`/sale/${sale.id}`, sale)
+        api.post(`/sales/pay`, form)
             .then((res) =>
             (
-                dispatch(editSale(sale)),
-                dispatch(addMessage(`Venda foi atualizada com sucesso!`)),
+                console.log('pagou ' + JSON.stringify(form)),
+                console.log('pagou ' + JSON.stringify(res.data)),
+                // dispatch(editSale(sale)),
+                // dispatch(addMessage(`Vendas recebidas com sucesso!`)),
+                dispatch(changeTitleAlert(res.data)),
                 dispatch(turnAlert()),
                 dispatch(turnLoading()),
                 cleanForm()
@@ -125,3 +134,24 @@ export const editSaleFetch = (sale, cleanForm) => {
             })
     };
 }
+// export const editSaleFetch = (sale, cleanForm) => {
+//     return (dispatch) => {
+//         dispatch(turnLoading());
+
+
+//         api.put(`/sale/${sale.id}`, sale)
+//             .then((res) =>
+//             (
+//                 dispatch(editSale(sale)),
+//                 dispatch(addMessage(`Venda foi atualizada com sucesso!`)),
+//                 dispatch(turnAlert()),
+//                 dispatch(turnLoading()),
+//                 cleanForm()
+//             ))
+//             .catch((error) => {
+//                 dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+//                 dispatch(turnLoading());
+//                 return error.response ? error.response.data : 'erro desconhecido';
+//             })
+//     };
+// }

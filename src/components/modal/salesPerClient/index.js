@@ -3,6 +3,7 @@ import AlertModal from '../../messagesModal'
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from '@mui/material/Modal';
 import Switch from '@mui/material/Switch';
+import Currency from '../../inputs/textFields/currency';
 import {
     Grid,
     Typography,
@@ -24,8 +25,9 @@ import BaseCard from "../../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
 import Receipt from "../../modal/salesReceipt";
 import { showClient } from '../../../store/ducks/clients';
-import { turnModal, turnModalGetSale, turnModalGetSales } from '../../../store/ducks/Layout';
+import { changeTitleAlert, turnModalGetSale, turnModalGetSales } from '../../../store/ducks/Layout';
 import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
+import { toPaySalesFetch } from '../../../store/fetchActions/sale';
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -61,21 +63,58 @@ export default function (props) {
     const dispatch = useDispatch();
     const [sale, setSale] = useState();
 
-    const [salesToPay, setSalesToPay] = useState([]);
+    // const [salesToPay, setSalesToPay] = useState([]);
+    const [waning, setWarning] = useState('');
 
-    const handleIsVisible = (sale) => {
-        salesToPay.includes(sale.id) ? (setSalesToPay([...salesToPay.filter(s => s != sale.id)]), setTotalSale(totalSale - setCurrency(sale.total_sale))) : (setSalesToPay([...salesToPay, sale.id]), setTotalSale(totalSale + setCurrency(sale.total_sale)));
+    const [form, setForm] = useState({
+        id_sales: [],
+        id_client: client ? client.id : 0,
+        cash: 0,
+        check: 0,
+        card: 0
+    });
+
+    const { id_sales: salesToPay, cash, check, card } = form;
+
+    const changeItem = ({ target }) => {
+        setForm({ ...form, [target.name]: target.value })
+    }
+
+    const handleEditForm = (sale) => {
+        // salesToPay.includes(sale.id) ? (setSalesToPay([...salesToPay.filter(s => s != sale.id)]), setTotalSale(totalSale - setCurrency(sale.total_sale))) : (setSalesToPay([...salesToPay, sale.id]), setTotalSale(totalSale + setCurrency(sale.total_sale)));
+
+        console.log(salesToPay);
+        salesToPay.includes(sale.id)
+
+            ? (setForm({ ...form, id_sales: [...salesToPay.filter(s => s != sale.id)] }), setTotalSale(totalSale - setCurrency(sale.total_sale)))
+
+            : (setForm({ ...form, id_sales: [...salesToPay, sale.id] }), setTotalSale(totalSale + setCurrency(sale.total_sale)))
     }
 
     const cleanForm = () => {
         setTotalSale(0);
-        setSalesToPay([]);
+        setForm({
+            id_sales: [],
+            id_client: client ? client.id : 0,
+            cash: 0,
+            check: 0,
+            card: 0
+        });
         dispatch(turnModalGetSales());
         dispatch(showClient({}));
     }
 
     const handleClose = () => {
         cleanForm();
+    };
+
+    const HandleToPay = () => {
+        if ((setCurrency(cash) + setCurrency(check) + setCurrency(card)) < totalSale) {
+            setWarning("O Valor inserido precisa ser igual ou maior ao valor total a pagar");
+        } else {
+            dispatch(changeTitleAlert("Vendas recebidas com sucesso dimais da conta"));
+            dispatch(toPaySalesFetch(form, cleanForm));
+        }
     };
 
     const [page, setPage] = useState(0);
@@ -171,7 +210,7 @@ export default function (props) {
                                                                 <TableCell align="center">
                                                                     <Box sx={{ "& button": { mx: 1 } }}>
                                                                         <FormControlLabel control={<Switch checked={salesToPay.includes(sale.id)}
-                                                                            onClick={() => handleIsVisible(sale)} />} />
+                                                                            onClick={() => handleEditForm(sale)} />} />
                                                                     </Box>
                                                                 </TableCell>
 
@@ -292,9 +331,39 @@ export default function (props) {
                                     />
                                 </TableContainer>
 
-                                <h5>Total a Pagar: {convertToBrlCurrency(getCurrency(totalSale))}</h5>
+                                <h3>Total a Pagar: {convertToBrlCurrency(getCurrency(totalSale))}</h3>
 
                             </BaseCard>
+
+                            <Box sx={{
+                                '& > :not(style)': { m: 2 },
+                                // 'display': 'flex',
+                                'justify-content': 'left'
+                            }}
+                            >
+                                <h5>{waning}</h5>
+                                <Currency value={cash}
+                                    disabled={!totalSale > 0}
+                                    label={'Dinheiro'}
+                                    name={'cash'}
+                                    changeItem={changeItem}
+                                    wd={"20%"}
+                                />
+                                <Currency value={card}
+                                    disabled={!totalSale > 0}
+                                    label={'Cartão'}
+                                    name={'card'}
+                                    changeItem={changeItem}
+                                    wd={"20%"}
+                                />
+                                <Currency value={check}
+                                    disabled={!totalSale > 0}
+                                    label={'Cheque'}
+                                    name={'check'}
+                                    changeItem={changeItem}
+                                    wd={"20%"}
+                                />
+                            </Box>
                             <Box sx={{ "& button": { mx: 1, mt: 5 } }}>
                                 <Button onClick={() => { handleClose() }} variant="outlined" mt={2}>
                                     Fechar
@@ -302,7 +371,7 @@ export default function (props) {
 
                                 {
                                     totalSale > 0 &&
-                                    <Button onClick={() => { handleClose() }} variant="outlined" mt={2}>
+                                    <Button onClick={() => { HandleToPay() }} color="success" variant="contained" mt={2}>
                                         Efetuar pagamento
                                     </Button>
 

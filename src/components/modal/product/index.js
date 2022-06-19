@@ -261,7 +261,7 @@ export default function ProductModal(props) {
 
                                     <FormGroup>
                                         <FormControlLabel control={<Switch checked={isVisible}
-                                            onClick={handleIsVisible} />} label="Integrar estoque" />
+                                            onClick={handleIsVisible} />} label={isVisible ? "Desintegrar estoque" : "Integrar estoque"} />
                                     </FormGroup>
 
                                     {/* <FormGroup>
