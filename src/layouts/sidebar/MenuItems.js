@@ -4,11 +4,11 @@ const Menuitems = [
     icon: "home",
     href: "/",
   },
-  {
-    title: "PDV",
-    icon: "monitor",
-    href: "/pdv",
-  },
+  // {
+  //   title: "PDV",
+  //   icon: "monitor",
+  //   href: "/pdv",
+  // },
   {
     title: "Usuarios", 
     icon: "users",
@@ -44,11 +44,11 @@ const Menuitems = [
     icon: "dollar-sign",
     href: "/valueCategory",
   },
-  {
-    title: "Vendas", 
-    icon: "activity",
-    href: "/sales",
-  },
+  // {
+  //   title: "Vendas", 
+  //   icon: "activity",
+  //   href: "/sales",
+  // },
 
   // {
   //   title: "Vendas", 
