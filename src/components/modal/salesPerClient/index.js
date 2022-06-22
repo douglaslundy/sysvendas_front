@@ -17,7 +17,7 @@ import {
     styled,
     TableContainer,
     TablePagination,
-    FormGroup,
+    Alert,
     FormControlLabel,
 } from "@mui/material";
 
@@ -28,6 +28,8 @@ import { showClient } from '../../../store/ducks/clients';
 import { changeTitleAlert, turnModalGetSale, turnModalGetSales } from '../../../store/ducks/Layout';
 import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
 import { toPaySalesFetch } from '../../../store/fetchActions/sale';
+import ConfirmDialog from "../../confirmDialog";
+
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -66,24 +68,32 @@ export default function (props) {
     // const [salesToPay, setSalesToPay] = useState([]);
     const [waning, setWarning] = useState('');
 
+    const [confirmDialog, setConfirmDialog] = useState({
+        isOpen: false,
+    });
+
     const [form, setForm] = useState({
         id_sales: [],
         id_client: client ? client.id : 0,
         cash: 0,
-        check: 0,
-        card: 0
+        // check: 0,
+        // card: 0
     });
 
-    const { id_sales: salesToPay, cash, check, card } = form;
+    const { id_sales: salesToPay, cash } = form;
+    const [troco, setTroco] = useState(0);
 
     const changeItem = ({ target }) => {
         setForm({ ...form, [target.name]: target.value })
     }
 
+    useEffect(() => {
+        setTroco(setCurrency(cash) - totalSale);
+    } ,[cash])
+
     const handleEditForm = (sale) => {
         // salesToPay.includes(sale.id) ? (setSalesToPay([...salesToPay.filter(s => s != sale.id)]), setTotalSale(totalSale - setCurrency(sale.total_sale))) : (setSalesToPay([...salesToPay, sale.id]), setTotalSale(totalSale + setCurrency(sale.total_sale)));
 
-        console.log(salesToPay);
         salesToPay.includes(sale.id)
 
             ? (setForm({ ...form, id_sales: [...salesToPay.filter(s => s != sale.id)] }), setTotalSale(totalSale - setCurrency(sale.total_sale)))
@@ -97,8 +107,8 @@ export default function (props) {
             id_sales: [],
             id_client: client ? client.id : 0,
             cash: 0,
-            check: 0,
-            card: 0
+            // check: 0,
+            // card: 0
         });
         dispatch(turnModalGetSales());
         dispatch(showClient({}));
@@ -109,11 +119,11 @@ export default function (props) {
     };
 
     const HandleToPay = () => {
-        if ((setCurrency(cash) + setCurrency(check) + setCurrency(card)) < totalSale) {
+        if (setCurrency(cash) < totalSale) {
             setWarning("O Valor inserido precisa ser igual ou maior ao valor total a pagar");
         } else {
+            setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja baixar estas vendas?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: toPaySalesFetch(form, cleanForm) })
             dispatch(changeTitleAlert("Vendas recebidas com sucesso dimais da conta"));
-            dispatch(toPaySalesFetch(form, cleanForm));
         }
     };
 
@@ -332,6 +342,10 @@ export default function (props) {
                                 </TableContainer>
 
                                 <h3>Total a Pagar: {convertToBrlCurrency(getCurrency(totalSale))}</h3>
+                                <h4>Troco: {troco && troco > 0 ? convertToBrlCurrency(getCurrency(troco)) : ''}</h4>
+                                <ConfirmDialog
+                                    confirmDialog={confirmDialog}
+                                    setConfirmDialog={setConfirmDialog} />
 
                             </BaseCard>
 
@@ -341,15 +355,20 @@ export default function (props) {
                                 'justify-content': 'left'
                             }}
                             >
-                                <h5>{waning}</h5>
+                                {/* <h5>{}</h5> */}
+                                {waning &&
+                                    <Alert variant="filled" severity="error">
+                                        {waning}
+                                    </Alert>
+                                }
                                 <Currency value={cash}
                                     disabled={!totalSale > 0}
                                     label={'Dinheiro'}
                                     name={'cash'}
                                     changeItem={changeItem}
-                                    wd={"20%"}
+                                    wd={"30%"}
                                 />
-                                <Currency value={card}
+                                {/* <Currency value={card}
                                     disabled={!totalSale > 0}
                                     label={'Cartão'}
                                     name={'card'}
@@ -362,7 +381,7 @@ export default function (props) {
                                     name={'check'}
                                     changeItem={changeItem}
                                     wd={"20%"}
-                                />
+                                /> */}
                             </Box>
                             <Box sx={{ "& button": { mx: 1, mt: 5 } }}>
                                 <Button onClick={() => { handleClose() }} variant="outlined" mt={2}>

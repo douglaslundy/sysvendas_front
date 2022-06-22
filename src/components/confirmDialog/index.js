@@ -63,14 +63,14 @@ export default function ConfirmDialog(props) {
                 <Button
                     onClick={() => {dispatch(confirmDialog.confirm), setConfirmDialog({ ...confirmDialog, isOpen: false })}}
                     color="error" size="medium" variant="contained">
-                    <FeatherIcon icon="trash" width="40" height="20" />
+                    <FeatherIcon icon="check" width="40" height="20" />
                     Sim
                 </Button>
 
                 <Button
                     onClick={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
                     color="success" size="medium" variant="contained">
-                    <FeatherIcon icon="trash" width="40" height="20" />
+                    <FeatherIcon icon="x" width="40" height="20" />
                     Não
                 </Button>
             </DialogActions>

@@ -32,6 +32,7 @@ import Select from '../inputs/selects';
 import Currency from '../inputs/textFields/currency';
 import { getAllClients } from "../../store/fetchActions/client";
 import { addSale } from "../../store/fetchActions/sale";
+import ConfirmDialog from "../confirmDialog";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -69,6 +70,10 @@ export default () => {
 
     const { product, qtd } = formCart;
     const { id_pay_metod, id_client, pay_value, type_sale, total_sale, check, cash, card } = formSale;
+
+    const [confirmDialog, setConfirmDialog] = useState({
+        isOpen: false,
+    });
 
     useEffect(() => {
         dispatch(getListProductsCart());
@@ -149,23 +154,28 @@ export default () => {
     const payMetods = [{
         'id': "cash",
         'name': 'dinheiro'
-    }, {
-        'id': "card",
-        'name': 'cartao'
-    }, {
-        'id': "check",
-        'name': 'cheque'
-    }, {
+    },
+    // {
+    //     'id': "card",
+    //     'name': 'cartao'
+    // },
+    // {
+    //     'id': "check",
+    //     'name': 'cheque'
+    // },
+    {
         'id': "on_term",
         'name': 'a prazo'
-    }];
+    }
+    ];
 
     const confirmSale = () => {
         if (productsCart.length > 0) {
+
+            setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja finalizar esta venda?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: addSale(formSale, cleanForm) });
             dispatch(changeTitleAlert(`Venda realizada com sucesso!`));
-            dispatch(addSale(formSale, cleanForm));
         } else {
-            dispatch(addAlertMessage("Insira pelo menos 1 produto ao carrinho!"))
+            dispatch(addAlertMessage("Insira pelo menos um produto ao carrinho!"))
         }
     }
 
@@ -397,6 +407,9 @@ export default () => {
                         </TableContainer>
 
                     </Box>
+                    <ConfirmDialog
+                        confirmDialog={confirmDialog}
+                        setConfirmDialog={setConfirmDialog} />
                 </BaseCard >
 
                 <BaseCard title="Total">
@@ -419,6 +432,14 @@ export default () => {
                             wd={"90%"}
                         />
 
+                        <InputSelectClient
+                            label="Selecione o cliente"
+                            name="client"
+                            clients={clients}
+                            changeItem={getClient}
+                            wd={"90%"}
+                        />
+
                         {type_sale !== 'on_term' &&
                             <Currency
                                 value={pay_value}
@@ -428,15 +449,9 @@ export default () => {
                                 wd="90%"
                             />
                         }
-                        {type_sale == 'on_term' &&
-                            <InputSelectClient
-                                label="Selecione o cliente"
-                                name="client"
-                                clients={clients}
-                                changeItem={getClient}
-                                wd={"90%"}
-                            />
-                        }
+                        {/* {type_sale == 'on_term' && */}
+
+                        {/* } */}
 
                         <Button onClick={confirmSale} color="secondary" size="medium" variant="contained">
                             <FeatherIcon icon="save" width="20" height="20" />
