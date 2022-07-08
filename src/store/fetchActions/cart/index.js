@@ -30,7 +30,9 @@ export const addProductCartFetch = (cart, cleanForm) => {
             id_user: user,
             qtd: setCurrency(cart.qtd),
             sale_value: setCurrency(cart.product[0].sale_value),
-            id_product: cart.product[0] ? cart.product[0].id : ''
+            id_product: cart.product[0] ? cart.product[0].id : '',            
+            id_product_stock: cart.product[0] ? cart.product[0].id_product_stock : '',
+            reason: cart.product[0] ? cart.product[0].reason : 1
         };
 
         api.post('/cart', prod)

@@ -40,6 +40,11 @@ export default function index(props) {
       setOptions([]);
     }
   }, [open]);
+
+  // const listItems = options.map((prod, index) => ({
+  //   ...prod,
+  //   label: prod.name
+  // }))
   
   const { label,  name, value, changeItem, products, wd } = props;
 
@@ -55,7 +60,7 @@ export default function index(props) {
       onClose={() => {
         setOpen(false);
       }}
-      // isOptionEqualToValue={(option, value) => option.id === value.id}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
       getOptionLabel={(option) => `${option.id} - ${option.name} - Preço ${option.sale_value}`}
       noOptionsText={"Produto inexistente!"}
       options={options}

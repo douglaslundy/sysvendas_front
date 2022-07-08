@@ -17,8 +17,10 @@ export const cleanProductsCart = createAction('CLEAN_PRODUCT_CART');
 export default createReducer(INITIAL_STATE, {
 
 	// addProductCart  persiste no banco insere um elemento na lista products
-	[addProductCart.type]: (state, action) => ({ productsCart: [action.payload, ...state.productsCart] }),
-
+	// [addProductCart.type]: (state, action) => ({ productsCart: [action.payload, ...state.productsCart] }),
+	
+	[addProductCart.type]: (state, action) => ( state.productsCart.filter( (prod) => prod.id == action.payload.id).length > 0 ? { productsCart: [action.payload, ...state.productsCart.filter((prod) => prod.id !== action.payload.id)] } : { productsCart: [action.payload, ...state.productsCart] }),
+	
 	// editProductCart  persiste no banco uma atualização e altera o elemento na lista products
 	[editProductCart.type]: (state, action) => ({ productsCart: [action.payload, ...state.productsCart.filter((prod) => prod.id !== action.payload.id)] }),
 

@@ -2,8 +2,8 @@ import { api } from "../../../services/api";
 import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
 import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
-import { editSale, addSales, addSalesPerClient } from "../../ducks/sales";
-import { turnAlert, addMessage, addAlertMessage, turnLoading, turnModalGetSales, changeTitleAlert } from "../../ducks/Layout";
+import { addSales, addSalesPerClient } from "../../ducks/sales";
+import { turnAlert, addAlertMessage, turnLoading, turnModalGetSales, changeTitleAlert } from "../../ducks/Layout";
 import { parseISO, format } from 'date-fns';
 
 export const addSale = (sale, cleanForm) => {

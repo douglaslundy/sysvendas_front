@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Receipt from "../modal/salesReceipt";
 import { turnModalGetSale } from "../../store/ducks/Layout";
+import salesPDF from "../../reports/sales";
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -214,7 +215,7 @@ export default () => {
                                                     <FeatherIcon icon="eye" width="20" height="20" />
                                                 </Button>
 
-                                                <Button title="Imprimir venda" onClick={() => {alert('estamos desenvolvendo essa funcionalidade')  }} color="error" size="medium" variant="contained">
+                                                <Button title="Imprimir venda" onClick={() => salesPDF(sale)} color="error" size="medium" variant="contained">
                                                     <FeatherIcon icon="printer" width="20" height="20" />
                                                 </Button>
 

@@ -12,11 +12,13 @@ import {
     TableHead,
     TableRow,
     TableCell,
-    TableContainer
+    TableContainer,
 } from "@mui/material";
+import FeatherIcon from "feather-icons-react";
 
 import { turnModalGetSale } from '../../../store/ducks/Layout';
 import { convertToBrlCurrency, getCurrency } from '../../helpers/formatt/currency';
+import salesPDF from '../../../reports/sales';
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -194,7 +196,10 @@ export default function SalesReceipt(props) {
 
                     <Box sx={{ "& button": { mx: 1, mt: 5 } }}>
                         <Button onClick={() => { handleClose() }} variant="outlined" mt={2}>
-                            Fechar
+                            <FeatherIcon icon="skip-back" width="20" height="20" />
+                        </Button>
+                        <Button title="Imprimir venda" onClick={() => salesPDF(props.sale)} color="error" size="medium" variant="contained">
+                            <FeatherIcon icon="printer" width="20" height="20" />
                         </Button>
                     </Box>
 

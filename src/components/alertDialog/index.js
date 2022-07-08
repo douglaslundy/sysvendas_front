@@ -70,8 +70,7 @@ export default function AlertDialog() {
                 <Button
                     onClick={() => dispatch(turnAlert())}
                     color="error" size="medium" variant="contained">
-                    <FeatherIcon icon="check-circle" size="36" width="40" height="20" />
-                    OK
+                    <FeatherIcon icon="check-circle" size="36" width="80" height="30" />
                 </Button>
 
             </DialogActions>

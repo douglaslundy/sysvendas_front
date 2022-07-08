@@ -324,6 +324,7 @@
     "path-parse": "^1.0.7",
     "path-type": "^4.0.0",
     "pbkdf2": "^3.1.2",
+    "pdfmake": "^0.2.5",
     "picocolors": "^1.0.0",
     "picomatch": "^2.3.1",
     "pirates": "^4.0.5",

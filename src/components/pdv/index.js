@@ -18,21 +18,21 @@ import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
 import InputSelectProduct from "../inputs/inputSelectProduct";
 import InputSelectClient from "../inputs/inputSelectClient";
+import ConfirmDialog from "../confirmDialog";
 import QTD from "../../components/inputs/textFields/stock-qtd";
+import AlertModal from "../messagesModal";
+import Select from '../inputs/selects';
+import Currency from '../inputs/textFields/currency';
 import { useSelector, useDispatch } from 'react-redux';
 import { getId } from "../helpers/formatt/getIdFromSelect";
 import { getCurrency, setCurrency } from "../helpers/formatt/currency";
 import { addProductCartFetch, getListProductsCart, deleteProductFromCart } from "../../store/fetchActions/cart";
 import { getAllProducts } from "../../store/fetchActions/product";
 import { convertToBrlCurrency } from "../helpers/formatt/currency";
-import AlertModal from "../messagesModal";
 import { addAlertMessage, changeTitleAlert } from "../../store/ducks/Layout";
 import { getTotal } from "../helpers/checkout";
-import Select from '../inputs/selects';
-import Currency from '../inputs/textFields/currency';
 import { getAllClients } from "../../store/fetchActions/client";
 import { addSale } from "../../store/fetchActions/sale";
-import ConfirmDialog from "../confirmDialog";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -120,12 +120,13 @@ export default () => {
             pay_value: 0,
             type_sale: "in_cash",
             paied: "yes",
-            total_sale: getTotal(productsCart),
+            // total_sale: getTotal(productsCart),
+            total_sale: 0,
             check: 0,
             cash: 0,
             card: 0
         });
-        dispatch(getListProductsCart());
+        // setFormCart({...form, total_sale: 0})
     }
 
     const addProdutCart = () => {
@@ -432,13 +433,15 @@ export default () => {
                             wd={"90%"}
                         />
 
-                        <InputSelectClient
-                            label="Selecione o cliente"
-                            name="client"
-                            clients={clients}
-                            changeItem={getClient}
-                            wd={"90%"}
-                        />
+                        {confirmDialog.isOpen == false &&
+                            <InputSelectClient
+                                label="Selecione o cliente"
+                                name="client"
+                                clients={clients}
+                                changeItem={getClient}
+                                wd={"90%"}
+                            />
+                        }
 
                         {type_sale !== 'on_term' &&
                             <Currency
@@ -466,22 +469,3 @@ export default () => {
         </>
     );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
