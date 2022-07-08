@@ -31,8 +31,8 @@ export default () => {
     }, []);
 
 
-    const changeItem = ({ target }) => {
-        setId(getId(target.value));
+    const getProduct = (value = 0) => {
+        setId(value.id);
     };
 
     const show = () => {
@@ -132,7 +132,7 @@ export default () => {
                     label="Produtos"
                     name="product"
                     products={products}
-                    changeItem={changeItem}
+                    setProduct={getProduct}
                 />
 
                 <Fab onClick={() => show()} color="primary" aria-label="add">

@@ -29,10 +29,10 @@ export const addProductCartFetch = (cart, cleanForm) => {
         const prod = {
             id_user: user,
             qtd: setCurrency(cart.qtd),
-            sale_value: setCurrency(cart.product[0].sale_value),
-            id_product: cart.product[0] ? cart.product[0].id : '',            
-            id_product_stock: cart.product[0] ? cart.product[0].id_product_stock : '',
-            reason: cart.product[0] ? cart.product[0].reason : 1
+            sale_value: setCurrency(cart.product.sale_value),
+            id_product: cart.product ? cart.product.id : '',            
+            id_product_stock: cart.product ? cart.product.id_product_stock : '',
+            reason: cart.product ? cart.product.reason : 1
         };
 
         api.post('/cart', prod)
@@ -42,15 +42,15 @@ export const addProductCartFetch = (cart, cleanForm) => {
                 res = {
                     ...res.data.cart,
                     product: {
-                        id: cart.product[0].id,
-                        name: cart.product[0].name,
-                        bar_code: cart.product[0].bar_code,
-                        id_unity: cart.product[0].id_unity,
-                        id_category: cart.product[0].id_category,
-                        stock: setCurrency(cart.product[0].stock),
-                        sale_value: setCurrency(cart.product[0].sale_value),
-                        cost_value: setCurrency(cart.product[0].cost_value),
-                        active: cart.product[0].active,
+                        id: cart.product.id,
+                        name: cart.product.name,
+                        bar_code: cart.product.bar_code,
+                        id_unity: cart.product.id_unity,
+                        id_category: cart.product.id_category,
+                        stock: setCurrency(cart.product.stock),
+                        sale_value: setCurrency(cart.product.sale_value),
+                        cost_value: setCurrency(cart.product.cost_value),
+                        active: cart.product.active,
                     }
                 },
                 cleanForm(),

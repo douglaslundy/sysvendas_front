@@ -1,4 +1,4 @@
-export function setCurrency(str) {
+export function setCurrency(str = '') {
 
     //remove todos os pontos
     let multiplier = str.toString().replace(/['R$'.]/g, '');

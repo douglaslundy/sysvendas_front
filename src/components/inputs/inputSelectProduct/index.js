@@ -22,7 +22,7 @@ export default function index(props) {
     }
 
     (async () => {
-      await sleep(1e3); 
+      await sleep(1e3);
 
       if (active) {
         setOptions([...products]);
@@ -32,7 +32,7 @@ export default function index(props) {
     return () => {
       active = false;
     };
-    
+
   }, [loading]);
 
   useEffect(() => {
@@ -41,12 +41,12 @@ export default function index(props) {
     }
   }, [open]);
 
-  // const listItems = options.map((prod, index) => ({
-  //   ...prod,
-  //   label: prod.name
-  // }))
-  
-  const { label,  name, value, changeItem, products, wd } = props;
+  const { label, name, setProduct, products, wd } = props;
+  const [selectedId, setSelectedId] = useState(0);
+
+  const getProduct = () => {
+    setProduct(products.filter((prod) => prod.id == selectedId)[0]);
+  }
 
   return (
     <Autocomplete
@@ -61,19 +61,19 @@ export default function index(props) {
         setOpen(false);
       }}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      getOptionLabel={(option) => `${option.id} - ${option.name} - Preço ${option.sale_value}`}
+      getOptionLabel={(option) => `${option.name} - Preço ${option.sale_value}`}
       noOptionsText={"Produto inexistente!"}
       options={options}
       loading={loading}
+      onSelect={getProduct}
+      onChange={(_, newValue) => { setSelectedId(newValue?.id) }}
+      name={name}
+
       renderInput={(params) => (
 
         <TextField
           {...params}
-          id="product"
           label={label}
-          name={name}
-          value={value}
-          onSelect={changeItem}
 
           InputProps={{
             ...params.InputProps,

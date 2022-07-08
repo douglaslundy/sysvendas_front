@@ -53,8 +53,9 @@ export default () => {
 
     const [formCart, setFormCart] = useState({
         product: [],
-        qtd: ''
+        qtd: '',
     });
+
 
     const [formSale, setFormSale] = useState({
         id_pay_metod: "cash",
@@ -67,13 +68,18 @@ export default () => {
         card: 0
 
     });
+    const [product, setProduct] = useState([]);
 
-    const { product, qtd } = formCart;
-    const { id_pay_metod, id_client, pay_value, type_sale, total_sale, check, cash, card } = formSale;
+    const { qtd } = formCart;
+    const { id_pay_metod, pay_value, type_sale, total_sale } = formSale;
 
     const [confirmDialog, setConfirmDialog] = useState({
         isOpen: false,
     });
+
+    useEffect(() => {
+        setFormCart({ product: product, qtd: product && product.id ? 1 : '' });
+    }, [product]);
 
     useEffect(() => {
         dispatch(getListProductsCart());
@@ -102,9 +108,13 @@ export default () => {
         setFormSale({ ...formSale, pay_value: target.value, [id_pay_metod]: target.value });
     };
 
-    const getProduct = ({ target }) => {
-        setFormCart({ ...formCart, ['product']: products.filter((prod) => prod.id == getId(target.value)), qtd: 1 });
-    }
+    // const getProduct = product => {
+    //     setFormCart({ ...formCart, ['product']: product, qtd: 1 });
+    // }
+
+    // const [product, setProduct] = useState([]);
+
+
     const getClient = ({ target }) => {
         setFormSale({ ...formSale, ['id_client']: getId(target.value) });
     }
@@ -130,8 +140,9 @@ export default () => {
     }
 
     const addProdutCart = () => {
-        product[0] ? dispatch(changeTitleAlert(`${product[0].name} foi inserido no carrinho!`)) : '';
-        product[0] ? dispatch(addProductCartFetch(formCart, cleanForm)) : dispatch(addAlertMessage('Selecione o produto que deseja inserir no carrinho!'));
+        console.log(`produto pego foi  ${JSON.stringify(product[0])}`)
+        product ? dispatch(changeTitleAlert(`${product.name} foi inserido no carrinho!`)) : '';
+        product ? dispatch(addProductCartFetch(formCart, cleanForm)) : dispatch(addAlertMessage('Selecione o produto que deseja inserir no carrinho!'));
     }
 
     const HandleDeleteProduct = product => {
@@ -194,7 +205,7 @@ export default () => {
                         label="Selecione o produto"
                         name="product"
                         products={products}
-                        changeItem={getProduct}
+                        setProduct={setProduct}
                         wd={"55%"}
                     />
 
