@@ -69,6 +69,7 @@ export default () => {
 
     });
     const [product, setProduct] = useState([]);
+    const [client, setClient] = useState([]);
 
     const { qtd } = formCart;
     const { id_pay_metod, pay_value, type_sale, total_sale } = formSale;
@@ -82,14 +83,19 @@ export default () => {
     }, [product]);
 
     useEffect(() => {
+        setFormSale({ ...formSale, id_client: client?.id });
+    }, [client]);
+    
+    useEffect(() => {
+        setFormSale({ ...formSale, ['total_sale']: getTotal(productsCart) })
+    }, [productsCart]);
+
+    useEffect(() => {
         dispatch(getListProductsCart());
         dispatch(getAllProducts());
         dispatch(getAllClients());
     }, []);
 
-    useEffect(() => {
-        setFormSale({ ...formSale, ['total_sale']: getTotal(productsCart) })
-    }, [productsCart]);
 
     useEffect(() => {
         id_pay_metod == "on_term" ? setFormSale({ ...formSale, 'paied': 'no', 'type_sale': 'on_term', cash: 0, card: 0, check: 0 }) :
@@ -115,9 +121,9 @@ export default () => {
     // const [product, setProduct] = useState([]);
 
 
-    const getClient = ({ target }) => {
-        setFormSale({ ...formSale, ['id_client']: getId(target.value) });
-    }
+    // const getClient = ({ target }) => {
+    //     setFormSale({ ...formSale, ['id_client']: getId(target.value) });
+    // }
 
     const cleanForm = () => {
         setFormCart({
@@ -140,7 +146,6 @@ export default () => {
     }
 
     const addProdutCart = () => {
-        console.log(`produto pego foi  ${JSON.stringify(product[0])}`)
         product ? dispatch(changeTitleAlert(`${product.name} foi inserido no carrinho!`)) : '';
         product ? dispatch(addProductCartFetch(formCart, cleanForm)) : dispatch(addAlertMessage('Selecione o produto que deseja inserir no carrinho!'));
     }
@@ -449,7 +454,7 @@ export default () => {
                                 label="Selecione o cliente"
                                 name="client"
                                 clients={clients}
-                                changeItem={getClient}
+                                setClient={setClient}
                                 wd={"90%"}
                             />
                         }

@@ -22,7 +22,7 @@ export default function index(props) {
     }
 
     (async () => {
-      await sleep(1e3); 
+      await sleep(1e3);
 
       if (active) {
         setOptions([...clients]);
@@ -32,7 +32,7 @@ export default function index(props) {
     return () => {
       active = false;
     };
-    
+
   }, [loading]);
 
   useEffect(() => {
@@ -40,8 +40,13 @@ export default function index(props) {
       setOptions([]);
     }
   }, [open]);
-  
-  const { label,  name, value, changeItem, clients, wd } = props;
+
+  const { label, name, setClient, clients, wd } = props;
+  const [selectedId, setSelectedId] = useState(0);
+
+  const getClient = () => {
+    setClient(clients.filter((cli) => cli.id == selectedId)[0]);
+  } 
 
   return (
     <Autocomplete
@@ -56,19 +61,20 @@ export default function index(props) {
         setOpen(false);
       }}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      getOptionLabel={(option) => `${option.id} - ${option.full_name}`}
+      // getOptionLabel={(option) => `${option.full_name} - Código: ${option.id}`}
+      getOptionLabel={(option) => `${option.full_name}`}
       noOptionsText={"Cliente inexistente!!!"}
       options={options}
       loading={loading}
+      name={name}
+      onChange={(_, newValue) => { setSelectedId(newValue?.id) }}
+      onSelect={getClient}
+
       renderInput={(params) => (
 
         <TextField
           {...params}
-          id="client"
           label={label}
-          name={name}
-          value={value}
-          onSelect={changeItem}
 
           InputProps={{
             ...params.InputProps,
