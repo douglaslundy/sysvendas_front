@@ -1,6 +1,5 @@
 import { api } from "../../../services/api";
-import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
-import { getId } from '../../../components/helpers/formatt/getIdFromSelect';
+import { setCurrency } from "../../../components/helpers/formatt/currency";
 import { addProductsCart, addProductCart, removeProductCart } from "../../ducks/cart";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 import { parseCookies } from 'nookies';
@@ -67,71 +66,6 @@ export const addProductCartFetch = (cart, cleanForm) => {
             })
     };
 };
-
-
-
-
-
-
-// export const valueUpdatePerCategoy = (data, cleanForm) => {
-//     return (dispatch) => {
-//         dispatch(turnLoading());
-
-//         data = {
-//             ...data,
-//             percent: data.percent.replace(" %", ""),
-//         };
-
-//         api.post('/cart/updateValueCategories', data)
-//             .then((res) =>
-//             (
-//                 dispatch(addMessage(`O Preço dos produtos da Categoria selecionada foram atualizados em ${data.percent} com sucesso!`)),
-//                 dispatch(turnAlert()),
-//                 dispatch(turnLoading()),
-//                 cleanForm()
-//             ))
-//             .catch((error) => {
-//                 dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
-//                 dispatch(turnLoading());
-//                 return error.response ? error.response.data : 'erro desconhecido';
-//             })
-//     };
-// };
-
-
-// export const editProductFetch = (product, cleanForm) => {
-//     return (dispatch) => {
-//         dispatch(turnLoading())
-
-//         product = {
-//             ...product,
-//             cost_value: setCurrency(product.cost_value),
-//             sale_value: setCurrency(product.sale_value)
-//             // id_category: getId(product.id_category)
-//         };
-
-//         api.put(`/cart/${product.id}`, product)
-//             .then((res) =>
-//             (
-//                 product = {
-//                     ...res.data.product,
-//                     cost_value: getCurrency(res.data.product.cost_value),
-//                     sale_value: getCurrency(res.data.product.sale_value)
-//                 },
-
-//                 dispatch(editProduct(product)),
-//                 dispatch(addMessage(`O produto ${product.name} foi atualizado com sucesso!`)),
-//                 dispatch(turnAlert()),
-//                 dispatch(turnLoading()),
-//                 cleanForm()
-//             ))
-//             .catch((error) => {
-//                 dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
-//                 dispatch(turnLoading());
-//                 return error.response ? error.response.data : 'erro desconhecido';
-//             })
-//     };
-// }
 
 export const deleteProductFromCart = (product) => {
     return (dispatch) => {

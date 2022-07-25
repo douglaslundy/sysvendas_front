@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Receipt from "../modal/salesReceipt";
 import { turnModalGetSale } from "../../store/ducks/Layout";
 import salesPDF from "../../reports/sales";
+import BasicDatePicker from "../inputs/datePicker";
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -62,6 +63,8 @@ export default () => {
 
     return (
         <BaseCard title="Vendas">
+            
+            <BasicDatePicker />
 
             {sale &&
                 <Receipt sale={sale} />

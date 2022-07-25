@@ -16,8 +16,7 @@ import {
     Alert,
     Button,
     FormGroup,
-    FormControlLabel,
-    Checkbox,
+    FormControlLabel
 } from "@mui/material";
 
 import BaseCard from "../../baseCard/BaseCard";
@@ -122,7 +121,6 @@ export default function ProductModal(props) {
     const handlePutData = async () => {
         dispatch(changeTitleAlert(`O produto ${form.name} foi atualizado com sucesso!`));
         dispatch(editProductFetch(form, cleanForm));
-        // console.log(JSON.stringify(form))
     };
 
     const handleClose = () => {
@@ -140,9 +138,8 @@ export default function ProductModal(props) {
         return { ...products.filter((prod) => prod.id == id)[0] };
     }
 
-    const getProduct = ({ target }) => {
-        const id = getId(target.value);
-        setForm({ ...form, ['id_product_stock']: id, ['stock']: getProductStock(id).stock });
+    const setProduct = value => {
+        setForm({ ...form, ['id_product_stock']: value?.id, ['stock']: getProductStock(value?.id).stock });
     }
 
     useEffect(() => {
@@ -264,26 +261,12 @@ export default function ProductModal(props) {
                                             onClick={handleIsVisible} />} label={isVisible ? "Desintegrar estoque" : "Integrar estoque"} />
                                     </FormGroup>
 
-                                    {/* <FormGroup>
-                                        <FormControlLabel
-                                            control={
-                                                
-                                            // <Checkbox
-                                            //     checked={isVisible}
-                                            //     onClick={handleIsVisible}
-                                            // />
-                                        
-                                        }
-                                            label="Integrar estoque"
-                                        /> */}
-                                    {/* </FormGroup> */}
-
                                     {isVisible &&
                                         <InputSelectProduct
                                             label={product ? getProductStock(product.id_product_stock).name : "Selecione o produto a integrar"}
                                             name="id_product_stock"
                                             products={products}
-                                            changeItem={getProduct}
+                                            setProduct={setProduct}
                                             wd={"100%"}
                                         />
                                     }

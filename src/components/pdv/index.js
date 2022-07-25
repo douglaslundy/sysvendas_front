@@ -114,17 +114,6 @@ export default () => {
         setFormSale({ ...formSale, pay_value: target.value, [id_pay_metod]: target.value });
     };
 
-    // const getProduct = product => {
-    //     setFormCart({ ...formCart, ['product']: product, qtd: 1 });
-    // }
-
-    // const [product, setProduct] = useState([]);
-
-
-    // const getClient = ({ target }) => {
-    //     setFormSale({ ...formSale, ['id_client']: getId(target.value) });
-    // }
-
     const cleanForm = () => {
         setFormCart({
             product: [],

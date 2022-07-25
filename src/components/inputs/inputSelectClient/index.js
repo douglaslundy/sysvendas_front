@@ -44,9 +44,9 @@ export default function index(props) {
   const { label, name, setClient, clients, wd } = props;
   const [selectedId, setSelectedId] = useState(0);
 
-  const getClient = () => {
-    setClient(clients.filter((cli) => cli.id == selectedId)[0]);
-  } 
+  // const getClient = () => {
+  //   setClient(clients.filter((cli) => cli.id == selectedId)[0]);
+  // } 
 
   return (
     <Autocomplete
@@ -67,15 +67,15 @@ export default function index(props) {
       options={options}
       loading={loading}
       name={name}
-      onChange={(_, newValue) => { setSelectedId(newValue?.id) }}
-      onSelect={getClient}
+      // onChange={(_, newValue) => { setSelectedId(newValue?.id) }}
+      onChange={(_, newValue) => { setClient(clients.filter((cli) => cli.id == newValue?.id)[0]) }}
 
       renderInput={(params) => (
 
         <TextField
           {...params}
           label={label}
-
+          onChange={(_, value) => { setOptions([...clients.filter((cli) => cli.full_name == value)]) }}
           InputProps={{
             ...params.InputProps,
             endAdornment: (
