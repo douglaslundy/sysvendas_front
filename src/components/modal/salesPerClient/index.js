@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import AlertModal from '../../messagesModal'
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from '@mui/material/Modal';
@@ -76,20 +76,27 @@ export default function (props) {
         id_sales: [],
         id_client: client ? client.id : 0,
         cash: 0,
+        discount: 0,
+        payable: 0, 
+        troco: 0
         // check: 0,
         // card: 0
     });
 
-    const { id_sales: salesToPay, cash } = form;
-    const [troco, setTroco] = useState(0);
+    const { id_sales: salesToPay, cash, discount, payable, troco } = form;
+    // const [troco, setTroco] = useState(0);
 
     const changeItem = ({ target }) => {
         setForm({ ...form, [target.name]: target.value })
     }
 
     useEffect(() => {
-        setTroco(setCurrency(cash) - totalSale);
+        setForm({...form, troco: setCurrency(cash) - setCurrency(payable)});
     } ,[cash])
+
+    useEffect(() => {
+        setForm({...form, payable: getCurrency(totalSale - setCurrency(discount))});
+    } ,[discount, totalSale])
 
     const handleEditForm = (sale) => {
         // salesToPay.includes(sale.id) ? (setSalesToPay([...salesToPay.filter(s => s != sale.id)]), setTotalSale(totalSale - setCurrency(sale.total_sale))) : (setSalesToPay([...salesToPay, sale.id]), setTotalSale(totalSale + setCurrency(sale.total_sale)));
@@ -119,7 +126,7 @@ export default function (props) {
     };
 
     const HandleToPay = () => {
-        if (setCurrency(cash) < totalSale) {
+        if (setCurrency(cash) < (setCurrency(payable) - setCurrency(discount))) {
             setWarning("O Valor inserido precisa ser igual ou maior ao valor total a pagar");
         } else {
             setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja baixar estas vendas?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: toPaySalesFetch(form, cleanForm) })
@@ -341,8 +348,11 @@ export default function (props) {
                                     />
                                 </TableContainer>
 
-                                <h3>Total a Pagar: {convertToBrlCurrency(getCurrency(totalSale))}</h3>
-                                <h4>Troco: {troco && troco > 0 ? convertToBrlCurrency(getCurrency(troco)) : ''}</h4>
+                                <h3>Total de vendas selecionadas: {convertToBrlCurrency(getCurrency(totalSale))}</h3>
+                                
+                                <h4>Desconto: {convertToBrlCurrency(getCurrency(setCurrency(discount) ? setCurrency(discount) : 0))}</h4>
+                                <h3>Total a Pagar: {convertToBrlCurrency(setCurrency(payable) ? payable: 0)}</h3>
+                                <h4>Troco: {troco && troco > 0 ? convertToBrlCurrency(getCurrency(troco)) : convertToBrlCurrency(0)}</h4>
                                 <ConfirmDialog
                                     confirmDialog={confirmDialog}
                                     setConfirmDialog={setConfirmDialog} />
@@ -361,6 +371,13 @@ export default function (props) {
                                         {waning}
                                     </Alert>
                                 }
+                                <Currency value={discount}
+                                    disabled={!totalSale > 0}
+                                    label={'Desconto'}
+                                    name={'discount'}
+                                    changeItem={changeItem}
+                                    wd={"30%"}
+                                />
                                 <Currency value={cash}
                                     disabled={!totalSale > 0}
                                     label={'Dinheiro'}

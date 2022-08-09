@@ -12,27 +12,21 @@ import {
     styled,
     TableContainer,
     TablePagination,
-    TextField
 } from "@mui/material";
 import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
 import InputSelectProduct from "../inputs/inputSelectProduct";
-import InputSelectClient from "../inputs/inputSelectClient";
-import ConfirmDialog from "../confirmDialog";
 import QTD from "../../components/inputs/textFields/stock-qtd";
 import AlertModal from "../messagesModal";
 import Select from '../inputs/selects';
-import Currency from '../inputs/textFields/currency';
 import { useSelector, useDispatch } from 'react-redux';
-import { getId } from "../helpers/formatt/getIdFromSelect";
-import { getCurrency, setCurrency } from "../helpers/formatt/currency";
+import { getCurrency } from "../helpers/formatt/currency";
 import { addProductCartFetch, getListProductsCart, deleteProductFromCart } from "../../store/fetchActions/cart";
 import { getAllProducts } from "../../store/fetchActions/product";
 import { convertToBrlCurrency } from "../helpers/formatt/currency";
-import { addAlertMessage, changeTitleAlert } from "../../store/ducks/Layout";
+import { addAlertMessage, changeTitleAlert, turnModal } from "../../store/ducks/Layout";
 import { getTotal } from "../helpers/checkout";
-import { getAllClients } from "../../store/fetchActions/client";
-import { addSale } from "../../store/fetchActions/sale";
+import PdvModal from "../modal/pdv";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -49,43 +43,26 @@ export default () => {
     const dispatch = useDispatch();
     const { productsCart } = useSelector(state => state.cart);
     const { products } = useSelector(state => state.products);
-    const { clients } = useSelector(state => state.clients);
 
     const [formCart, setFormCart] = useState({
-        product: [],
+        // product: [],
         qtd: '',
     });
 
 
     const [formSale, setFormSale] = useState({
         id_pay_metod: "cash",
-        id_client: null,
-        pay_value: 0,
         type_sale: 'in_cash',
         total_sale: 0,
-        check: 0,
-        cash: 0,
-        card: 0
-
     });
     const [product, setProduct] = useState([]);
-    const [client, setClient] = useState([]);
-
     const { qtd } = formCart;
-    const { id_pay_metod, pay_value, type_sale, total_sale } = formSale;
-
-    const [confirmDialog, setConfirmDialog] = useState({
-        isOpen: false,
-    });
+    const { id_pay_metod, total_sale } = formSale;
 
     useEffect(() => {
         setFormCart({ product: product, qtd: product && product.id ? 1 : '' });
     }, [product]);
 
-    useEffect(() => {
-        setFormSale({ ...formSale, id_client: client?.id });
-    }, [client]);
-    
     useEffect(() => {
         setFormSale({ ...formSale, ['total_sale']: getTotal(productsCart) })
     }, [productsCart]);
@@ -93,13 +70,12 @@ export default () => {
     useEffect(() => {
         dispatch(getListProductsCart());
         dispatch(getAllProducts());
-        dispatch(getAllClients());
     }, []);
 
 
     useEffect(() => {
-        id_pay_metod == "on_term" ? setFormSale({ ...formSale, 'paied': 'no', 'type_sale': 'on_term', cash: 0, card: 0, check: 0 }) :
-            setFormSale({ ...formSale, paied: 'yes', id_client: null, type_sale: 'in_cash', pay_value: 0, cash: 0, card: 0, check: 0 });
+        id_pay_metod == "on_term" ? setFormSale({ ...formSale, 'paied': 'no', 'type_sale': 'on_term' }) :
+            setFormSale({ ...formSale, 'paied': 'yes', 'type_sale': 'in_cash' });
     }, [id_pay_metod])
 
     const changeItem = ({ target }) => {
@@ -110,28 +86,22 @@ export default () => {
         setFormSale({ ...formSale, [target.name]: target.value });
     };
 
-    const changePayValue = ({ target }) => {
-        setFormSale({ ...formSale, pay_value: target.value, [id_pay_metod]: target.value });
-    };
-
     const cleanForm = () => {
         setFormCart({
             product: [],
             qtd: 1
         });
 
-        setFormSale({
-            id_pay_metod: "cash",
-            pay_value: 0,
-            type_sale: "in_cash",
-            paied: "yes",
-            // total_sale: getTotal(productsCart),
-            total_sale: 0,
-            check: 0,
-            cash: 0,
-            card: 0
-        });
-        // setFormCart({...form, total_sale: 0})
+        // setFormSale({
+        //     id_pay_metod: "cash",
+        //     pay_value: 0,
+        //     type_sale: "in_cash",
+        //     paied: "yes",
+        //     total_sale: 0,
+        //     check: 0,
+        //     cash: 0,
+        //     card: 0
+        // });
     }
 
     const addProdutCart = () => {
@@ -141,7 +111,7 @@ export default () => {
 
     const HandleDeleteProduct = product => {
         dispatch(deleteProductFromCart(product));
-        dispatch(changeTitleAlert(`${product.product.name} foi retirado do carrinho!`))
+        dispatch(changeTitleAlert(`${product.product.name} foi removido do carrinho!`))
     }
 
     // Pagination of products
@@ -159,7 +129,7 @@ export default () => {
 
     const payMetods = [{
         'id': "cash",
-        'name': 'dinheiro'
+        'name': 'a vista'
     },
     // {
     //     'id': "card",
@@ -177,9 +147,7 @@ export default () => {
 
     const confirmSale = () => {
         if (productsCart.length > 0) {
-
-            setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja finalizar esta venda?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: addSale(formSale, cleanForm) });
-            dispatch(changeTitleAlert(`Venda realizada com sucesso!`));
+            dispatch(turnModal());
         } else {
             dispatch(addAlertMessage("Insira pelo menos um produto ao carrinho!"))
         }
@@ -413,9 +381,9 @@ export default () => {
                         </TableContainer>
 
                     </Box>
-                    <ConfirmDialog
+                    {/* <ConfirmDialog
                         confirmDialog={confirmDialog}
-                        setConfirmDialog={setConfirmDialog} />
+                        setConfirmDialog={setConfirmDialog} /> */}
                 </BaseCard >
 
                 <BaseCard title="Total">
@@ -437,37 +405,13 @@ export default () => {
                             changeItem={changeSale}
                             wd={"90%"}
                         />
-
-                        {confirmDialog.isOpen == false &&
-                            <InputSelectClient
-                                label="Selecione o cliente"
-                                name="client"
-                                clients={clients}
-                                setClient={setClient}
-                                wd={"90%"}
-                            />
-                        }
-
-                        {type_sale !== 'on_term' &&
-                            <Currency
-                                value={pay_value}
-                                label="Valor Pago"
-                                name="pay_value"
-                                changeItem={changePayValue}
-                                wd="90%"
-                            />
-                        }
-                        {/* {type_sale == 'on_term' && */}
-
-                        {/* } */}
-
-                        <Button onClick={confirmSale} color="secondary" size="medium" variant="contained">
-                            <FeatherIcon icon="save" width="20" height="20" />
-                            CONFIRMAR
-                        </Button>
-
+                        <PdvModal formSale={formSale}>
+                            <Button onClick={confirmSale} color="secondary" size="medium" variant="contained">
+                                <FeatherIcon icon="save" width="20" height="20" />
+                                CONFIRMAR
+                            </Button>
+                        </PdvModal>
                     </Box>
-
                 </BaseCard >
             </Box>
 
