@@ -16,6 +16,7 @@ import {
 
 import BaseCard from "../../baseCard/BaseCard";
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
+import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
 
 
 const style = {
@@ -24,7 +25,7 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: "70%",
-    height: "78%",
+    height: "90%",
     // width: "90%",
     // height: "98%",
     bgcolor: 'background.paper',
@@ -57,18 +58,15 @@ export default function PdvModal(props) {
         check: 0,
         cash: 0,
         card: 0,
+        discount: ''
     });
-    const { id_pay_metod, pay_value, type_sale, total_sale } = formSale;
+    const { id_pay_metod, pay_value, type_sale, total_sale, discount } = formSale;
 
     const changeItem = ({ target }) => {
-        setForm({ ...form, [target.name]: target.value.toUpperCase() });
+        setFormSale({ ...formSale, [target.name]: target.value.toUpperCase() });
     };
 
     const cleanForm = () => {
-        setFormSale({
-            total_sale: "",
-        });
-        // setTexto('');
         dispatch(turnModal());
     }
 
@@ -99,6 +97,10 @@ export default function PdvModal(props) {
         setFormSale({ ...formSale, ...props.formSale })
     }, [props.formSale]);
 
+    useEffect(() => {
+        setFormSale({ ...formSale, id_client: null });
+    }, [isOpenModal]);
+
     return (
         <div>
             {props.children}
@@ -115,14 +117,20 @@ export default function PdvModal(props) {
 
                     <Grid container spacing={0}>
                         <Grid item xs={12} lg={12}>
-                            <BaseCard title={`Finalizar Venda ${type_sale == 'in_cash' ? 'A VISTA' : 'A PRAZO'} no total de R$ ${total_sale}`}>
+                            <BaseCard title={`Finalizar Venda ${type_sale == 'in_cash' ? 'A VISTA' : 'A PRAZO'}`}>
                                 {/* {texto &&
                                     <Alert variant="filled" severity="warning">
                                         {texto}
                                     </Alert>
                                 } */}
 
-                                <br />
+                                <h4>Total R$ {total_sale}</h4>
+                                {discount &&
+                                    <>
+                                        <h5 style={{ color: "red" }}>Desconto {discount}</h5>
+                                        <h3> Pagar {convertToBrlCurrency(getCurrency(setCurrency(total_sale) - setCurrency(discount)))}</h3>
+                                    </>
+                                }
 
                                 {/* <FormGroup > */}
                                 {/* <Stack spacing={3}> */}
@@ -142,6 +150,14 @@ export default function PdvModal(props) {
                                         wd={"90%"}
                                     />
 
+                                    <Currency
+                                        value={discount}
+                                        label="Desconto"
+                                        name="discount"
+                                        changeItem={changeItem}
+                                        wd="90%"
+                                    />
+
                                     {type_sale !== 'on_term' &&
                                         <>
                                             <Currency
@@ -150,7 +166,7 @@ export default function PdvModal(props) {
                                                 name="pay_value"
                                                 changeItem={changePayValue}
                                                 wd="90%"
-                                            />                                           
+                                            />
                                         </>
                                     }
                                 </Box>

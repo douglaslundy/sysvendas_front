@@ -17,7 +17,7 @@ import {
 import FeatherIcon from "feather-icons-react";
 
 import { turnModalGetSale } from '../../../store/ducks/Layout';
-import { convertToBrlCurrency, getCurrency } from '../../helpers/formatt/currency';
+import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
 import salesPDF from '../../../reports/sales';
 
 
@@ -49,7 +49,7 @@ export default function SalesReceipt(props) {
 
     const dispatch = useDispatch();
     const { isOpenModalGetSale } = useSelector(state => state.layout);
-    const { id, sale_date, type_sale, paied, total_sale, client, itens } = props.sale;
+    const { id, sale_date, type_sale, paied, total_sale, client, itens, discount } = props.sale;
 
     const handleClose = () => {
         dispatch(turnModalGetSale());
@@ -192,7 +192,14 @@ export default function SalesReceipt(props) {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <h5>Total: {convertToBrlCurrency(total_sale)}</h5>
+                    <h5>Total:  {convertToBrlCurrency(total_sale)}</h5>
+                    {
+                        discount != 0 &&
+                        <>
+                            <h5 style={{ color: "red" }}>Desconto:  {convertToBrlCurrency(discount)}</h5>
+                            <h4>Total Pago:  {convertToBrlCurrency(getCurrency(setCurrency(total_sale) - setCurrency(discount)))}</h4>
+                        </>
+                    }
 
                     <Box sx={{ "& button": { mx: 1, mt: 5 } }}>
                         <Button onClick={() => { handleClose() }} variant="outlined" mt={2}>

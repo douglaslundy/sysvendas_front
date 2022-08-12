@@ -1,11 +1,11 @@
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
-import { convertToBrlCurrency, getCurrency } from '../../components/helpers/formatt/currency';
+import { convertToBrlCurrency, getCurrency, setCurrency } from '../../components/helpers/formatt/currency';
 
 function salesPDF(sale) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-    const { id, sale_date, type_sale, paied, total_sale, client, itens } = sale;
+    const { id, sale_date, type_sale, paied, total_sale, client, itens, discount } = sale;
 
     const title = [
         {
@@ -86,11 +86,34 @@ function salesPDF(sale) {
         {
 
             text: [
-                `Total: ${convertToBrlCurrency(total_sale)}`
+                `Total: ${convertToBrlCurrency(total_sale)}`,
             ],
             fontSize: 14,
             bold: true,
-            margin: [2, 20, 2, 20] // left, top, right, bottom
+            margin: [2, 20, 2, 2] // left, top, right, bottom
+        }
+    ];
+    const discountLabel = [
+        {
+
+            text: [
+                `Desconto: ${convertToBrlCurrency(discount)}`,
+            ],
+            fontSize: 14,
+            color: 'red',
+            bold: true,
+            margin: [2, 2, 2, 2] // left, top, right, bottom
+        }
+    ];
+    const totalPaied = [
+        {
+
+            text: [
+                `Total Pago: ${convertToBrlCurrency(getCurrency(setCurrency(total_sale) - setCurrency(discount)))}`,
+            ],
+            fontSize: 18,
+            bold: true,
+            margin: [2, 2, 2, 2] // left, top, right, bottom
         }
     ];
 
@@ -114,7 +137,8 @@ function salesPDF(sale) {
         // watermark: { text: 'JR Ferragens', color: 'blue', opacity: 0.3, bold: true, italics: false },
         // watermark: { text: 'JR Ferragens', fontSize: 40 },
         // watermark: { text: 'JR Ferragens', angle: 70 },
-        content: [company, type, name, details, total],
+        // content: [company, type, name, details, total, discount > 0 ? discountLabel : '', discount > 0 ? totalPaied: ''],
+        content: [company, type, name, details, total, discount > 0 ? [discountLabel, totalPaied] : ''],
         footer: footer
     };
 

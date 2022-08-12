@@ -24,6 +24,7 @@ import Receipt from "../modal/salesReceipt";
 import { turnModalGetSale } from "../../store/ducks/Layout";
 import salesPDF from "../../reports/sales";
 import BasicDatePicker from "../inputs/datePicker";
+import { convertToBrlCurrency, getCurrency, setCurrency } from "../helpers/formatt/currency";
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -145,9 +146,6 @@ export default () => {
                                             </Box>
                                         </TableCell>
 
-
-
-
                                         <TableCell align="center">
                                             <Box
                                                 sx={{
@@ -175,8 +173,6 @@ export default () => {
                                             </Box>
                                         </TableCell>
 
-
-
                                         <TableCell>
                                             <Box
                                                 sx={{
@@ -191,7 +187,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        R$ {sale.total_sale}
+                                                        {convertToBrlCurrency(getCurrency(setCurrency(sale.total_sale) - setCurrency(sale.discount)))}
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"
@@ -221,7 +217,6 @@ export default () => {
                                                 <Button title="Imprimir venda" onClick={() => salesPDF(sale)} color="error" size="medium" variant="contained">
                                                     <FeatherIcon icon="printer" width="20" height="20" />
                                                 </Button>
-
 
                                             </Box>
                                         </TableCell>

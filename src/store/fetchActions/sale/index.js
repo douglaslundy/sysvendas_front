@@ -5,6 +5,7 @@ import { cleanProductsCart } from "../../ducks/cart";
 import { addSales, addSalesPerClient } from "../../ducks/sales";
 import { turnAlert, addAlertMessage, turnLoading, turnModalGetSales, changeTitleAlert } from "../../ducks/Layout";
 import { parseISO, format } from 'date-fns';
+import { getAllClients } from "../client";
 
 export const addSale = (sale, cleanForm) => {
     const { 'sysvendas.id': user } = parseCookies();
@@ -18,7 +19,8 @@ export const addSale = (sale, cleanForm) => {
             card: setCurrency(sale.card),
             cash: setCurrency(sale.cash),
             pay_value: setCurrency(sale.pay_value),
-            total_sale: setCurrency(sale.total_sale)
+            total_sale: setCurrency(sale.total_sale),
+            discount: setCurrency(sale.discount)
         };
 
         api.post('/sales', sale)
@@ -51,11 +53,12 @@ export const getAllSales = () => {
     const config = {
         transformResponse: [function (data) {
 
-            const payload = JSON.parse(data).map(s => {
+            const payload = JSON.parse(data).map(sale => {
                 return {
-                    ...s,
-                    "total_sale": getCurrency(s.total_sale),
-                    "sale_date": format(parseISO(s.sale_date), 'dd/MM/yyyy hh:mm:ss')
+                    ...sale,
+                    "total_sale": getCurrency(sale.total_sale),
+                    "discount": getCurrency(sale.discount),
+                    "sale_date": format(parseISO(sale.sale_date), 'dd/MM/yyyy hh:mm:ss')
                 }
             })
             return payload;
@@ -79,11 +82,12 @@ export const getAllSalesPerClient = (client, paied = "all") => {
     const config = {
         transformResponse: [function (data) {
 
-            const payload = JSON.parse(data).map(s => {
+            const payload = JSON.parse(data).map(sale => {
                 return {
-                    ...s,
-                    "total_sale": getCurrency(s.total_sale),
-                    "sale_date": format(parseISO(s.sale_date), 'dd/MM/yyyy hh:mm:ss')
+                    ...sale,
+                    "total_sale": getCurrency(sale.total_sale),
+                    "discount": getCurrency(sale.discount),
+                    "sale_date": format(parseISO(sale.sale_date), 'dd/MM/yyyy hh:mm:ss')
                 }
             })
             return payload;
@@ -118,9 +122,8 @@ export const toPaySalesFetch = (form, cleanForm) => {
         api.post(`/sales/pay`, form)
             .then((res) =>
             (
-                // dispatch(editSale(sale)),
-                // dispatch(addMessage(`Vendas recebidas com sucesso!`)),
                 dispatch(changeTitleAlert(res.data)),
+                dispatch(getAllClients()),
                 dispatch(turnAlert()),
                 dispatch(turnLoading()),
                 cleanForm()
@@ -132,24 +135,3 @@ export const toPaySalesFetch = (form, cleanForm) => {
             })
     };
 }
-// export const editSaleFetch = (sale, cleanForm) => {
-//     return (dispatch) => {
-//         dispatch(turnLoading());
-
-
-//         api.put(`/sale/${sale.id}`, sale)
-//             .then((res) =>
-//             (
-//                 dispatch(editSale(sale)),
-//                 dispatch(addMessage(`Venda foi atualizada com sucesso!`)),
-//                 dispatch(turnAlert()),
-//                 dispatch(turnLoading()),
-//                 cleanForm()
-//             ))
-//             .catch((error) => {
-//                 dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
-//                 dispatch(turnLoading());
-//                 return error.response ? error.response.data : 'erro desconhecido';
-//             })
-//     };
-// }

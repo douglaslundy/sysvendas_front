@@ -103,9 +103,9 @@ export default function (props) {
 
         salesToPay.includes(sale.id)
 
-            ? (setForm({ ...form, id_sales: [...salesToPay.filter(s => s != sale.id)] }), setTotalSale(totalSale - setCurrency(sale.total_sale)))
+            ? (setForm({ ...form, id_sales: [...salesToPay.filter(s => s != sale.id)] }), setTotalSale(totalSale - (setCurrency(sale.total_sale) - setCurrency(sale.discount))))
 
-            : (setForm({ ...form, id_sales: [...salesToPay, sale.id] }), setTotalSale(totalSale + setCurrency(sale.total_sale)))
+            : (setForm({ ...form, id_sales: [...salesToPay, sale.id] }), setTotalSale(totalSale + (setCurrency(sale.total_sale) - setCurrency(sale.discount))))
     }
 
     const cleanForm = () => {
@@ -306,7 +306,7 @@ export default function (props) {
                                                                                     fontWeight: "600",
                                                                                 }}
                                                                             >
-                                                                                R$ {sale.total_sale}
+                                                                                {convertToBrlCurrency(getCurrency(setCurrency(sale.total_sale) - setCurrency(sale.discount)))}
                                                                             </Typography>
                                                                             <Typography
                                                                                 color="textSecondary"
