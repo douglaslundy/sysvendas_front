@@ -43,9 +43,9 @@ export default () => {
     const dispatch = useDispatch();
     const { productsCart } = useSelector(state => state.cart);
     const { products } = useSelector(state => state.products);
+    const { isOpenAlert } = useSelector(state => state.layout);
 
     const [formCart, setFormCart] = useState({
-        // product: [],
         qtd: '',
     });
 
@@ -91,17 +91,6 @@ export default () => {
             product: [],
             qtd: 1
         });
-
-        // setFormSale({
-        //     id_pay_metod: "cash",
-        //     pay_value: 0,
-        //     type_sale: "in_cash",
-        //     paied: "yes",
-        //     total_sale: 0,
-        //     check: 0,
-        //     cash: 0,
-        //     card: 0
-        // });
     }
 
     const addProdutCart = () => {
@@ -125,20 +114,11 @@ export default () => {
         setPage(0);
     };
 
-    // deletar depois 
-
     const payMetods = [{
         'id': "cash",
         'name': 'a vista'
     },
-    // {
-    //     'id': "card",
-    //     'name': 'cartao'
-    // },
-    // {
-    //     'id': "check",
-    //     'name': 'cheque'
-    // },
+
     {
         'id': "on_term",
         'name': 'a prazo'
@@ -156,36 +136,38 @@ export default () => {
     return (
         <>
             <AlertModal />
-            <BaseCard title="Adicionar Produto">
-                <Box sx={{
-                    '& > :not(style)': { m: 2 },
-                    'display': 'flex',
-                    'justify-content': 'stretch'
-                }}
-                >
-                    <InputSelectProduct
-                        label="Selecione o produto"
-                        name="product"
-                        products={products}
-                        setProduct={setProduct}
-                        wd={"55%"}
-                    />
+            {isOpenAlert == false &&
+                <BaseCard title="Adicionar Produto">
+                    <Box sx={{
+                        '& > :not(style)': { m: 2 },
+                        'display': 'flex',
+                        'justify-content': 'stretch'
+                    }}
+                    >
 
-                    <QTD
-                        sx={{ width: "30%" }}
-                        label="QTD"
-                        name="qtd"
-                        value={qtd}
-                        changeItem={changeItem}
-                    />
+                        <InputSelectProduct
+                            label="Selecione o produto"
+                            name="product"
+                            products={products}
+                            setProduct={setProduct}
+                            wd={"55%"}
+                        />
 
-                    <Fab onClick={() => addProdutCart()} color="primary" aria-label="add">
-                        <FeatherIcon icon="send" />
-                    </Fab>
+                        <QTD
+                            sx={{ width: "30%" }}
+                            label="QTD"
+                            name="qtd"
+                            value={qtd}
+                            changeItem={changeItem}
+                        />
+                        <Fab onClick={() => addProdutCart()} title="Inserir" color="primary" aria-label="add">
+                            <FeatherIcon icon="send" />
+                        </Fab>
 
-                </Box>
+                    </Box>
 
-            </BaseCard >
+                </BaseCard >
+            }
 
             <Box sx={{
                 '& > :not(style)': { m: 2 },

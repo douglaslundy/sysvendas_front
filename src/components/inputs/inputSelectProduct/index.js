@@ -42,10 +42,12 @@ export default function index(props) {
   }, [open]);
 
   const { label, name, setProduct, products, wd } = props;
-  const [selectedId, setSelectedId] = useState(0);
+  // const [selectedId, setSelectedId] = useState(0);
 
-  const getProduct = () => {
-    setProduct(products.filter((prod) => prod.id == selectedId)[0]);
+  const getProduct = (id) => {
+    // setSelectedId(id);
+    // setProduct(products.filter((prod) => prod.id == selectedId)[0]);
+    setProduct(products.filter((prod) => prod.id == id)[0]);
   }
 
   return (
@@ -65,8 +67,9 @@ export default function index(props) {
       noOptionsText={"Produto inexistente!"}
       options={options}
       loading={loading}
-      onSelect={getProduct}
-      onChange={(_, newValue) => { setSelectedId(newValue?.id) }}
+      // onSelect={getProduct}
+      // onChange={(_, newValue) => { setSelectedId(newValue?.id) }}
+      onChange={(_, newValue) => { getProduct(newValue?.id) }}
       name={name}
 
       renderInput={(params) => (

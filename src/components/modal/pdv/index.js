@@ -25,7 +25,7 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: "70%",
-    height: "90%",
+    height: "95%",
     // width: "90%",
     // height: "98%",
     bgcolor: 'background.paper',
@@ -58,7 +58,7 @@ export default function PdvModal(props) {
         check: 0,
         cash: 0,
         card: 0,
-        discount: ''
+        discount: 0
     });
     const { id_pay_metod, pay_value, type_sale, total_sale, discount } = formSale;
 
@@ -67,6 +67,18 @@ export default function PdvModal(props) {
     };
 
     const cleanForm = () => {
+
+        setFormSale({
+            ...formSale,
+            id_client: null,
+            pay_value: 0,
+            paied: "yes",
+            check: 0,
+            cash: 0,
+            card: 0,
+            discount: 0
+        });
+
         dispatch(turnModal());
     }
 
@@ -125,11 +137,14 @@ export default function PdvModal(props) {
                                 } */}
 
                                 <h4>Total R$ {total_sale}</h4>
-                                {discount &&
+                                {setCurrency(discount) > 0 &&
                                     <>
                                         <h5 style={{ color: "red" }}>Desconto {discount}</h5>
                                         <h3> Pagar {convertToBrlCurrency(getCurrency(setCurrency(total_sale) - setCurrency(discount)))}</h3>
                                     </>
+                                }
+                                {setCurrency(pay_value) > (setCurrency(discount) > 0 ? setCurrency(total_sale) - setCurrency(discount) : setCurrency(total_sale)) &&
+                                    <h5 style={{ color: "blue" }}>Troco {convertToBrlCurrency(getCurrency(setCurrency(pay_value) - (setCurrency(discount) > 0 ? setCurrency(total_sale) - setCurrency(discount) : setCurrency(total_sale))))}</h5>
                                 }
 
                                 {/* <FormGroup > */}
@@ -141,14 +156,15 @@ export default function PdvModal(props) {
                                     // 'justify-content': 'stretch'
                                 }}
                                 >
-
-                                    <InputSelectClient
-                                        label="Selecione o cliente"
-                                        name="client"
-                                        clients={clients}
-                                        setClient={setClient}
-                                        wd={"90%"}
-                                    />
+                                    {isOpenModal == true &&
+                                        <InputSelectClient
+                                            label="Selecione o cliente"
+                                            name="client"
+                                            clients={clients}
+                                            setClient={setClient}
+                                            wd={"90%"}
+                                        />
+                                    }
 
                                     <Currency
                                         value={discount}
