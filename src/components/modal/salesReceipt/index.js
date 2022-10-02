@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { styled } from '@mui/material/styles';
+import { parseISO, format } from 'date-fns';
 
 import {
     Button,
@@ -69,7 +70,7 @@ export default function SalesReceipt(props) {
 
                     <h1>Recibo de Venda</h1>
                     <hr />
-                    <h3>JR Ferragens - Data : {sale_date}</h3>
+                    <h3>JR Ferragens - Data : {format(parseISO(sale_date), 'dd/MM/yyyy hh:mm:ss')}</h3>
                     <h5>Venda Nº: {id} / {type_sale == "in_cash" ? 'A Vista' : 'A Prazo'} / Venda Recebida {paied == 'yes' ? 'SIM' : 'NÃO'}</h5>
                     <hr />
                     <h3>CLIENTE: {client != null ? client.full_name : 'VENDA NO BALCÃO'}</h3>
@@ -173,7 +174,7 @@ export default function SalesReceipt(props) {
                                                 </TableCell>
 
                                                 <TableCell>
-                                                    <Typography variant="h6">R$ {getCurrency(item.item_value)}</Typography>
+                                                    <Typography variant="h6">{convertToBrlCurrency(getCurrency(item.item_value))}</Typography>
                                                 </TableCell>
 
                                                 <TableCell>
@@ -192,12 +193,12 @@ export default function SalesReceipt(props) {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <h5>Total:  {convertToBrlCurrency(total_sale)}</h5>
+                    <h5>Total:  {convertToBrlCurrency(getCurrency(total_sale))}</h5>
                     {
                         discount != 0 &&
                         <>
-                            <h5 style={{ color: "red" }}>Desconto:  {convertToBrlCurrency(discount)}</h5>
-                            <h4>Total Pago:  {convertToBrlCurrency(getCurrency(setCurrency(total_sale) - setCurrency(discount)))}</h4>
+                            <h5 style={{ color: "red" }}>Desconto:  {convertToBrlCurrency(getCurrency(discount))}</h5>
+                            <h4>Total Pago:  {convertToBrlCurrency(getCurrency(total_sale - discount))}</h4>
                         </>
                     }
 

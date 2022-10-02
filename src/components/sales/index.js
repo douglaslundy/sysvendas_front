@@ -25,6 +25,7 @@ import { turnModalGetSale } from "../../store/ducks/Layout";
 import salesPDF from "../../reports/sales";
 import BasicDatePicker from "../inputs/datePicker";
 import { convertToBrlCurrency, getCurrency, setCurrency } from "../helpers/formatt/currency";
+import { parseISO, format } from 'date-fns';
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -140,7 +141,7 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {sale.sale_date}
+                                                        {format(parseISO(sale.sale_date), 'dd/MM/yyyy hh:mm:ss')}
                                                     </Typography>
                                                 </Box>
                                             </Box>
@@ -187,7 +188,8 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {convertToBrlCurrency(getCurrency(setCurrency(sale.total_sale) - setCurrency(sale.discount)))}
+                                                        {/* {convertToBrlCurrency(getCurrency(setCurrency(sale.total_sale) - setCurrency(sale.discount)))} */}
+                                                        {convertToBrlCurrency(getCurrency(sale.total_sale - sale.discount))}
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"

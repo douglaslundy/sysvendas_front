@@ -26,6 +26,7 @@ import { getAllSalesPerClient } from "../../store/fetchActions/sale";
 import { showClient } from "../../store/ducks/clients";
 import { changeTitleAlert, turnModal, turnModalGetSales } from "../../store/ducks/Layout";
 import ConfirmDialog from "../confirmDialog";
+import { convertToBrlCurrency } from "../helpers/formatt/currency";
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -218,7 +219,7 @@ export default () => {
                                         </TableCell>
 
                                         <TableCell>
-                                            <Typography variant="h6">R$ {client.debit_balance}</Typography>
+                                            <Typography variant="h6">{convertToBrlCurrency(client.debit_balance)}</Typography>
                                         </TableCell>
 
                                         <TableCell align="center">

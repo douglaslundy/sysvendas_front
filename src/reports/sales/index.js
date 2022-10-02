@@ -1,6 +1,7 @@
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { convertToBrlCurrency, getCurrency, setCurrency } from '../../components/helpers/formatt/currency';
+import { parseISO, format } from 'date-fns';
 
 function salesPDF(sale) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -22,7 +23,7 @@ function salesPDF(sale) {
         {
 
             text: [
-                `JR Ferragens - Data : ${sale_date}`
+                `JR Ferragens - Data : ${format(parseISO(sale_date), 'dd/MM/yyyy hh:mm:ss')}`
             ],
             fontSize: 12,
             bold: true,
@@ -86,7 +87,7 @@ function salesPDF(sale) {
         {
 
             text: [
-                `Total: ${convertToBrlCurrency(total_sale)}`,
+                `Total: ${convertToBrlCurrency(getCurrency(total_sale))}`,
             ],
             fontSize: 14,
             bold: true,
@@ -97,7 +98,7 @@ function salesPDF(sale) {
         {
 
             text: [
-                `Desconto: ${convertToBrlCurrency(discount)}`,
+                `Desconto: ${convertToBrlCurrency(getCurrency(discount))}`,
             ],
             fontSize: 14,
             color: 'red',
@@ -109,7 +110,7 @@ function salesPDF(sale) {
         {
 
             text: [
-                `Total Pago: ${convertToBrlCurrency(getCurrency(setCurrency(total_sale) - setCurrency(discount)))}`,
+                `Total Pago: ${convertToBrlCurrency(getCurrency(total_sale - discount))}`,
             ],
             fontSize: 18,
             bold: true,

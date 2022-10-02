@@ -136,7 +136,8 @@ export default function PdvModal(props) {
                                     </Alert>
                                 } */}
 
-                                <h4>Total R$ {total_sale}</h4>
+                                {/* <h4>Total R$ {total_sale}</h4> */}
+                                <h4>Total {convertToBrlCurrency(getCurrency(setCurrency(total_sale)))}</h4>
                                 {setCurrency(discount) > 0 &&
                                     <>
                                         <h5 style={{ color: "red" }}>Desconto {discount}</h5>

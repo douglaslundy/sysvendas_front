@@ -95,7 +95,7 @@ export default function (props) {
     } ,[cash])
 
     useEffect(() => {
-        setForm({...form, payable: getCurrency(totalSale - setCurrency(discount))});
+        setForm({...form, payable: getCurrency(totalSale - setCurrency(discount ? discount : 0))});
     } ,[discount, totalSale])
 
     const handleEditForm = (sale) => {
@@ -103,9 +103,9 @@ export default function (props) {
 
         salesToPay.includes(sale.id)
 
-            ? (setForm({ ...form, id_sales: [...salesToPay.filter(s => s != sale.id)] }), setTotalSale(totalSale - (setCurrency(sale.total_sale) - setCurrency(sale.discount))))
+            ? (setForm({ ...form, id_sales: [...salesToPay.filter(s => s != sale.id)] }), setTotalSale(totalSale - (sale.total_sale - sale.discount)))
 
-            : (setForm({ ...form, id_sales: [...salesToPay, sale.id] }), setTotalSale(totalSale + (setCurrency(sale.total_sale) - setCurrency(sale.discount))))
+            : (setForm({ ...form, id_sales: [...salesToPay, sale.id] }), setTotalSale(totalSale + (sale.total_sale - sale.discount)))
     }
 
     const cleanForm = () => {
@@ -306,7 +306,7 @@ export default function (props) {
                                                                                     fontWeight: "600",
                                                                                 }}
                                                                             >
-                                                                                {convertToBrlCurrency(getCurrency(setCurrency(sale.total_sale) - setCurrency(sale.discount)))}
+                                                                                {convertToBrlCurrency(getCurrency(sale.total_sale - sale.discount))}
                                                                             </Typography>
                                                                             <Typography
                                                                                 color="textSecondary"
@@ -350,8 +350,8 @@ export default function (props) {
 
                                 <h3>Total de vendas selecionadas: {convertToBrlCurrency(getCurrency(totalSale))}</h3>
                                 
-                                <h4>Desconto: {convertToBrlCurrency(getCurrency(setCurrency(discount) ? setCurrency(discount) : 0))}</h4>
-                                <h3>Total a Pagar: {convertToBrlCurrency(setCurrency(payable) ? payable: 0)}</h3>
+                                <h4>Desconto: {convertToBrlCurrency(getCurrency(setCurrency(discount ? discount : 0)))}</h4>
+                                <h3>Total a Pagar: {convertToBrlCurrency(getCurrency(setCurrency(payable ? payable: 0)))}</h3>
                                 <h4>Troco: {troco && troco > 0 ? convertToBrlCurrency(getCurrency(troco)) : convertToBrlCurrency(0)}</h4>
                                 <ConfirmDialog
                                     confirmDialog={confirmDialog}

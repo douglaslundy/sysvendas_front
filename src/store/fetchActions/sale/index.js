@@ -4,8 +4,9 @@ import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
 import { addSales, addSalesPerClient } from "../../ducks/sales";
 import { turnAlert, addAlertMessage, turnLoading, turnModalGetSales, changeTitleAlert } from "../../ducks/Layout";
-import { parseISO, format } from 'date-fns';
+// import { parseISO, format } from 'date-fns';
 import { getAllClients } from "../client";
+import salesPDF from "../../../reports/sales";
 
 export const addSale = (sale, cleanForm) => {
     const { 'sysvendas.id': user } = parseCookies();
@@ -39,7 +40,9 @@ export const addSale = (sale, cleanForm) => {
                 dispatch(turnAlert()),
                 dispatch(turnLoading()),
                 dispatch(cleanProductsCart()),
-                cleanForm()
+                cleanForm(),
+                console.log(JSON.stringify(...res.data.sale)),
+                salesPDF(...res.data.sale)
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
@@ -56,9 +59,12 @@ export const getAllSales = () => {
             const payload = JSON.parse(data).map(sale => {
                 return {
                     ...sale,
-                    "total_sale": getCurrency(sale.total_sale),
-                    "discount": getCurrency(sale.discount),
-                    "sale_date": format(parseISO(sale.sale_date), 'dd/MM/yyyy hh:mm:ss')
+                    // "total_sale": getCurrency(sale.total_sale),
+                    "total_sale": sale.total_sale,
+                    // "discount": getCurrency(sale.discount),
+                    "discount": sale.discount,
+                    // "sale_date": format(parseISO(sale.sale_date), 'dd/MM/yyyy hh:mm:ss'),
+                    "sale_date": sale.sale_date,
                 }
             })
             return payload;
@@ -85,9 +91,10 @@ export const getAllSalesPerClient = (client, paied = "all") => {
             const payload = JSON.parse(data).map(sale => {
                 return {
                     ...sale,
-                    "total_sale": getCurrency(sale.total_sale),
-                    "discount": getCurrency(sale.discount),
-                    "sale_date": format(parseISO(sale.sale_date), 'dd/MM/yyyy hh:mm:ss')
+                    "total_sale": sale.total_sale,
+                    "discount": sale.discount,
+                    "sale_date": sale.sale_date
+                    // "sale_date": format(parseISO(sale.sale_date), 'dd/MM/yyyy hh:mm:ss')
                 }
             })
             return payload;
