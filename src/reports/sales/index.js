@@ -131,7 +131,9 @@ function salesPDF(sale) {
 
 
     const definitions = {
-        pageSize: 'A4',
+        // pageSize: 'A4',
+        pageSize: 'A6',
+        pageOrientation: itens.length > 5 ? 'portrait' : 'landscape',
         pageMargins: [15, 50, 15, 40],
         header: [title],
         watermark: 'JR Ferragens ',

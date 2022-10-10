@@ -41,7 +41,6 @@ export const addSale = (sale, cleanForm) => {
                 dispatch(turnLoading()),
                 dispatch(cleanProductsCart()),
                 cleanForm(),
-                console.log(JSON.stringify(...res.data.sale)),
                 salesPDF(...res.data.sale)
             ))
             .catch((error) => {
