@@ -64,7 +64,7 @@ export default () => {
     }
 
     return (
-        <BaseCard title="Vendas">
+        <BaseCard title={`Encontramos ${sales.length} Vendas realizadas no período informado` }> 
             
             <BasicDatePicker />
 

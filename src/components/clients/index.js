@@ -93,8 +93,7 @@ export default () => {
     };
 
     return (
-        <BaseCard title="Clientes">
-
+        <BaseCard title={`Você possui ${allClients.length} Clientes Cadastrados` }> 
             <Box sx={{
                 '& > :not(style)': { m: 2 },
                 'display': 'flex',

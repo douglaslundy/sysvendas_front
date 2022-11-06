@@ -72,8 +72,7 @@ export default () => {
 
 
     return (
-        <BaseCard title="Unidades">
-
+        <BaseCard title={`Você possui ${units.length} Unidades Cadastradas` }> 
             <UnitModal>
                 <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
                     <FeatherIcon icon="plus" />

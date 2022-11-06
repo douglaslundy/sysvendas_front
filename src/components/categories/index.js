@@ -73,7 +73,7 @@ export default () => {
     };
 
     return (
-        <BaseCard title="Categorias">
+        <BaseCard title={`Você possui ${categories.length} Categorias Cadastradas` }> 
 
             <CategorieModal>
                 <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">

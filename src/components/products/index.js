@@ -97,8 +97,7 @@ export default () => {
     }
 
     return (
-        <BaseCard title="Produtos">
-
+        <BaseCard title={`Você possui ${allProducts.length} Produtos Cadastrados` }>            
             <Box sx={{
                 '& > :not(style)': { m: 2 },
                 'display': 'flex',
