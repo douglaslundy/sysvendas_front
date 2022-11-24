@@ -141,7 +141,8 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {format(parseISO(sale.sale_date), 'dd/MM/yyyy hh:mm:ss')}
+                                                        {/* {format(parseISO(sale.sale_date), 'dd/MM/yyyy hh:mm:ss')} */}
+                                                        {format(parseISO(sale.sale_date), 'dd/MM/yyyy')}
                                                     </Typography>
                                                 </Box>
                                             </Box>
