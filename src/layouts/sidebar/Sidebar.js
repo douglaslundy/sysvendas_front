@@ -75,6 +75,18 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
           ))}
         </List>
       </Box>
+
+      {/* <Typography
+        variant="h5"
+        fontWeight="700"
+        sx={{
+          ml: 1,
+        }}
+      >
+        Licença: {(new Date('2025-02-01') - new Date((`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`).toString())) / (1000 * 60 * 60 * 24)} dias restantes 
+      </Typography> */}
+
+
     </Box>
   );
   if (lgUp) {
