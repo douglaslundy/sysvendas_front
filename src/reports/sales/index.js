@@ -132,17 +132,18 @@ function salesPDF(sale) {
 
     const definitions = {
         // pageSize: 'A4',
-        pageSize: 'A6',
-        pageOrientation: itens.length > 5 ? 'portrait' : 'landscape',
+        pageSize: 'A4',
+        // pageOrientation: itens.length > 5 ? 'portrait' : 'landscape',
+        pageOrientation: 'portrait',
         pageMargins: [15, 50, 15, 40],
         header: [title],
-        watermark: 'JR Ferragens ',
+        // watermark: 'JR Ferragens ',
         // watermark: { text: 'JR Ferragens', color: 'blue', opacity: 0.3, bold: true, italics: false },
         // watermark: { text: 'JR Ferragens', fontSize: 40 },
         // watermark: { text: 'JR Ferragens', angle: 70 },
         // content: [company, type, name, details, total, discount > 0 ? discountLabel : '', discount > 0 ? totalPaied: ''],
         content: [company, type, name, details, total, discount > 0 ? [discountLabel, totalPaied] : ''],
-        footer: footer
+        // footer: footer
     };
 
     // pdfMake.createPdf(definitions).download();
