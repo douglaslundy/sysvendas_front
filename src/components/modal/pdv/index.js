@@ -5,9 +5,12 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import InputSelectClient from '../../inputs/inputSelectClient';
 import Currency from '../../inputs/textFields/currency';
+import Percent from '../../inputs/textFields/percent';
 import { getAllClients } from '../../../store/fetchActions/client';
 import { addSale } from '../../../store/fetchActions/sale';
 import ConfirmDialog from '../../confirmDialog';
+
+import { valueDecrescidFromPercent } from '../../helpers/functions/percent';
 
 import {
     Grid,
@@ -113,6 +116,9 @@ export default function PdvModal(props) {
         setFormSale({ ...formSale, id_client: null });
     }, [isOpenModal]);
 
+    const getTotalToPay = () => {
+        return convertToBrlCurrency(valueDecrescidFromPercent(total_sale, discount));
+    }
     return (
         <div>
             {props.children}
@@ -130,31 +136,28 @@ export default function PdvModal(props) {
                     <Grid container spacing={0}>
                         <Grid item xs={12} lg={12}>
                             <BaseCard title={`Finalizar Venda ${type_sale == 'in_cash' ? 'A VISTA' : 'A PRAZO'}`}>
-                                {/* {texto &&
-                                    <Alert variant="filled" severity="warning">
-                                        {texto}
-                                    </Alert>
-                                } */}
 
-                                {/* <h4>Total R$ {total_sale}</h4> */}
                                 <h4>Total {convertToBrlCurrency(getCurrency(setCurrency(total_sale)))}</h4>
                                 {setCurrency(discount) > 0 &&
                                     <>
                                         <h5 style={{ color: "red" }}>Desconto {discount}</h5>
-                                        <h3> Pagar {convertToBrlCurrency(getCurrency(setCurrency(total_sale) - setCurrency(discount)))}</h3>
+                                        <h3> Pagar {getTotalToPay()}</h3>
                                     </>
                                 }
-                                {setCurrency(pay_value) > (setCurrency(discount) > 0 ? setCurrency(total_sale) - setCurrency(discount) : setCurrency(total_sale)) &&
-                                    <h5 style={{ color: "blue" }}>Troco {convertToBrlCurrency(getCurrency(setCurrency(pay_value) - (setCurrency(discount) > 0 ? setCurrency(total_sale) - setCurrency(discount) : setCurrency(total_sale))))}</h5>
+                                {setCurrency(pay_value) > 0 &&   
+                                    
+                                    (setCurrency(discount) > 0 ? setCurrency(pay_value) - (setCurrency(total_sale) - setCurrency(discount)) : setCurrency(pay_value) - (setCurrency(total_sale)) > 0) &&
+                                
+                                    <h5 style={{ color: "blue" }}>Troco {convertToBrlCurrency(getCurrency(
+                                                                            setCurrency(discount) > 0 
+                                                                                ? setCurrency(pay_value) - getCurrency(setCurrency(valueDecrescidFromPercent(total_sale, discount)))
+                                                                                    : setCurrency(pay_value) - setCurrency(total_sale)))}</h5>
                                 }
-
-                                {/* <FormGroup > */}
-                                {/* <Stack spacing={3}> */}
+                                
                                 <Box sx={{
                                     '& > :not(style)': { m: 2 },
                                     'display': 'grid',
                                     'minWidth': 300,
-                                    // 'justify-content': 'stretch'
                                 }}
                                 >
                                     {isOpenModal == true &&
@@ -166,14 +169,15 @@ export default function PdvModal(props) {
                                             wd={"90%"}
                                         />
                                     }
-
-                                    <Currency
-                                        value={discount}
-                                        label="Desconto"
-                                        name="discount"
-                                        changeItem={changeItem}
-                                        wd="90%"
-                                    />
+                                    {type_sale !== 'on_term' &&
+                                        <Percent
+                                            value={discount}
+                                            label="Desconto"
+                                            name="discount"
+                                            changeItem={changeItem}
+                                            wd="90%"
+                                        />
+                                    }
 
                                     {type_sale !== 'on_term' &&
                                         <>
@@ -187,8 +191,6 @@ export default function PdvModal(props) {
                                         </>
                                     }
                                 </Box>
-                                {/* </Stack> */}
-                                {/* </FormGroup> */}
                                 <br />
                                 <Box sx={{ "& button": { mx: 1 } }}>
                                     <Button onClick={handleSaveSale} variant="contained" mt={2}>

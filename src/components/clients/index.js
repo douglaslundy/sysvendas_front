@@ -175,7 +175,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {client.full_name ? client.full_name.toUpperCase() : ''}
+                                                        {client.full_name ? client.full_name.substring(0, 35).toUpperCase() : ''}
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"
@@ -183,7 +183,7 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {client.surname ? client.surname.toUpperCase() : ''}
+                                                        {client.surname ? client.surname.substring(0, 30).toUpperCase() : ''}
                                                     </Typography>
                                                 </Box>
                                             </Box>
@@ -203,7 +203,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {client.fantasy_name ? client.fantasy_name.toUpperCase() : ''}
+                                                        {client.fantasy_name ? client.fantasy_name.substring(0, 30).toUpperCase() : ''}
                                                     </Typography>
                                                     <Typography
                                                         color="textSecondary"

@@ -167,7 +167,8 @@ export default function ClientModal(props) {
                                         required
                                     />
                                     
-                                    <CpfCnpj value={cpf_cnpj}
+                                    <CpfCnpj 
+                                        value={cpf_cnpj}
                                         label={'CPF / CNPJ'}
                                         name={'cpf_cnpj'}
                                         changeItem={changeItem}

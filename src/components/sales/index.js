@@ -132,7 +132,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {sale.client != null ? sale.client.full_name.toUpperCase() : 'VENDA NO BALCÃO'}
+                                                        {sale.client != null ? sale.client.full_name.substring(0, 35).toUpperCase() : 'VENDA NO BALCÃO'}
                                                     </Typography>
 
                                                     <Typography
@@ -141,8 +141,7 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {/* {format(parseISO(sale.sale_date), 'dd/MM/yyyy hh:mm:ss')} */}
-                                                        {format(parseISO(sale.sale_date), 'dd/MM/yyyy')}
+                                                        {sale && sale.sale_date && format(parseISO(sale.sale_date), 'dd/MM/yyyy HH:mm:ss')}
                                                     </Typography>
                                                 </Box>
                                             </Box>

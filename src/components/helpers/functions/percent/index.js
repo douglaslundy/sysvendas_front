@@ -1,4 +1,4 @@
-import { setCurrency } from "../../formatt/currency";
+import { getCurrency, setCurrency } from "../../formatt/currency";
 
 export const summedPercentage = (cost_value, sale_value) => {
 
@@ -16,4 +16,8 @@ export const discountPercentage = (actual_value, discounted_value) => {
 
 export const valueSaleSummedFromPercent = (cost_value, percent_value) => {
     return (setCurrency(cost_value) + (setCurrency(cost_value) * (parseFloat(percent_value.replace(',', '')) / 100))) / 100;
+} 
+
+export const valueDecrescidFromPercent = (cost_value, percent_value) => {
+    return ((setCurrency(cost_value) - (setCurrency(cost_value) * (parseFloat(setCurrency(percent_value) / 100) / 100))) / 100).toFixed(2);
 } 

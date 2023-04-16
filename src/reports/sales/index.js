@@ -3,10 +3,8 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { convertToBrlCurrency, getCurrency, setCurrency } from '../../components/helpers/formatt/currency';
 import { parseISO, format } from 'date-fns';
 
-function salesPDF(sale) {
+function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, itens, discount }) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
-    const { id, sale_date, type_sale, paied, total_sale, client, itens, discount } = sale;
 
     const title = [
         {
@@ -14,7 +12,7 @@ function salesPDF(sale) {
             text: `Relatório da Venda Nº ${id}`,
             fontSize: 18,
             bold: true,
-            alignment:'center' ,
+            alignment: 'center',
             margin: [20, 20, 0, 45] // left, top, right, bottom
         }
     ];
@@ -22,8 +20,13 @@ function salesPDF(sale) {
     const company = [
         {
 
-            text: [
-                `JR Ferragens - Data : ${format(parseISO(sale_date), 'dd/MM/yyyy hh:mm:ss')}`
+            stack: [
+                { text: 'JR Ferragens', fontSize: 16, bold: true },
+                { text: 'Tel & WhatsApp: 35 98859-2759', fontSize: 12, bold: true },
+                { text: 'CNPJ: CNPJ 34.498.355/0001-74', fontSize: 12, bold: true },
+                { text: 'E-mail: jrferragens84@gmail.com', fontSize: 12, bold: true },
+                { text: ' ', fontSize: 12, bold: true },
+                { text: `Data da venda: ${format(parseISO(sale_date), 'dd/MM/yyyy hh:mm:ss')}` },
             ],
             fontSize: 12,
             bold: true,
@@ -43,10 +46,23 @@ function salesPDF(sale) {
     ];
     const name = [
         {
-
-            text: [
-                `CLIENTE: ${client != null ? client.full_name : 'VENDA NO BALCÃO'}`
+            stack: [
+                client != null ?
+                    (
+                        type_sale != "in_cash" ?
+                            (
+                                [
+                                    { text: `CLIENTE: ${client.full_name}` },
+                                    { text: `${client.cpf_cnpj.length > 11 ? + " CNPJ: " : "CPF: " + client.cpf_cnpj + " / Telefone: " + client.phone }` }
+                                ]
+                            )
+                            :
+                            { text: `CLIENTE: ${client.full_name}` }
+                    )
+                    :
+                    { text: `CLIENTE: ${client != null ? client.full_name : 'VENDA NO BALCÃO'}` }
             ],
+
             fontSize: 12,
             bold: true,
             margin: [2, 2, 2, 20] // left, top, right, bottom
@@ -148,7 +164,7 @@ function salesPDF(sale) {
 
     // pdfMake.createPdf(definitions).download();
     pdfMake.createPdf(definitions).print();
-    
+
 }
 
 export default salesPDF;

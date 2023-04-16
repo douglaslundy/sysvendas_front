@@ -28,7 +28,6 @@ import { convertStock } from '../../helpers/stock';
 import { getAllUnitsToSelect } from "../../../store/fetchActions/unit";
 import { getAllCategoriesToSelect } from "../../../store/fetchActions/categorie";
 import InputSelectProduct from '../../../components/inputs/inputSelectProduct';
-import { getId } from '../../helpers/formatt/getIdFromSelect';
 
 const style = {
     position: 'absolute',

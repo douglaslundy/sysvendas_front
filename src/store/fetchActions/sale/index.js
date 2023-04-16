@@ -8,10 +8,15 @@ import { turnAlert, addAlertMessage, turnLoading, turnModalGetSales, changeTitle
 import { getAllClients } from "../client";
 import salesPDF from "../../../reports/sales";
 
+import { valueDecrescidFromPercent } from '../../../components/helpers/functions/percent';
+
+
 export const addSale = (sale, cleanForm) => {
     const { 'sysvendas.id': user } = parseCookies();
     return (dispatch) => {
         dispatch(turnLoading());
+
+        // console.log('disconto antes ' + sale.discount)
 
         sale = {
             ...sale,
@@ -21,22 +26,16 @@ export const addSale = (sale, cleanForm) => {
             cash: setCurrency(sale.cash),
             pay_value: setCurrency(sale.pay_value),
             total_sale: setCurrency(sale.total_sale),
-            discount: setCurrency(sale.discount)
+            discount: setCurrency(valueDecrescidFromPercent(sale.total_sale, sale.discount)) / 100
         };
+
+        
+        // console.log('disconto depois  ' + sale.discount)
+        // console.log('total da venda ' + setCurrency(valueDecrescidFromPercent(getCurrency(sale.total_sale), getCurrency(sale.discount))))
 
         api.post('/sales', sale)
             .then((res) =>
-            (
-                // sale = {
-                //     ...res.data,
-                //     check: getCurrency(res.datacheck),
-                //     card: getCurrency(res.data.card),
-                //     cash: getCurrency(res.data.cash),
-                //     pay_value: getCurrency(res.data.pay_value),
-                //     total_sale: getCurrency(res.data.total_sale)
-                // },
-
-                // // dispatch(addSale(sale)),
+            (        
                 dispatch(turnAlert()),
                 dispatch(turnLoading()),
                 dispatch(cleanProductsCart()),
