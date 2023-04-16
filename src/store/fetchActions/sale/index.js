@@ -16,8 +16,6 @@ export const addSale = (sale, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
 
-        // console.log('disconto antes ' + sale.discount)
-
         sale = {
             ...sale,
             id_user: user,
@@ -26,9 +24,13 @@ export const addSale = (sale, cleanForm) => {
             cash: setCurrency(sale.cash),
             pay_value: setCurrency(sale.pay_value),
             total_sale: setCurrency(sale.total_sale),
-            discount: setCurrency(valueDecrescidFromPercent(sale.total_sale, sale.discount)) / 100
+            discount: setCurrency(sale.total_sale) - (setCurrency(valueDecrescidFromPercent(sale.total_sale, sale.discount)) / 100)
         };
-
+        
+        // console.log('pay_value ' + sale.pay_value)
+        // console.log('total é ' + sale.total_sale)
+        // console.log('disconto é ' + sale.discount)
+        // // console.log('total é ' + sale.total_sale - sale.discount)
         
         // console.log('disconto depois  ' + sale.discount)
         // console.log('total da venda ' + setCurrency(valueDecrescidFromPercent(getCurrency(sale.total_sale), getCurrency(sale.discount))))

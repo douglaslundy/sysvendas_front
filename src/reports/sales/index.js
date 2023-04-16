@@ -2,13 +2,27 @@ import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { convertToBrlCurrency, getCurrency, setCurrency } from '../../components/helpers/formatt/currency';
 import { parseISO, format } from 'date-fns';
+import img from '../../../assets/images/logos/logo.png'
 
-function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, itens, discount }) {
+async function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, itens, discount }) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+    const loadImage = async (url) => {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const base64ImageData = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = () => {
+                resolve(reader.result);
+            };
+            reader.onerror = reject;
+        });
+        return base64ImageData;
+    };
 
     const title = [
         {
-
             text: `Relatório da Venda Nº ${id}`,
             fontSize: 18,
             bold: true,
@@ -17,11 +31,19 @@ function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, itens, 
         }
     ];
 
-    const company = [
+    const logo = [
         {
+            image: await loadImage('http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.03233391.png&w=256&q=75'),
+            width: 80,
+            height: 40
+        },
+    ]
 
+    const company = [
+        logo,
+        {
             stack: [
-                { text: 'JR Ferragens', fontSize: 16, bold: true },
+                // { text: 'JR Ferragens', fontSize: 16, bold: true },
                 { text: 'Tel & WhatsApp: 35 98859-2759', fontSize: 12, bold: true },
                 { text: 'CNPJ: CNPJ 34.498.355/0001-74', fontSize: 12, bold: true },
                 { text: 'E-mail: jrferragens84@gmail.com', fontSize: 12, bold: true },
@@ -35,7 +57,6 @@ function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, itens, 
     ];
     const type = [
         {
-
             text: [
                 `Venda - ${type_sale == "in_cash" ? 'A Vista' : 'A Prazo'} / Recebida - ${paied == 'yes' ? 'SIM' : 'NÃO'}`
             ],
@@ -53,7 +74,7 @@ function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, itens, 
                             (
                                 [
                                     { text: `CLIENTE: ${client.full_name}` },
-                                    { text: `${client.cpf_cnpj.length > 11 ? + " CNPJ: " : "CPF: " + client.cpf_cnpj + " / Telefone: " + client.phone }` }
+                                    { text: `${client.cpf_cnpj.length > 11 ? + " CNPJ: " : "CPF: " + client.cpf_cnpj + " / Telefone: " + client.phone}` }
                                 ]
                             )
                             :
@@ -147,22 +168,18 @@ function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, itens, 
 
 
     const definitions = {
-        // pageSize: 'A4',
         pageSize: 'A4',
-        // pageOrientation: itens.length > 5 ? 'portrait' : 'landscape',
         pageOrientation: 'portrait',
         pageMargins: [15, 50, 15, 40],
         header: [title],
-        // watermark: 'JR Ferragens ',
-        // watermark: { text: 'JR Ferragens', color: 'blue', opacity: 0.3, bold: true, italics: false },
-        // watermark: { text: 'JR Ferragens', fontSize: 40 },
-        // watermark: { text: 'JR Ferragens', angle: 70 },
-        // content: [company, type, name, details, total, discount > 0 ? discountLabel : '', discount > 0 ? totalPaied: ''],
-        content: [company, type, name, details, total, discount > 0 ? [discountLabel, totalPaied] : ''],
+        content: [
+
+
+            company, type, name, details, total, discount > 0 ? [discountLabel, totalPaied] : ''
+        ],
         // footer: footer
     };
 
-    // pdfMake.createPdf(definitions).download();
     pdfMake.createPdf(definitions).print();
 
 }
