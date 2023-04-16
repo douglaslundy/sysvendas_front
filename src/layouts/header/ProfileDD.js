@@ -9,15 +9,18 @@ import {
   Link,
   Button,
   Divider,
+  ListItemButton,
+  ListItemText,
 } from "@mui/material";
 
-import { useSelector, useDispatch } from "react-redux";
-import Router from "next/router";
+import { useDispatch } from "react-redux";
 import { AuthContext } from "../../contexts/AuthContext";
 import { logoutFetch } from "../../store/fetchActions/auth";
+import UserModal from "../../components/modal/user";
+import { turnUserModal } from "../../store/ducks/Layout";
+import { getUserFetch } from "../../store/fetchActions/user";
 
-function 
-logout(dispatch) {
+function logout(dispatch) {
   dispatch(logoutFetch());
 }
 
@@ -35,10 +38,16 @@ const ProfileDD = () => {
   const dispatch = useDispatch();
 
   const { username } = useContext(AuthContext);
-
+  const { user } = useContext(AuthContext);
+  
+  const HandleEditUser = async user => {
+    dispatch(getUserFetch(user));
+    dispatch(turnUserModal());
+}
 
   return (
     <>
+    <UserModal />
       <Button
         aria-label="menu"
         color="inherit"
@@ -96,7 +105,11 @@ const ProfileDD = () => {
           },
         }}
       >
-        <Box>          
+        <Box>
+          <ListItemButton>
+            <ListItemText primary="Meus Dados" onClick={() => HandleEditUser(user)} />
+          </ListItemButton>
+
           <Divider />
           <Box p={2}>
             <Link to="/">

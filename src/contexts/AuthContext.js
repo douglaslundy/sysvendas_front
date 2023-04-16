@@ -1,9 +1,7 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { parseCookies } from 'nookies';
-import axios from "axios";
 
 export const AuthContext = createContext({});
-
 
 export function AuthProvider({ children }) {
 
@@ -11,11 +9,12 @@ export function AuthProvider({ children }) {
 
     const { 'sysvendas.username': username } = parseCookies();
     const { 'sysvendas.profile': profile } = parseCookies();
+    const { 'sysvendas.id': user } = parseCookies();
 
     const { 'sysvendas.token': tokens } = parseCookies();
 
     return (
-        <AuthContext.Provider value={{ username, profile, isAuthenticated, tokens }}>
+        <AuthContext.Provider value={{ username, profile, isAuthenticated, tokens, user }}>
             {children}
         </AuthContext.Provider>
     )

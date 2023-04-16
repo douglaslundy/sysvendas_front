@@ -1,13 +1,7 @@
 import { api } from "../../../services/api";
 import { cleanCpfCnpj } from "../../../components/helpers/formatt/cpf_cnpj";
-import { inactiveUser, addUser, editUser, addUsers } from "../../ducks/users";
+import { inactiveUser, addUser, editUser, addUsers, showUser } from "../../ducks/users";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
-import { parseCookies } from "nookies";
-
-// function getToken() {
-//     const { 'sysvendas.token': token } = parseCookies();
-//     token ? api.defaults.headers['Authorization'] = `Bearer ${token}` : Router.push('/login');
-// }
 
 export const getAllUsers = () => {
     // getToken();
@@ -74,6 +68,24 @@ export const editUserFetch = (user, cleanForm) => {
                 })
     };
 }
+
+export const getUserFetch = (user) => {
+    return (dispatch) => {
+        dispatch(turnLoading()),
+            api.get(`/users/${user}`)
+                .then((res) =>
+                (
+                    dispatch(showUser(res.data)),
+                    dispatch(turnLoading()),
+                ))
+                .catch((error) => {
+                    dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                    dispatch(turnLoading());
+                    return error.response ? error.response.data : 'erro desconhecido';
+                })
+    };
+}
+
 
 export const inactiveUserFetch = (user) => {
     return (dispatch) => {

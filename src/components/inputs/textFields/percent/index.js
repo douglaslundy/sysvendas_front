@@ -35,7 +35,6 @@ export default function index(props) {
   const { label, name, value, changeItem, wd, disabled } = props;
   return (
     <TextField
-      id="percent"
       label={label}
       variant="outlined"
       name={name}
