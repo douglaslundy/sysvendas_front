@@ -1,8 +1,7 @@
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
-import { convertToBrlCurrency, getCurrency, setCurrency } from '../../components/helpers/formatt/currency';
+import { convertToBrlCurrency, getCurrency } from '../../components/helpers/formatt/currency';
 import { parseISO, format } from 'date-fns';
-import img from '../../../assets/images/logos/logo.png'
 
 async function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, itens, discount }) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -33,26 +32,27 @@ async function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, i
 
     const logo = [
         {
-            image: await loadImage('http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.03233391.png&w=256&q=75'),
-            width: 80,
-            height: 40
+            // image: "data:image/png;base64, codigo convertido da imagem em base 64 aqui",
+            image: await loadImage('https://sysvendas.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.03233391.png&w=256&q=75'),
+            width: 120,
+            height: 60,
+            margin: [20, 20, 0, 45] // left, top, right, bottom
         },
     ]
 
     const company = [
-        logo,
+        // logo,
         {
             stack: [
-                // { text: 'JR Ferragens', fontSize: 16, bold: true },
+                { text: 'CNPJ: 34.498.355/0001-74', fontSize: 12, bold: true },
                 { text: 'Tel & WhatsApp: 35 98859-2759', fontSize: 12, bold: true },
-                { text: 'CNPJ: CNPJ 34.498.355/0001-74', fontSize: 12, bold: true },
                 { text: 'E-mail: jrferragens84@gmail.com', fontSize: 12, bold: true },
-                { text: ' ', fontSize: 12, bold: true },
                 { text: `Data da venda: ${format(parseISO(sale_date), 'dd/MM/yyyy hh:mm:ss')}` },
             ],
             fontSize: 12,
+            alignment: 'center',
             bold: true,
-            margin: [2, 10, 2, 5] // left, top, right, bottom
+            margin: [0, -30, 2, 5] // left, top, right, bottom
         }
     ];
     const type = [
@@ -62,7 +62,7 @@ async function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, i
             ],
             fontSize: 12,
             bold: true,
-            margin: [2, 2, 2, 5] // left, top, right, bottom
+            margin: [2, 20, 2, 0] // left, top, right, bottom
         }
     ];
     const name = [
@@ -74,7 +74,7 @@ async function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, i
                             (
                                 [
                                     { text: `CLIENTE: ${client.full_name}` },
-                                    { text: `${client.cpf_cnpj.length > 11 ? + " CNPJ: " : "CPF: " + client.cpf_cnpj + " / Telefone: " + client.phone}` }
+                                    { text: `${client.cpf_cnpj ? client.cpf_cnpj.length > 11 ? + " CNPJ: " : "CPF: " + client.cpf_cnpj + " / Telefone: " + client.phone: ''}` }
                                 ]
                             )
                             :
@@ -171,11 +171,8 @@ async function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, i
         pageSize: 'A4',
         pageOrientation: 'portrait',
         pageMargins: [15, 50, 15, 40],
-        header: [title],
-        content: [
-
-
-            company, type, name, details, total, discount > 0 ? [discountLabel, totalPaied] : ''
+        header: [logo],
+        content: [company, type, name, details, total, discount > 0 ? [discountLabel, totalPaied] : ''
         ],
         // footer: footer
     };
