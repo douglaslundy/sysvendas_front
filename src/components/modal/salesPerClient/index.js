@@ -137,7 +137,7 @@ export default function (props) {
     };
 
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10); const handleChangePage = (event, newPage) => {
+    const [rowsPerPage, setRowsPerPage] = useState(20); const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
 

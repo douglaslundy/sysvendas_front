@@ -70,7 +70,7 @@ export default function SalesReceipt(props) {
 
                     <h1>Recibo de Venda</h1>
                     <hr />
-                    <h3>JR Ferragens - Data : {created_at && format(parseISO(created_at), 'dd/MM/yyyy hh:mm:ss')}</h3>
+                    <h3>JR Ferragens - Data : {created_at && format(parseISO(created_at), 'dd/MM/yyyy HH:mm:ss')}</h3>
                     <h5>Venda Nº: {id} / {type_sale == "in_cash" ? 'A Vista' : 'A Prazo'} / Venda Recebida {paied == 'yes' ? 'SIM' : 'NÃO'}</h5>
                     <hr />
                     <h3>CLIENTE: {client != null ? client.full_name : 'VENDA NO BALCÃO'}</h3>

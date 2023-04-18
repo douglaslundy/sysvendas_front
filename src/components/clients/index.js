@@ -228,7 +228,7 @@ export default () => {
                                                     <FeatherIcon icon="dollar-sign" width="20" height="20" />
                                                 </Button>
 
-                                                <Button title="Editar cliente" onClick={() => { HandleEditClient(client) }} color="primary" size="medium" variant="contained">
+                                                <Button title="Editar cliente" onClick={() => { HandleEditClient(client) }} color="success" size="medium" variant="contained">
                                                     <FeatherIcon icon="edit" width="20" height="20" />
                                                 </Button>
 
