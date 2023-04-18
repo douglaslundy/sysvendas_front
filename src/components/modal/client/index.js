@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import AlertModal from '../../messagesModal'
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
@@ -157,7 +157,6 @@ export default function ClientModal(props) {
                                         } }}
                                     />
                                     <TextField
-                                        id="email"
                                         label="@Email"
                                         variant="outlined"
                                         type="email"

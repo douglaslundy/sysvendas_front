@@ -1,10 +1,9 @@
 import { api } from "../../../services/api";
-import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
+import { setCurrency } from "../../../components/helpers/formatt/currency";
 import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
 import { addSales, addSalesPerClient } from "../../ducks/sales";
 import { turnAlert, addAlertMessage, turnLoading, turnModalGetSales, changeTitleAlert } from "../../ducks/Layout";
-// import { parseISO, format } from 'date-fns';
 import { getAllClients } from "../client";
 import salesPDF from "../../../reports/sales";
 
@@ -26,14 +25,6 @@ export const addSale = (sale, cleanForm) => {
             total_sale: setCurrency(sale.total_sale),
             discount: setCurrency(sale.total_sale) - (setCurrency(valueDecrescidFromPercent(sale.total_sale, sale.discount)) / 100)
         };
-        
-        // console.log('pay_value ' + sale.pay_value)
-        // console.log('total é ' + sale.total_sale)
-        // console.log('disconto é ' + sale.discount)
-        // // console.log('total é ' + sale.total_sale - sale.discount)
-        
-        // console.log('disconto depois  ' + sale.discount)
-        // console.log('total da venda ' + setCurrency(valueDecrescidFromPercent(getCurrency(sale.total_sale), getCurrency(sale.discount))))
 
         api.post('/sales', sale)
             .then((res) =>
@@ -64,7 +55,7 @@ export const getAllSales = () => {
                     // "discount": getCurrency(sale.discount),
                     "discount": sale.discount,
                     // "sale_date": format(parseISO(sale.sale_date), 'dd/MM/yyyy hh:mm:ss'),
-                    "sale_date": sale.sale_date,
+                    // "sale_date": sale.sale_date,
                 }
             })
             return payload;
@@ -93,7 +84,7 @@ export const getAllSalesPerClient = (client, paied = "all") => {
                     ...sale,
                     "total_sale": sale.total_sale,
                     "discount": sale.discount,
-                    "sale_date": sale.sale_date
+                    "created_at": sale.created_at
                     // "sale_date": format(parseISO(sale.sale_date), 'dd/MM/yyyy hh:mm:ss')
                 }
             })

@@ -30,6 +30,8 @@ import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/fo
 import { toPaySalesFetch } from '../../../store/fetchActions/sale';
 import ConfirmDialog from "../../confirmDialog";
 
+import salesPDF from '../../../reports/sales';
+
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -254,7 +256,7 @@ export default function (props) {
                                                                                     fontSize: "13px",
                                                                                 }}
                                                                             >
-                                                                                {sale.sale_date}
+                                                                                {sale.created_at}
                                                                             </Typography>
                                                                         </Box>
                                                                     </Box>
@@ -327,7 +329,7 @@ export default function (props) {
                                                                             <FeatherIcon icon="eye" width="20" height="20" />
                                                                         </Button>
 
-                                                                        <Button title="Imprimir venda" onClick={() => { alert('estamos desenvolvendo essa funcionalidade') }} color="error" size="medium" variant="contained">
+                                                                        <Button title="Imprimir venda" onClick={() => { salesPDF(sale) }} color="error" size="medium" variant="contained">
                                                                             <FeatherIcon icon="printer" width="20" height="20" />
                                                                         </Button>
                                                                     </Box>
@@ -385,20 +387,7 @@ export default function (props) {
                                     changeItem={changeItem}
                                     wd={"30%"}
                                 />
-                                {/* <Currency value={card}
-                                    disabled={!totalSale > 0}
-                                    label={'Cartão'}
-                                    name={'card'}
-                                    changeItem={changeItem}
-                                    wd={"20%"}
-                                />
-                                <Currency value={check}
-                                    disabled={!totalSale > 0}
-                                    label={'Cheque'}
-                                    name={'check'}
-                                    changeItem={changeItem}
-                                    wd={"20%"}
-                                /> */}
+                                
                             </Box>
                             <Box sx={{ "& button": { mx: 1, mt: 5 } }}>
                                 <Button onClick={() => { handleClose() }} variant="outlined" mt={2}>

@@ -3,7 +3,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { convertToBrlCurrency, getCurrency } from '../../components/helpers/formatt/currency';
 import { parseISO, format } from 'date-fns';
 
-async function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, itens, discount }) {
+async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, itens, discount }) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
     const loadImage = async (url) => {
@@ -47,7 +47,7 @@ async function salesPDF({ id, sale_date, type_sale, paied, total_sale, client, i
                 { text: 'CNPJ: 34.498.355/0001-74', fontSize: 12, bold: true },
                 { text: 'Tel & WhatsApp: 35 98859-2759', fontSize: 12, bold: true },
                 { text: 'E-mail: jrferragens84@gmail.com', fontSize: 12, bold: true },
-                { text: `Data da venda: ${format(parseISO(sale_date), 'dd/MM/yyyy hh:mm:ss')}` },
+                { text: `Data da venda: ${created_at && format(parseISO(created_at), 'dd/MM/yyyy HH:mm:ss')}` },
             ],
             fontSize: 12,
             alignment: 'center',

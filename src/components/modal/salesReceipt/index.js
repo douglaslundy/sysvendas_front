@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -18,7 +18,7 @@ import {
 import FeatherIcon from "feather-icons-react";
 
 import { turnModalGetSale } from '../../../store/ducks/Layout';
-import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
+import { convertToBrlCurrency, getCurrency } from '../../helpers/formatt/currency';
 import salesPDF from '../../../reports/sales';
 
 
@@ -50,7 +50,7 @@ export default function SalesReceipt(props) {
 
     const dispatch = useDispatch();
     const { isOpenModalGetSale } = useSelector(state => state.layout);
-    const { id, sale_date, type_sale, paied, total_sale, client, itens, discount } = props.sale;
+    const { id, created_at, type_sale, paied, total_sale, client, itens, discount } = props.sale;
 
     const handleClose = () => {
         dispatch(turnModalGetSale());
@@ -70,7 +70,7 @@ export default function SalesReceipt(props) {
 
                     <h1>Recibo de Venda</h1>
                     <hr />
-                    <h3>JR Ferragens - Data : {format(parseISO(sale_date), 'dd/MM/yyyy hh:mm:ss')}</h3>
+                    <h3>JR Ferragens - Data : {created_at && format(parseISO(created_at), 'dd/MM/yyyy hh:mm:ss')}</h3>
                     <h5>Venda Nº: {id} / {type_sale == "in_cash" ? 'A Vista' : 'A Prazo'} / Venda Recebida {paied == 'yes' ? 'SIM' : 'NÃO'}</h5>
                     <hr />
                     <h3>CLIENTE: {client != null ? client.full_name : 'VENDA NO BALCÃO'}</h3>

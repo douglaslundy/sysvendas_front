@@ -24,7 +24,7 @@ import Receipt from "../modal/salesReceipt";
 import { turnModalGetSale } from "../../store/ducks/Layout";
 import salesPDF from "../../reports/sales";
 import BasicDatePicker from "../inputs/datePicker";
-import { convertToBrlCurrency, getCurrency, setCurrency } from "../helpers/formatt/currency";
+import { convertToBrlCurrency, getCurrency } from "../helpers/formatt/currency";
 import { parseISO, format } from 'date-fns';
 
 
@@ -59,12 +59,12 @@ export default () => {
     }, []);
 
     const HandleViewSale = sale => {
-        dispatch(turnModalGetSale());
         setSale(sale);
+        dispatch(turnModalGetSale());
     }
 
     return (
-        <BaseCard title={`Encontramos ${sales.length} Vendas realizadas no período informado` }> 
+        <BaseCard title={`Encontramos ${sales && sales.length} Vendas realizadas no período informado` }> 
             
             <BasicDatePicker />
 
@@ -141,7 +141,7 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {sale && sale.sale_date && format(parseISO(sale.sale_date), 'dd/MM/yyyy HH:mm:ss')}
+                                                        {sale && sale.created_at && format(parseISO(sale.created_at), 'dd/MM/yyyy HH:mm:ss')}
                                                     </Typography>
                                                 </Box>
                                             </Box>
