@@ -3,7 +3,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { convertToBrlCurrency, getCurrency } from '../../components/helpers/formatt/currency';
 import { parseISO, format } from 'date-fns';
 
-async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, itens, discount }) {
+async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, itens, discount, obs }) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
     const loadImage = async (url) => {
@@ -55,7 +55,7 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
 
         {
             stack: [
-                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------`, fontSize: 12, bold: false },
+                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------` },
             ],
             fontSize: 12,
             alignment: 'center',
@@ -74,7 +74,7 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
 
         {
             stack: [
-                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------`, fontSize: 12, bold: false },
+                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------` },
             ],
             fontSize: 12,
             alignment: 'center',
@@ -85,26 +85,24 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
     const name = [
         {
             stack: [
-                client != null ?
-                    (
-                        type_sale != "in_cash" ?
-                            (
-                                [
-                                    { text: `CLIENTE: ${client.id} - ${client.full_name}` },
-                                    { text: `${client.cpf_cnpj ? client.cpf_cnpj.length > 11 ? + " CNPJ: " : "CPF: " + client.cpf_cnpj + " / Telefone: " + client.phone : ''}` }
-                                ]
-                            )
-                            :
-                            { text: `CLIENTE: ${client.id} - ${client.full_name}` }
-                    )
-                    :
-                    { text: `CLIENTE: ${client != null ? client.id - client.full_name : 'VENDA NO BALCÃO'}` }
+                client != null ? ({ text: `CLIENTE: ${client.id} - ${client.full_name}` })
+                    : { text: `CLIENTE: VENDA NO BALCÃO` }
             ],
-
             fontSize: 11,
             bold: true,
             margin: [2, 0, 2, 0] // left, top, right, bottom
-        }
+        },
+
+        {
+            stack: [
+                client != null ? ({ text: `${ (client.cpf_cnpj != null && client.cpf_cnpj.length > 11 ? + " CNPJ: " : "CPF: ") + (client.cpf_cnpj != null ? client.cpf_cnpj : '') + " / Telefone: " + (client.phone != null ?  client.phone : '')}`})
+                    : { text: `` }
+            ],
+            fontSize: 11,
+            bold: false,
+            margin: [2, 0, 2, 0] // left, top, right, bottom
+        },
+
     ];
 
     const type = [
@@ -118,7 +116,7 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
 
         {
             stack: [
-                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------`, fontSize: 12, bold: false },
+                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------` },
             ],
             fontSize: 12,
             alignment: 'center',
@@ -160,7 +158,7 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
 
         {
             stack: [
-                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------`, fontSize: 12, bold: false },
+                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------` },
             ],
             fontSize: 12,
             alignment: 'center',
@@ -215,11 +213,23 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
         ]
     }
 
+    const lbObs = [
+
+        {
+            stack: [
+                { text: `Obs.: ${obs ? obs : ''}` },
+            ],
+            fontSize: 10,
+            alignment: 'left',
+            margin: [0, discount > 0 ? -45 : -13, 200, 10] // left, top, right, bottom
+        }
+    ];
+
     const lbSingn = [
 
         {
             stack: [
-                { text: `------------------------------------------------------`, fontSize: 12, bold: false },
+                { text: `------------------------------------------------------------------------` },
             ],
             fontSize: 10,
             alignment: 'center',
@@ -233,7 +243,7 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
             ],
             fontSize: 10,
             alignment: 'center',
-            margin: [0, 10, 0, 0]  // left, top, right, bottom
+            margin: [0, 0, 0, 0]  // left, top, right, bottom
         }
     ];
 
@@ -242,7 +252,7 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
         pageOrientation: 'portrait',
         pageMargins: [15, 50, 15, 40],
         header: [logo],
-        content: [company, name, type, details, total, discount > 0 ? [discountLabel, totalPaied] : '', lbSingn
+        content: [company, name, type, details, total, discount > 0 ? [discountLabel, totalPaied] : '', lbObs, lbSingn
         ],
         // footer: footer
     };

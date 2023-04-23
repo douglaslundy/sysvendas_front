@@ -15,6 +15,7 @@ import { valueDecrescidFromPercent } from '../../helpers/functions/percent';
 import {
     Grid,
     Button,
+    TextField,
 } from "@mui/material";
 
 import BaseCard from "../../baseCard/BaseCard";
@@ -52,18 +53,16 @@ export default function PdvModal(props) {
     const dispatch = useDispatch();
 
     const [formSale, setFormSale] = useState({
-        // id_pay_metod: "cash",
         id_client: null,
         pay_value: 0,
-        // type_sale: '',
-        // total_sale: 0,
         paied: "yes",
         check: 0,
         cash: 0,
         card: 0,
-        discount: 0
+        discount: 0,
+        obs: ""
     });
-    const { id_pay_metod, pay_value, type_sale, total_sale, discount } = formSale;
+    const { id_pay_metod, pay_value, type_sale, total_sale, discount, obs } = formSale;
 
     const changeItem = ({ target }) => {
         setFormSale({ ...formSale, [target.name]: target.value.toUpperCase() });
@@ -79,7 +78,8 @@ export default function PdvModal(props) {
             check: 0,
             cash: 0,
             card: 0,
-            discount: 0
+            discount: 0, 
+            obs: ""
         });
 
         dispatch(turnModal());
@@ -144,16 +144,16 @@ export default function PdvModal(props) {
                                         <h3> Pagar {getTotalToPay()}</h3>
                                     </>
                                 }
-                                {setCurrency(pay_value) > 0 &&   
-                                    
+                                {setCurrency(pay_value) > 0 &&
+
                                     (setCurrency(discount) > 0 ? setCurrency(pay_value) - (setCurrency(total_sale) - setCurrency(discount)) : setCurrency(pay_value) - (setCurrency(total_sale)) > 0) &&
-                                
+
                                     <h5 style={{ color: "blue" }}>Troco {convertToBrlCurrency(getCurrency(
-                                                                            setCurrency(discount) > 0 
-                                                                                ? setCurrency(pay_value) - getCurrency(setCurrency(valueDecrescidFromPercent(total_sale, discount)))
-                                                                                    : setCurrency(pay_value) - setCurrency(total_sale)))}</h5>
+                                        setCurrency(discount) > 0
+                                            ? setCurrency(pay_value) - getCurrency(setCurrency(valueDecrescidFromPercent(total_sale, discount)))
+                                            : setCurrency(pay_value) - setCurrency(total_sale)))}</h5>
                                 }
-                                
+
                                 <Box sx={{
                                     '& > :not(style)': { m: 2 },
                                     'display': 'grid',
@@ -190,6 +190,24 @@ export default function PdvModal(props) {
                                             />
                                         </>
                                     }
+
+                                    <TextField
+                                        value={obs}
+                                        label={obs && obs.length > 0 ? `Resumo: ${200 - obs.length} caracteres restantes` : 'Obs'}
+                                        name="obs"
+                                        multiline
+                                        onChange={changeItem}
+                                        rows={2}
+                                        sx={{ width: '90%' }}
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                            maxLength: 200
+                                        }}
+                                    />
+
+
                                 </Box>
                                 <br />
                                 <Box sx={{ "& button": { mx: 1 } }}>

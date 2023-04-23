@@ -29,6 +29,7 @@ import { changeTitleAlert, turnModalGetSale, turnModalGetSales } from '../../../
 import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
 import { toPaySalesFetch } from '../../../store/fetchActions/sale';
 import ConfirmDialog from "../../confirmDialog";
+import { parseISO, format } from 'date-fns';
 
 import salesPDF from '../../../reports/sales';
 
@@ -256,7 +257,7 @@ export default function (props) {
                                                                                     fontSize: "13px",
                                                                                 }}
                                                                             >
-                                                                                {sale.created_at}
+                                                                                {sale && sale.created_at && format(parseISO(sale.created_at), 'dd/MM/yyyy HH:mm:ss')}
                                                                             </Typography>
                                                                         </Box>
                                                                     </Box>
