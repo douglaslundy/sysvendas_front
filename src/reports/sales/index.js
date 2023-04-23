@@ -36,6 +36,7 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
             image: await loadImage('https://sysvendas.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.03233391.png&w=256&q=75'),
             width: 120,
             height: 60,
+            alignment: 'center',
             margin: [20, 20, 0, 45] // left, top, right, bottom
         },
     ]
@@ -44,27 +45,43 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
         // logo,
         {
             stack: [
-                { text: 'CNPJ: 34.498.355/0001-74', fontSize: 12, bold: true },
-                { text: 'Tel & WhatsApp: 35 98859-2759', fontSize: 12, bold: true },
-                { text: 'E-mail: jrferragens84@gmail.com', fontSize: 12, bold: true },
-                { text: `Data da venda: ${created_at && format(parseISO(created_at), 'dd/MM/yyyy HH:mm:ss')}` },
+                { text: 'CNPJ: 34.498.355/0001-74 - Fone && Zap: 35 98859-2759 - E-mail: jrferragens84@gmail.com', fontSize: 12, bold: false },
             ],
             fontSize: 12,
             alignment: 'center',
             bold: true,
-            margin: [0, -30, 2, 5] // left, top, right, bottom
-        }
-    ];
-    const type = [
+            margin: [0, 40, 0, 5] // left, top, right, bottom
+        },
+
         {
-            text: [
-                `Venda - ${type_sale == "in_cash" ? 'A Vista' : 'A Prazo'} / Recebida - ${paied == 'yes' ? 'SIM' : 'NÃO'}`
+            stack: [
+                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------`, fontSize: 12, bold: false },
             ],
             fontSize: 12,
-            bold: true,
-            margin: [2, 20, 2, 0] // left, top, right, bottom
+            alignment: 'center',
+            margin: [0, 0, 0, 0] // left, top, right, bottom
+        },
+
+        {
+            stack: [
+                { text: `D O C U M E N T O   A U X I L I A R   D E   V E N D A  -  P E D I D O`, fontSize: 14 },
+                { text: `NÃO É DOCUMENTO FISCAL - NÃO É VÁLIDO COMO GARANTIA DE MERCADORIA`, fontSize: 10, bold: true },
+                { text: `N. do documento: ${id}       -       ${created_at && format(parseISO(created_at), 'dd/MM/yyyy')}       -       ${created_at && format(parseISO(created_at), 'HH:mm:ss')}`, fontSize: 12 },
+            ],
+            alignment: 'center',
+            margin: [0, 0, 0, 0] // left, top, right, bottom
+        },
+
+        {
+            stack: [
+                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------`, fontSize: 12, bold: false },
+            ],
+            fontSize: 12,
+            alignment: 'center',
+            margin: [0, 0, 0, 0] // left, top, right, bottom
         }
     ];
+
     const name = [
         {
             stack: [
@@ -73,28 +90,46 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
                         type_sale != "in_cash" ?
                             (
                                 [
-                                    { text: `CLIENTE: ${client.full_name}` },
-                                    { text: `${client.cpf_cnpj ? client.cpf_cnpj.length > 11 ? + " CNPJ: " : "CPF: " + client.cpf_cnpj + " / Telefone: " + client.phone: ''}` }
+                                    { text: `CLIENTE: ${client.id} - ${client.full_name}` },
+                                    { text: `${client.cpf_cnpj ? client.cpf_cnpj.length > 11 ? + " CNPJ: " : "CPF: " + client.cpf_cnpj + " / Telefone: " + client.phone : ''}` }
                                 ]
                             )
                             :
-                            { text: `CLIENTE: ${client.full_name}` }
+                            { text: `CLIENTE: ${client.id} - ${client.full_name}` }
                     )
                     :
-                    { text: `CLIENTE: ${client != null ? client.full_name : 'VENDA NO BALCÃO'}` }
+                    { text: `CLIENTE: ${client != null ? client.id - client.full_name : 'VENDA NO BALCÃO'}` }
             ],
 
-            fontSize: 12,
+            fontSize: 11,
             bold: true,
-            margin: [2, 2, 2, 20] // left, top, right, bottom
+            margin: [2, 0, 2, 0] // left, top, right, bottom
         }
     ];
 
+    const type = [
+        {
+            text: [
+                `COND. PAGTO:   ${type_sale == "in_cash" ? 'A Vista' : 'A Prazo'} / ${paied == 'yes' ? 'Recebida' : 'A Receber'}`
+            ],
+            fontSize: 11,
+            margin: [2, 0, 2, 0] // left, top, right, bottom
+        },
+
+        {
+            stack: [
+                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------`, fontSize: 12, bold: false },
+            ],
+            fontSize: 12,
+            alignment: 'center',
+            margin: [0, 0, 0, 0] // left, top, right, bottom
+        }
+    ];
 
     const dados = itens.map((item) => {
         return [
-            { text: getCurrency(item.qtd), fontSize: 9, margin: [0, 2, 0, 2] },
             { text: item.name, fontSize: 9, margin: [0, 2, 0, 2] },
+            { text: getCurrency(item.qtd), fontSize: 9, margin: [0, 2, 0, 2] },
             { text: convertToBrlCurrency(getCurrency(item.item_value)), fontSize: 9, margin: [0, 2, 0, 2] },
             { text: convertToBrlCurrency(getCurrency(item.item_value * item.qtd / 100)), fontSize: 9, margin: [0, 2, 0, 2] }
         ]
@@ -104,11 +139,11 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
         {
             table: {
                 headerRows: 1,
-                widths: ['8%', '52%', '20%', '20%'],
+                widths: ['52%', '8%', '20%', '20%'],
                 body: [
                     [
-                        { text: 'Qtd', style: 'tableHeader', fontSize: 10 },
                         { text: 'Descrição', style: 'tableHeader', fontSize: 10 },
+                        { text: 'Qtd', style: 'tableHeader', fontSize: 10 },
                         { text: 'Preço Unitário', style: 'tableHeader', fontSize: 10 },
                         { text: 'Total', style: 'tableHeader', fontSize: 10 }
                     ],
@@ -120,24 +155,37 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
         }
     ];
 
+
     const total = [
+
+        {
+            stack: [
+                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------`, fontSize: 12, bold: false },
+            ],
+            fontSize: 12,
+            alignment: 'center',
+            margin: [0, 5, 0, 0] // left, top, right, bottom
+        },
+
         {
 
             text: [
-                `Total: ${convertToBrlCurrency(getCurrency(total_sale))}`,
+                `TOTAL: ${convertToBrlCurrency(getCurrency(total_sale))}`,
             ],
-            fontSize: 14,
+            fontSize: 10,
+            alignment: 'right',
             bold: true,
-            margin: [2, 20, 2, 2] // left, top, right, bottom
+            margin: [2, 2, 2, 2] // left, top, right, bottom
         }
     ];
     const discountLabel = [
         {
 
             text: [
-                `Desconto: ${convertToBrlCurrency(getCurrency(discount))}`,
+                `DESCONTO: ${convertToBrlCurrency(getCurrency(discount))}`,
             ],
-            fontSize: 14,
+            fontSize: 10,
+            alignment: 'right',
             color: 'red',
             bold: true,
             margin: [2, 2, 2, 2] // left, top, right, bottom
@@ -147,9 +195,10 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
         {
 
             text: [
-                `Total Pago: ${convertToBrlCurrency(getCurrency(total_sale - discount))}`,
+                `TOTAL PAGO: ${convertToBrlCurrency(getCurrency(total_sale - discount))}`,
             ],
-            fontSize: 18,
+            alignment: 'right',
+            fontSize: 12,
             bold: true,
             margin: [2, 2, 2, 2] // left, top, right, bottom
         }
@@ -166,13 +215,34 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
         ]
     }
 
+    const lbSingn = [
+
+        {
+            stack: [
+                { text: `------------------------------------------------------`, fontSize: 12, bold: false },
+            ],
+            fontSize: 10,
+            alignment: 'center',
+            margin: [0, 0, 0, 0] // left, top, right, bottom
+        },
+
+        {
+
+            text: [
+                `COMPRADOR / RECEBEDOR`,
+            ],
+            fontSize: 10,
+            alignment: 'center',
+            margin: [0, 10, 0, 0]  // left, top, right, bottom
+        }
+    ];
 
     const definitions = {
         pageSize: 'A4',
         pageOrientation: 'portrait',
         pageMargins: [15, 50, 15, 40],
         header: [logo],
-        content: [company, type, name, details, total, discount > 0 ? [discountLabel, totalPaied] : ''
+        content: [company, name, type, details, total, discount > 0 ? [discountLabel, totalPaied] : '', lbSingn
         ],
         // footer: footer
     };
