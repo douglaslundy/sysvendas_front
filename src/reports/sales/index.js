@@ -45,11 +45,10 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
         // logo,
         {
             stack: [
-                { text: 'CNPJ: 34.498.355/0001-74 - Fone && Zap: 35 98859-2759 - E-mail: jrferragens84@gmail.com', fontSize: 12, bold: false },
+                { text: 'CNPJ: 34.498.355/0001-74 - FONE & ZAP: (35)98859-2759 - EMAIL: jrferragens84@gmail.com'},
             ],
             fontSize: 12,
             alignment: 'center',
-            bold: true,
             margin: [0, 40, 0, 5] // left, top, right, bottom
         },
 
