@@ -24,7 +24,7 @@ import { getAllProducts, inactiveProductFetch } from "../../store/fetchActions/p
 import { showProduct } from "../../store/ducks/products";
 import { changeTitleAlert, turnModal } from "../../store/ducks/Layout";
 import ConfirmDialog from "../confirmDialog";
-import { convertToBrlCurrency } from "../helpers/formatt/currency";
+import { convertToBrlCurrency, convertToDecimal } from "../helpers/formatt/currency";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -251,7 +251,7 @@ export default () => {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {product.stock ? product.stock / product.reason : 0}
+                                                        {product.stock ? convertToDecimal(product.stock / convertToDecimal(product.reason)) : 0}
 
                                                         {/* <Button title="Entrada no estoque" onClick={() => { HandleEditProduct(product) }} color="primary" size="medium" variant="contained">
                                                             {product.stock ? product.stock / product.reason : 0}

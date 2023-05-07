@@ -1,5 +1,5 @@
 import { api } from "../../../services/api";
-import { setCurrency } from "../../../components/helpers/formatt/currency";
+import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
 import { addProductsCart, addProductCart, removeProductCart } from "../../ducks/cart";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 import { parseCookies } from 'nookies';
@@ -8,11 +8,30 @@ import { parseCookies } from 'nookies';
 export const getListProductsCart = () => {
     const { 'sysvendas.id': user } = parseCookies();
 
+
+    const config = {
+        transformResponse: [function(data) {
+            const payload = JSON.parse(data).map(d => {
+                return {
+                    ...d,
+                    product: {
+                        ...d.product,
+                        reason: getCurrency(d.product.reason),
+                    }
+                }
+            })
+            return payload;
+        }]
+    }
+
     return (dispatch) => {
         dispatch(turnLoading())
         api
-            .get(`/cart/${user}`)
+            .get(`/cart/${user}`, config)
             .then((res) => {
+
+                console.log("todos produtos " + JSON.stringify(res.data));
+                
                 dispatch(addProductsCart(res.data));
                 dispatch(turnLoading());
             })
@@ -33,7 +52,7 @@ export const addProductCartFetch = (cart, cleanForm) => {
             id_product_stock: cart.product ? cart.product.id_product_stock : '',
             reason: cart.product ? cart.product.reason : 1
         };
-
+        
         api.post('/cart', prod)
             .then((res) =>
             (
@@ -44,14 +63,17 @@ export const addProductCartFetch = (cart, cleanForm) => {
                         id: cart.product.id,
                         name: cart.product.name,
                         bar_code: cart.product.bar_code,
+                        sale_value: setCurrency(cart.product.sale_value),
+                        reason: cart.product.reason,
+                        id_product_stock: cart.product.id_product_stock
                         // id_unity: cart.product.id_unity,
                         // id_category: cart.product.id_category,
                         // stock: setCurrency(cart.product.stock),
-                        sale_value: setCurrency(cart.product.sale_value),
                         // cost_value: setCurrency(cart.product.cost_value),
                         // active: cart.product.active,
                     }
                 },
+                
                 cleanForm(),
                 dispatch(addProductCart(res)),
                 dispatch(addMessage(`O produto ${res.product.name} foi adicionado ao carrinho!`)),
@@ -70,7 +92,8 @@ export const addProductCartFetch = (cart, cleanForm) => {
 export const editProductCartFetch = (cart, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
-        
+       
+        console.log(JSON.stringify(cart))
         api.put(`/cart/${cart.id}`, cart)
             .then((res) =>
             (
@@ -80,14 +103,16 @@ export const editProductCartFetch = (cart, cleanForm) => {
                         id: cart.product.id,
                         name: cart.product.name,
                         bar_code: cart.product.bar_code,
+                        sale_value: res.data.cart.sale_value,
+                        obs: cart.product.obs,
+                        reason: cart.product.reason,
+                        id_product_stock: cart.product.id_product_stock
                         // id_unity: cart.product.id_unity,
                         // id_category: cart.product.id_category,
                         // stock: setCurrency(cart.product.stock),
-                        sale_value: res.data.cart.sale_value,
                         // qtd: res.data.cart.qtd,
                         // cost_value: setCurrency(cart.product.cost_value),
                         // active: cart.product.active,
-                        obs: cart.product.obs,
                     }
                 },
                 cleanForm(),

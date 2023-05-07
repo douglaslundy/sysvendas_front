@@ -29,5 +29,11 @@ export function convertToBrlCurrency(str = 0) {
 
 }
 
+export function convertToDecimal(str = 0) {
+    const number = str.toString().replace(',','.');
+    return parseFloat(number).toFixed(2);
+
+}
+
 
 

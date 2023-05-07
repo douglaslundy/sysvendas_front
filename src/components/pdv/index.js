@@ -266,7 +266,7 @@ export default () => {
                                                                         fontWeight: "600",
                                                                     }}
                                                                 >
-                                                                    {prod.product.name.substring(0, 30).toUpperCase()}
+                                                                    {prod.product.name && prod.product.name.substring(0, 30).toUpperCase()}
                                                                 </Typography>
                                                                 <Typography
                                                                     color="textSecondary"
