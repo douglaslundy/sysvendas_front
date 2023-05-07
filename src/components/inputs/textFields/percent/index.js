@@ -32,7 +32,7 @@ const PercentMask = React.forwardRef((props, ref) => {
 
 export default function index(props) {
 
-  const { label, name, value, changeItem, wd, disabled } = props;
+  const { label, name, value, changeItem, wd, disabled, required } = props;
   return (
     <TextField
       label={label}
@@ -41,7 +41,7 @@ export default function index(props) {
       value={value ? value : ''}
       onChange={changeItem}
       sx={{ width: wd }}
-      required
+      required={required}
       disabled={disabled ? disabled : false}
       InputProps={{
         inputComponent: PercentMask,

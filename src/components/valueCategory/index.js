@@ -64,6 +64,7 @@ export default () => {
                 <Percent value={percent}
                     label={'Percentual'}
                     name={'percent'}
+                    required={'required'}
                     changeItem={changeItem}
                     wd={"44%"}
                 />

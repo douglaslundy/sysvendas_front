@@ -125,7 +125,10 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
 
     const dados = itens.map((item) => {
         return [
-            { text: item.name, fontSize: 9, margin: [0, 2, 0, 2] },
+            { stack: [
+                {text: item.name, fontSize: 12, margin: [0, 2, 0, 2]},
+                {text: item.obs, fontSize: 8, margin: [0, 2, 0, 2]} 
+            ] },
             { text: getCurrency(item.qtd), fontSize: 9, margin: [0, 2, 0, 2] },
             { text: convertToBrlCurrency(getCurrency(item.item_value)), fontSize: 9, margin: [0, 2, 0, 2] },
             { text: convertToBrlCurrency(getCurrency(item.item_value * item.qtd / 100)), fontSize: 9, margin: [0, 2, 0, 2] }

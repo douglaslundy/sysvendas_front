@@ -6,8 +6,14 @@ const Provisoria = () => {
     <BaseCard title="SysVendas">
       <h1>Novidades...</h1>
 
-      <h2>#Inserido logomarga, CNPJ e Telefone no recibo de venda!</h2>
-      <h4>... 16/04/2023</h4> 
+      <h2>#Criado botão e campo de observação por item no carrinho!</h2>
+      <h4>... 06/05/2023</h4> 
+
+      <h4>#Criado botao para alterar quantidade do item no carrinho</h4>
+      <h6>... 06/05/2023</h6>
+
+      <h4>#Inserido logomarga, CNPJ e Telefone no recibo de venda!</h4>
+      <h6>... 16/04/2023</h6> 
 
       <h4>#Retirado disconto da venda a prazo</h4>
       <h6>... 10/04/2023</h6> 

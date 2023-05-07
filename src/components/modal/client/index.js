@@ -170,6 +170,7 @@ export default function ClientModal(props) {
                                         value={cpf_cnpj}
                                         label={'CPF / CNPJ'}
                                         name={'cpf_cnpj'}
+                                        required={'required'}
                                         changeItem={changeItem}
                                      />
 

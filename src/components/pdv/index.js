@@ -24,9 +24,12 @@ import { getCurrency } from "../helpers/formatt/currency";
 import { addProductCartFetch, getListProductsCart, deleteProductFromCart } from "../../store/fetchActions/cart";
 import { getAllProducts } from "../../store/fetchActions/product";
 import { convertToBrlCurrency } from "../helpers/formatt/currency";
-import { addAlertMessage, changeTitleAlert, turnModal } from "../../store/ducks/Layout";
+import { addAlertMessage, changeTitleAlert, turnModal, turnObsCartModal, turnQtdCartModal } from "../../store/ducks/Layout";
+import { showProductCart } from "../../store/ducks/cart";
 import { getTotal } from "../helpers/checkout";
 import PdvModal from "../modal/pdv";
+import ObsProductCartModal from "../modal/showObsProduct";
+import QtdProductCartModal from "../modal/showQtdProduct";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -103,6 +106,16 @@ export default () => {
         dispatch(changeTitleAlert(`${product.product.name} foi removido do carrinho!`))
     }
 
+    const HandleEditProduct = async product => {
+        dispatch(showProductCart(product));
+        dispatch(turnObsCartModal());
+    }
+
+    const HandleEditQtdProduct = async product => {
+        dispatch(showProductCart(product));
+        dispatch(turnQtdCartModal());
+    }
+
     // Pagination of products
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -136,6 +149,9 @@ export default () => {
     return (
         <>
             <AlertModal />
+            <ObsProductCartModal />
+            <QtdProductCartModal />
+
             {isOpenAlert == false &&
                 <BaseCard title="Adicionar Produto">
                     <Box sx={{
@@ -233,8 +249,8 @@ export default () => {
                                 <TableBody>
                                     {productsCart
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((product, index) => (
-                                            <StyledTableRow key={product.id} hover>
+                                        .map((prod, index) => (
+                                            <StyledTableRow key={prod.id} hover>
                                                 <>
                                                     <TableCell>
                                                         <Box
@@ -250,7 +266,7 @@ export default () => {
                                                                         fontWeight: "600",
                                                                     }}
                                                                 >
-                                                                    {product.product.name.toUpperCase()}
+                                                                    {prod.product.name.substring(0, 30).toUpperCase()}
                                                                 </Typography>
                                                                 <Typography
                                                                     color="textSecondary"
@@ -258,7 +274,7 @@ export default () => {
                                                                         fontSize: "13px",
                                                                     }}
                                                                 >
-                                                                    {product.category ? product.category.name : ''}
+                                                                    {prod.obs ? prod.obs.substring(0, 30) : ''}
                                                                 </Typography>
                                                             </Box>
                                                         </Box>
@@ -278,7 +294,7 @@ export default () => {
                                                                         fontWeight: "600",
                                                                     }}
                                                                 >
-                                                                    {convertToBrlCurrency(getCurrency(product.sale_value))}
+                                                                    {convertToBrlCurrency(getCurrency(prod.sale_value))}
                                                                 </Typography>
                                                             </Box>
                                                         </Box>
@@ -293,21 +309,28 @@ export default () => {
                                                             }}
                                                         >
                                                             <Box>
-                                                                <Typography
-                                                                    variant="h6"
-                                                                    sx={{
-                                                                        fontWeight: "600",
-                                                                    }}
-                                                                >
-                                                                    {getCurrency(product.qtd)}
-                                                                </Typography>
+                                                                <Button onClick={() => { HandleEditQtdProduct(prod) }} 
+                                                                    title="Alterar quantidade"
+                                                                        color="primary" size="medium" variant="contained">
+
+                                                                    <Typography
+                                                                        variant="h6"
+                                                                        sx={{
+                                                                            fontWeight: "600",
+                                                                            color: "#000"
+                                                                        }}
+                                                                    >
+                                                                        {getCurrency(prod.qtd)}
+                                                                    </Typography>
+                                                                </Button>
+
                                                                 <Typography
                                                                     color="textSecondary"
                                                                     sx={{
                                                                         fontSize: "13px",
                                                                     }}
                                                                 >
-                                                                    {product.unity ? product.unity.name : ''}
+                                                                    {prod.unity ? prod.unity.name : ''}
                                                                 </Typography>
                                                             </Box>
                                                         </Box>
@@ -327,7 +350,7 @@ export default () => {
                                                                         fontWeight: "600",
                                                                     }}
                                                                 >
-                                                                    {convertToBrlCurrency(getCurrency(product.sale_value * product.qtd / 100))}
+                                                                    {convertToBrlCurrency(getCurrency(prod.sale_value * prod.qtd / 100))}
                                                                 </Typography>
                                                             </Box>
                                                         </Box>
@@ -337,11 +360,11 @@ export default () => {
                                                     <TableCell align="center">
                                                         <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                            {/* <Button onClick={() => { HandleEditProduct(product) }} color="primary" size="medium" variant="contained">
-                                                                <FeatherIcon icon="edit" width="20" height="20" />
-                                                            </Button> */}
+                                                            <Button onClick={() => { HandleEditProduct(prod) }} title="Inserir Observação" color="primary" size="medium" variant="contained">
+                                                                <FeatherIcon icon="twitch" width="20" height="20" />
+                                                            </Button>
 
-                                                            <Button onClick={() => { HandleDeleteProduct(product) }} color="error" size="medium" variant="contained">
+                                                            <Button onClick={() => { HandleDeleteProduct(prod) }} title="Remover produto do carrinho" color="error" size="medium" variant="contained">
                                                                 <FeatherIcon icon="trash" width="20" height="20" />
                                                             </Button>
                                                         </Box>

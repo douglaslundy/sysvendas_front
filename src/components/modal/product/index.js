@@ -233,6 +233,7 @@ export default function ProductModal(props) {
                                         <Percent value={percent}
                                             label={'Percentual'}
                                             name={'percent'}
+                                            required={'required'}
                                             changeItem={changePercent}
                                             wd={"24%"}
                                         />
