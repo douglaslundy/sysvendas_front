@@ -193,12 +193,21 @@ export default () => {
             }}>
 
                 <BaseCard title="Ponto De Venda">
-                    <Box
+                    {/* <Box
                         sx={{
                             '& > :not(style)': { m: 2 },
                             'display': 'flex',
                             'justify-content': 'stretch',
                             'minWidth': "50Em"
+                        }}
+                    > */}
+
+                    <Box
+                        sx={{
+                            '& > :not(style)': { m: 2 },
+                            'display': 'flex',
+                            'justify-content': 'stretch',
+                            'minWidth': "40Em"
                         }}
                     >
 
@@ -309,9 +318,9 @@ export default () => {
                                                             }}
                                                         >
                                                             <Box>
-                                                                <Button onClick={() => { HandleEditQtdProduct(prod) }} 
+                                                                <Button onClick={() => { HandleEditQtdProduct(prod) }}
                                                                     title="Alterar quantidade"
-                                                                        color="primary" size="medium" variant="contained">
+                                                                    color="primary" size="medium" variant="contained">
 
                                                                     <Typography
                                                                         variant="h6"
