@@ -120,7 +120,7 @@ export const inactiveClientFetch = (client) => {
                 dispatch(turnLoading())
             ))
             .catch((error) => {
-                dispatch(addMessage(`ERROR - ${error} `));
+                dispatch(addAlertMessage(`ERROR - ${error.response.data.message} `));
                 dispatch(turnLoading());
             })
     }

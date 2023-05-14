@@ -16,12 +16,12 @@ import {
 import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
 
-// import { useSelector, useDispatch } from 'react-redux';
-import { getAllSales } from "../../store/fetchActions/sale";
 import { useDispatch, useSelector } from "react-redux";
 
 import Receipt from "../modal/salesReceipt";
+import { getAllSales } from "../../store/fetchActions/sale";
 import { turnModalGetSale } from "../../store/ducks/Layout";
+import { showSale } from "../../store/ducks/sales";
 import salesPDF from "../../reports/sales";
 import BasicDatePicker from "../inputs/datePicker";
 import { convertToBrlCurrency, getCurrency } from "../helpers/formatt/currency";
@@ -39,10 +39,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default () => {
-    
-    const { sales } = useSelector(state => state.sales);
+
+    const { sales, sale } = useSelector(state => state.sales);
     const dispatch = useDispatch();
-    const [sale, setSale] = useState();
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10); const handleChangePage = (event, newPage) => {
@@ -58,18 +57,18 @@ export default () => {
         dispatch(getAllSales());
     }, []);
 
-    const HandleViewSale = sale => {
-        setSale(sale);
+    const HandleViewSale = async sale => {
+        dispatch(showSale(sale));
         dispatch(turnModalGetSale());
     }
 
     return (
-        <BaseCard title={`Encontramos ${sales && sales.length} Vendas realizadas no período informado` }> 
-            
+        <BaseCard title={`Encontramos ${sales && sales.length} Vendas realizadas no período informado`}>
+
             <BasicDatePicker />
 
-            {sale &&
-                <Receipt sale={sale} />
+            {sale && sale.id && 
+                <Receipt />
             }
 
             <TableContainer>
@@ -112,120 +111,114 @@ export default () => {
                     </TableHead>
                     <TableBody>
                         {sales &&
-                        sales
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((sale, index) => (
-                                <StyledTableRow key={sale.id} hover>
-                                    <>
+                            sales
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((sale, index) => (
+                                    <StyledTableRow key={sale.id} hover>
+                                        <>
 
-                                        <TableCell>
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    alignItems: "left",
-                                                }}
-                                            >
-                                                <Box>
-                                                    <Typography
-                                                        variant="h6"
-                                                        sx={{
-                                                            fontWeight: "600",
-                                                        }}
-                                                    >
-                                                        {sale.client != null ? sale.client.full_name.substring(0, 35).toUpperCase() : 'VENDA NO BALCÃO'}
-                                                    </Typography>
+                                            <TableCell>
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        alignItems: "left",
+                                                    }}
+                                                >
+                                                    <Box>
+                                                        <Typography
+                                                            variant="h6"
+                                                            sx={{
+                                                                fontWeight: "600",
+                                                            }}
+                                                        >
+                                                            {sale.client != null ? sale.client.full_name.substring(0, 35).toUpperCase() : 'VENDA NO BALCÃO'}
+                                                        </Typography>
 
-                                                    <Typography
-                                                        color="textSecondary"
-                                                        sx={{
-                                                            fontSize: "13px",
-                                                        }}
-                                                    >
-                                                        {sale && sale.created_at && format(parseISO(sale.created_at), 'dd/MM/yyyy HH:mm:ss')}
-                                                    </Typography>
+                                                        <Typography
+                                                            color="textSecondary"
+                                                            sx={{
+                                                                fontSize: "13px",
+                                                            }}
+                                                        >
+                                                            {sale && sale.created_at && format(parseISO(sale.created_at), 'dd/MM/yyyy HH:mm:ss')}
+                                                        </Typography>
+                                                    </Box>
                                                 </Box>
-                                            </Box>
-                                        </TableCell>
+                                            </TableCell>
 
-                                        <TableCell align="center">
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                }}
-                                            >
-                                                <Box>
-                                                    <Typography
-                                                        variant="h6"
-                                                        sx={{
-                                                            fontWeight: "600",
-                                                        }}
-                                                    >
-                                                        {sale.type_sale == "in_cash" ? "A Vista" : "A Prazo"}
-                                                    </Typography>
-                                                    <Typography
-                                                        color="textSecondary"
-                                                        sx={{
-                                                            fontSize: "13px",
-                                                        }}
-                                                    >
-                                                        {sale.paied == "yes" ? "Recebido" : "A Receber"}
-                                                    </Typography>
+                                            <TableCell align="center">
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                    }}
+                                                >
+                                                    <Box>
+                                                        <Typography
+                                                            variant="h6"
+                                                            sx={{
+                                                                fontWeight: "600",
+                                                            }}
+                                                        >
+                                                            {sale.type_sale == "in_cash" ? "A Vista" : "A Prazo"}
+                                                        </Typography>
+                                                        <Typography
+                                                            color="textSecondary"
+                                                            sx={{
+                                                                fontSize: "13px",
+                                                            }}
+                                                        >
+                                                            {sale.paied == "yes" ? "Recebido" : "A Receber"}
+                                                        </Typography>
+                                                    </Box>
                                                 </Box>
-                                            </Box>
-                                        </TableCell>
+                                            </TableCell>
 
-                                        <TableCell>
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    alignItems: "left"
-                                                }}
-                                            >
-                                                <Box>
-                                                    <Typography
-                                                        variant="h6"
-                                                        sx={{
-                                                            fontWeight: "600",
-                                                        }}
-                                                    >
-                                                        {/* {convertToBrlCurrency(getCurrency(setCurrency(sale.total_sale) - setCurrency(sale.discount)))} */}
-                                                        {convertToBrlCurrency(getCurrency(sale.total_sale - sale.discount))}
-                                                    </Typography>
-                                                    <Typography
-                                                        color="textSecondary"
-                                                        sx={{
-                                                            fontSize: "12px",
-                                                        }}
-                                                    >
-                                                        {/* {sale.phone} */}
-                                                    </Typography>
+                                            <TableCell>
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        alignItems: "left"
+                                                    }}
+                                                >
+                                                    <Box>
+                                                        <Typography
+                                                            variant="h6"
+                                                            sx={{
+                                                                fontWeight: "600",
+                                                            }}
+                                                        >
+                                                            {/* {convertToBrlCurrency(getCurrency(setCurrency(sale.total_sale) - setCurrency(sale.discount)))} */}
+                                                            {convertToBrlCurrency(getCurrency(sale.total_sale - sale.discount))}
+                                                        </Typography>
+                                                        <Typography
+                                                            color="textSecondary"
+                                                            sx={{
+                                                                fontSize: "12px",
+                                                            }}
+                                                        >
+                                                            {/* {sale.phone} */}
+                                                        </Typography>
+                                                    </Box>
                                                 </Box>
-                                            </Box>
-                                        </TableCell>
+                                            </TableCell>
 
-                                        <TableCell align="center">
-                                            <Box sx={{ "& button": { mx: 1 } }}>
+                                            <TableCell align="center">
+                                                <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                {/* <Receipt sale={sale}>
-                                                    <Button onClick={() => { dispatch(turnModal()) }} color="primary" size="medium" variant="contained">
+                                                    <Button title="Visualiar venda" onClick={() => HandleViewSale(sale)} color="primary" size="medium" variant="contained">
                                                         <FeatherIcon icon="eye" width="20" height="20" />
                                                     </Button>
-                                                </Receipt> */}
 
-                                                <Button title="Visualiar venda" onClick={() => HandleViewSale(sale)} color="primary" size="medium" variant="contained">
-                                                    <FeatherIcon icon="eye" width="20" height="20" />
-                                                </Button>
+                                                    <Button title="Imprimir venda" onClick={() => salesPDF(sale)} color="error" size="medium" variant="contained">
+                                                        <FeatherIcon icon="printer" width="20" height="20" />
+                                                    </Button>
 
-                                                <Button title="Imprimir venda" onClick={() => salesPDF(sale)} color="error" size="medium" variant="contained">
-                                                    <FeatherIcon icon="printer" width="20" height="20" />
-                                                </Button>
+                                                </Box>
+                                            </TableCell>
+                                        </>
 
-                                            </Box>
-                                        </TableCell>
-                                    </>
-
-                                </StyledTableRow>
-                            ))}
+                                    </StyledTableRow>
+                                ))}
                     </TableBody>
                 </Table>
                 <TablePagination

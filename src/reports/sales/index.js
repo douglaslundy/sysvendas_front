@@ -94,7 +94,7 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
 
         {
             stack: [
-                client != null ? ({ text: `${ (client.cpf_cnpj != null && client.cpf_cnpj.length > 11 ? + " CNPJ: " : "CPF: ") + (client.cpf_cnpj != null ? client.cpf_cnpj : '') + " / Telefone: " + (client.phone != null ?  client.phone : '')}`})
+                client != null ? ({ text: `${ (client.cpf_cnpj != null && client.cpf_cnpj.length > 11 ? " CNPJ: " : "CPF: ") + (client.cpf_cnpj != null ? client.cpf_cnpj : '') + " / Telefone: " + (client.phone != null ?  client.phone : '')}`})
                     : { text: `` }
             ],
             fontSize: 11,
@@ -125,6 +125,7 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
 
     const dados = itens.map((item) => {
         return [
+            { text: item.bar_code, fontSize: 9, margin: [0, 2, 0, 2] },
             { stack: [
                 {text: item.name, fontSize: 12, margin: [0, 2, 0, 2]},
                 {text: item.obs, fontSize: 8, margin: [0, 2, 0, 2]} 
@@ -139,9 +140,10 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
         {
             table: {
                 headerRows: 1,
-                widths: ['52%', '8%', '20%', '20%'],
+                widths: ['14%','44%', '6%', '18%', '18%'],
                 body: [
                     [
+                        { text: 'Código', style: 'tableHeader', fontSize: 10 },
                         { text: 'Descrição', style: 'tableHeader', fontSize: 10 },
                         { text: 'Qtd', style: 'tableHeader', fontSize: 10 },
                         { text: 'Preço Unitário', style: 'tableHeader', fontSize: 10 },

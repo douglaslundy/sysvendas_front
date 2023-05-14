@@ -20,6 +20,7 @@ import FeatherIcon from "feather-icons-react";
 import { turnModalGetSale } from '../../../store/ducks/Layout';
 import { convertToBrlCurrency, getCurrency } from '../../helpers/formatt/currency';
 import salesPDF from '../../../reports/sales';
+import { showSale } from '../../../store/ducks/sales';
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -50,10 +51,12 @@ export default function SalesReceipt(props) {
 
     const dispatch = useDispatch();
     const { isOpenModalGetSale } = useSelector(state => state.layout);
-    const { id, created_at, type_sale, paied, total_sale, client, itens, discount } = props.sale;
+    const { sale } = useSelector(state => state.sales);
+    const { id, created_at, type_sale, paied, total_sale, client, itens, discount } = sale;
 
     const handleClose = () => {
         dispatch(turnModalGetSale());
+        dispatch(showSale({}));
     };
 
     return (
@@ -87,11 +90,13 @@ export default function SalesReceipt(props) {
                         >
                             <TableHead>
                                 <TableRow>
+
                                     <TableCell>
                                         <Typography sx={{ fontWeight: "600" }} variant="h6">
-                                            Qtd
+                                            Código
                                         </Typography>
                                     </TableCell>
+
                                     <TableCell>
                                         <Typography sx={{ fontWeight: "600" }} variant="h6">
                                             Descrição
@@ -104,6 +109,12 @@ export default function SalesReceipt(props) {
                                         </Typography>
                                     </TableCell>
 
+                                    <TableCell>
+                                        <Typography sx={{ fontWeight: "600" }} variant="h6">
+                                            Qtd
+                                        </Typography>
+                                    </TableCell>
+
                                     <TableCell align="center">
                                         <Typography sx={{ fontWeight: "600" }} variant="h6">
                                             Total
@@ -113,36 +124,19 @@ export default function SalesReceipt(props) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {itens
+                                {itens && itens
                                     .map((item, index) => (
                                         <StyledTableRow key={index} hover>
                                             <>
                                                 <TableCell>
-                                                    <Box
+
+                                                    <Typography
                                                         sx={{
-                                                            display: "flex",
-                                                            alignItems: "center",
+                                                            fontSize: "12px",
                                                         }}
                                                     >
-                                                        <Box>
-                                                            <Typography
-                                                                variant="h6"
-                                                                sx={{
-                                                                    fontWeight: "600",
-                                                                }}
-                                                            >
-                                                                { }
-                                                            </Typography>
-                                                            <Typography
-                                                                sx={{
-                                                                    fontSize: "13px",
-                                                                    fontWeight: "600",
-                                                                }}
-                                                            >
-                                                                {getCurrency(item.qtd)}
-                                                            </Typography>
-                                                        </Box>
-                                                    </Box>
+                                                        {item.bar_code}
+                                                    </Typography>
                                                 </TableCell>
 
                                                 <TableCell>
@@ -161,14 +155,7 @@ export default function SalesReceipt(props) {
                                                             >
                                                                 {item.name}
                                                             </Typography>
-                                                            {/* <Typography
-                                                                color="textSecondary"
-                                                                sx={{
-                                                                    fontSize: "12px",
-                                                                }}
-                                                            >
-                                                                {item.bar_code}
-                                                            </Typography> */}
+
                                                         </Box>
                                                     </Box>
                                                 </TableCell>
@@ -179,12 +166,22 @@ export default function SalesReceipt(props) {
 
                                                 <TableCell>
                                                     <Typography
+                                                        sx={{
+                                                            fontSize: "13px",
+                                                            fontWeight: "600",
+                                                        }}
+                                                    >
+                                                        {getCurrency(item.qtd)}
+                                                    </Typography>
+                                                </TableCell>
+
+                                                <TableCell>
+                                                    <Typography
                                                         variant="h6" sx={{
                                                             fontWeight: "600"
                                                         }} >
                                                         {convertToBrlCurrency(getCurrency(item.item_value * item.qtd / 100))}</Typography>
                                                 </TableCell>
-
 
                                             </>
 

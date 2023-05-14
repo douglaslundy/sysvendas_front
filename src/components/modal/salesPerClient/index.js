@@ -32,6 +32,7 @@ import ConfirmDialog from "../../confirmDialog";
 import { parseISO, format } from 'date-fns';
 
 import salesPDF from '../../../reports/sales';
+import { showSale } from '../../../store/ducks/sales';
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -60,13 +61,12 @@ const style = {
 
 export default function (props) {
 
-    const { salesPerClient } = useSelector(state => state.sales);
+    const { salesPerClient, sale } = useSelector(state => state.sales);
     const { client } = useSelector(state => state.clients);
     const { isOpenModalGetSales } = useSelector(state => state.layout);
     const [totalSale, setTotalSale] = useState(0);
 
     const dispatch = useDispatch();
-    const [sale, setSale] = useState();
 
     // const [salesToPay, setSalesToPay] = useState([]);
     const [waning, setWarning] = useState('');
@@ -80,26 +80,25 @@ export default function (props) {
         id_client: client ? client.id : 0,
         cash: 0,
         discount: 0,
-        payable: 0, 
+        payable: 0,
         troco: 0
         // check: 0,
         // card: 0
     });
 
     const { id_sales: salesToPay, cash, discount, payable, troco } = form;
-    // const [troco, setTroco] = useState(0);
 
     const changeItem = ({ target }) => {
         setForm({ ...form, [target.name]: target.value })
     }
 
     useEffect(() => {
-        setForm({...form, troco: setCurrency(cash) - setCurrency(payable)});
-    } ,[cash])
+        setForm({ ...form, troco: setCurrency(cash) - setCurrency(payable) });
+    }, [cash])
 
     useEffect(() => {
-        setForm({...form, payable: getCurrency(totalSale - setCurrency(discount ? discount : 0))});
-    } ,[discount, totalSale])
+        setForm({ ...form, payable: getCurrency(totalSale - setCurrency(discount ? discount : 0)) });
+    }, [discount, totalSale])
 
     const handleEditForm = (sale) => {
         // salesToPay.includes(sale.id) ? (setSalesToPay([...salesToPay.filter(s => s != sale.id)]), setTotalSale(totalSale - setCurrency(sale.total_sale))) : (setSalesToPay([...salesToPay, sale.id]), setTotalSale(totalSale + setCurrency(sale.total_sale)));
@@ -148,14 +147,14 @@ export default function (props) {
     };
 
     const HandleViewSale = sale => {
+        dispatch(showSale(sale));
         dispatch(turnModalGetSale());
-        setSale(sale);
     }
 
     return (
         <div>
-            {sale &&
-                <Receipt sale={sale} />
+            {sale && sale.id &&
+                <Receipt />
             }
 
             {props.children}
@@ -352,9 +351,9 @@ export default function (props) {
                                 </TableContainer>
 
                                 <h3>Total de vendas selecionadas: {convertToBrlCurrency(getCurrency(totalSale))}</h3>
-                                
+
                                 <h4>Desconto: {convertToBrlCurrency(getCurrency(setCurrency(discount ? discount : 0)))}</h4>
-                                <h3>Total a Pagar: {convertToBrlCurrency(getCurrency(setCurrency(payable ? payable: 0)))}</h3>
+                                <h3>Total a Pagar: {convertToBrlCurrency(getCurrency(setCurrency(payable ? payable : 0)))}</h3>
                                 <h4>Troco: {troco && troco > 0 ? convertToBrlCurrency(getCurrency(troco)) : convertToBrlCurrency(0)}</h4>
                                 <ConfirmDialog
                                     confirmDialog={confirmDialog}
@@ -374,21 +373,23 @@ export default function (props) {
                                         {waning}
                                     </Alert>
                                 }
-                                <Currency value={discount}
+                                <Currency
+                                    value={discount}
                                     disabled={!totalSale > 0}
                                     label={'Desconto'}
                                     name={'discount'}
                                     changeItem={changeItem}
                                     wd={"30%"}
                                 />
-                                <Currency value={cash}
+                                <Currency
+                                    value={cash}
                                     disabled={!totalSale > 0}
                                     label={'Dinheiro'}
                                     name={'cash'}
                                     changeItem={changeItem}
                                     wd={"30%"}
                                 />
-                                
+
                             </Box>
                             <Box sx={{ "& button": { mx: 1, mt: 5 } }}>
                                 <Button onClick={() => { handleClose() }} variant="outlined" mt={2}>

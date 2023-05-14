@@ -27,7 +27,7 @@ import { showClient } from "../../store/ducks/clients";
 import { changeTitleAlert, turnModal, turnModalGetSales } from "../../store/ducks/Layout";
 import ConfirmDialog from "../confirmDialog";
 import { convertToBrlCurrency } from "../helpers/formatt/currency";
-
+import AlertModal from "../messagesModal";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -54,11 +54,15 @@ export default () => {
     useEffect(() => {
         dispatch(getAllClients());
     }, []);
-
+    
     useEffect(() => {
         setAllClients(searchValue ? [...clients.filter(cli => cli.full_name.toLowerCase().indexOf(searchValue) > -1)] : clients);
     }, [clients]);
     
+    useEffect(() => {
+        setAllClients([...clients.filter(cli => cli && cli.full_name && cli.full_name.toLowerCase().indexOf(searchValue) > -1)]);
+    }, [searchValue]);
+
     const HandleGetSales = async client => {
         dispatch(getAllSalesPerClient(client, 'no'));
         dispatch(showClient(client));
@@ -74,10 +78,8 @@ export default () => {
         dispatch(changeTitleAlert(`O cliente ${client.full_name} foi inativado com sucesso!`))
     }
 
-
     const searchClients = ({ target }) => {
         setSearchValue(target.value.toLowerCase());
-        setAllClients([...clients.filter(cli => cli.full_name.toLowerCase().indexOf(searchValue) > -1)]);
     }
 
     const [page, setPage] = useState(0);
@@ -93,7 +95,8 @@ export default () => {
     };
 
     return (
-        <BaseCard title={`Você possui ${allClients.length} Clientes Cadastrados` }> 
+        <BaseCard title={`Você possui ${allClients.length} Clientes Cadastrados`}>
+             <AlertModal />
             <Box sx={{
                 '& > :not(style)': { m: 2 },
                 'display': 'flex',
@@ -105,7 +108,6 @@ export default () => {
                     name="search"
                     value={searchValue}
                     onChange={searchClients}
-
                 />
 
                 {client &&

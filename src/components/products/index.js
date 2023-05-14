@@ -97,7 +97,7 @@ export default () => {
     }
 
     return (
-        <BaseCard title={`Você possui ${allProducts.length} Produtos Cadastrados` }>            
+        <BaseCard title={`Você possui ${allProducts.length} Produtos Cadastrados`}>
             <Box sx={{
                 '& > :not(style)': { m: 2 },
                 'display': 'flex',
@@ -139,6 +139,11 @@ export default () => {
                 >
                     <TableHead>
                         <TableRow>
+                            <TableCell align="left">
+                                <Typography color="textSecondary" variant="h6">
+                                    Código
+                                </Typography>
+                            </TableCell>
 
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
@@ -148,19 +153,13 @@ export default () => {
 
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Valor
+                                    Estoque
                                 </Typography>
                             </TableCell>
 
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Estoque
-                                </Typography>
-                            </TableCell>
-
-                            <TableCell align="left">
-                                <Typography color="textSecondary" variant="h6">
-                                    Código
+                                    Valor
                                 </Typography>
                             </TableCell>
 
@@ -178,6 +177,10 @@ export default () => {
                             .map((product) => (
                                 <StyledTableRow key={product.id} hover>
                                     <>
+                                        <TableCell>
+                                            <Typography variant="h6"> {product.bar_code}</Typography>
+                                        </TableCell>
+
                                         <TableCell>
                                             <Box
                                                 sx={{
@@ -206,7 +209,38 @@ export default () => {
                                             </Box>
                                         </TableCell>
 
+                                        <TableCell>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                <Box>
+                                                    <Typography
+                                                        variant="h6"
+                                                        sx={{
+                                                            fontWeight: "600",
+                                                        }}
+                                                    >
+                                                        {product.stock ? (convertToDecimal(product.stock) / convertToDecimal(product.reason)) : 0}
 
+                                                        {/* <Button title="Entrada no estoque" onClick={() => { HandleEditProduct(product) }} color="primary" size="medium" variant="contained">
+                                                            {product.stock ? product.stock / product.reason : 0}
+                                                        </Button> */}
+
+                                                    </Typography>
+                                                    <Typography
+                                                        color="textSecondary"
+                                                        sx={{
+                                                            fontSize: "13px",
+                                                        }}
+                                                    >
+                                                        {product.unity ? product.unity.name : ''}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        </TableCell>
 
                                         <TableCell>
                                             <Box
@@ -235,44 +269,6 @@ export default () => {
                                                 </Box>
                                             </Box>
                                         </TableCell>
-
-
-                                        <TableCell>
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                }}
-                                            >
-                                                <Box>
-                                                    <Typography
-                                                        variant="h6"
-                                                        sx={{
-                                                            fontWeight: "600",
-                                                        }}
-                                                    >
-                                                        {product.stock ? convertToDecimal(product.stock / convertToDecimal(product.reason)) : 0}
-
-                                                        {/* <Button title="Entrada no estoque" onClick={() => { HandleEditProduct(product) }} color="primary" size="medium" variant="contained">
-                                                            {product.stock ? product.stock / product.reason : 0}
-                                                        </Button> */}
-
-                                                    </Typography>
-                                                    <Typography
-                                                        color="textSecondary"
-                                                        sx={{
-                                                            fontSize: "13px",
-                                                        }}
-                                                    >
-                                                        {product.unity ? product.unity.name : ''}
-                                                    </Typography>
-                                                </Box>
-                                            </Box>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography variant="h6"> {product.bar_code}</Typography>
-                                        </TableCell>
-
 
                                         <TableCell align="center">
                                             <Box sx={{ "& button": { mx: 1 } }}>
