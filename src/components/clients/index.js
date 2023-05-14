@@ -74,7 +74,7 @@ export default () => {
     }
 
     const HandleInactiveClient = async client => {
-        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Deseja Realmente inativar o cliente ${client.name}`, confirm: inactiveClientFetch(client) })
+        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Deseja Realmente excluir o cliente ${client.full_name}`, confirm: inactiveClientFetch(client) })
         dispatch(changeTitleAlert(`O cliente ${client.full_name} foi inativado com sucesso!`))
     }
 
