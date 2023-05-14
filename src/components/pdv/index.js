@@ -136,14 +136,21 @@ export default () => {
         'id': "on_term",
         'name': 'a prazo'
     }
+    // ,
+
+    // {
+    //     'id': "budget",
+    //     'name': 'orçamento'
+    // }
     ];
 
     const confirmSale = () => {
-        if (productsCart.length > 0) {
-            dispatch(turnModal());
-        } else {
-            dispatch(addAlertMessage("Insira pelo menos um produto ao carrinho!"))
-        }
+        // id_pay_metod == 'budget' ? 
+        // alert('este é um orçamento') 
+        // : 
+        // (
+            productsCart.length > 0 ? dispatch(turnModal()) : dispatch(addAlertMessage("Insira pelo menos um produto ao carrinho!"))
+        // )
     }
 
     return (
