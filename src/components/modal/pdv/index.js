@@ -8,6 +8,7 @@ import Currency from '../../inputs/textFields/currency';
 import Percent from '../../inputs/textFields/percent';
 import { getAllClients } from '../../../store/fetchActions/client';
 import { addSale } from '../../../store/fetchActions/sale';
+import { addBudget } from '../../../store/fetchActions/budget';
 import ConfirmDialog from '../../confirmDialog';
 
 import { valueDecrescidFromPercent } from '../../helpers/functions/percent';
@@ -78,16 +79,24 @@ export default function PdvModal(props) {
             check: 0,
             cash: 0,
             card: 0,
-            discount: 0, 
+            discount: 0,
             obs: ""
         });
 
         dispatch(turnModal());
     }
 
+    const handleSave = async () => {
+        type_sale === 'budget' ? handleSaveBudget() : handleSaveSale()
+    }
 
     const handleSaveSale = async () => {
         setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja finalizar esta venda?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: addSale(formSale, cleanForm) });
+        dispatch(changeTitleAlert(`Venda realizada com sucesso!`));
+    };
+
+    const handleSaveBudget = async () => {
+        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja finalizar este orçamento?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: addBudget(formSale, cleanForm) });
         dispatch(changeTitleAlert(`Venda realizada com sucesso!`));
     };
 
@@ -119,6 +128,12 @@ export default function PdvModal(props) {
     const getTotalToPay = () => {
         return convertToBrlCurrency(valueDecrescidFromPercent(total_sale, discount));
     }
+
+    const paymentType = type_sale === 'in_cash' ? ' A VISTA' : ' A PRAZO';
+    const saleType = type_sale === 'budget' ? 'Orçamento' : 'Venda';
+
+    const title = `Finalizar ${saleType} ${type_sale === 'budget' ? '' : paymentType}`;
+
     return (
         <div>
             {props.children}
@@ -135,7 +150,7 @@ export default function PdvModal(props) {
 
                     <Grid container spacing={0}>
                         <Grid item xs={12} lg={12}>
-                            <BaseCard title={`Finalizar Venda ${type_sale == 'in_cash' ? 'A VISTA' : 'A PRAZO'}`}>
+                            <BaseCard title={title}>
 
                                 <h4>Total {convertToBrlCurrency(getCurrency(setCurrency(total_sale)))}</h4>
                                 {setCurrency(discount) > 0 &&
@@ -169,7 +184,7 @@ export default function PdvModal(props) {
                                             wd={"90%"}
                                         />
                                     }
-                                    {type_sale !== 'on_term' &&
+                                    {type_sale !== 'on_term' && type_sale !== 'budget' &&
                                         <Percent
                                             value={discount}
                                             label="Desconto"
@@ -179,7 +194,7 @@ export default function PdvModal(props) {
                                         />
                                     }
 
-                                    {type_sale !== 'on_term' &&
+                                    {type_sale !== 'on_term' && type_sale !== 'budget' &&
                                         <>
                                             <Currency
                                                 value={pay_value}
@@ -211,7 +226,7 @@ export default function PdvModal(props) {
                                 </Box>
                                 <br />
                                 <Box sx={{ "& button": { mx: 1 } }}>
-                                    <Button onClick={handleSaveSale} variant="contained" mt={2}>
+                                    <Button onClick={handleSave} variant="contained" mt={2}>
                                         Gravar
                                     </Button>
 

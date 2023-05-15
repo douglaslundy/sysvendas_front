@@ -3,7 +3,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { convertToBrlCurrency, getCurrency } from '../../components/helpers/formatt/currency';
 import { parseISO, format } from 'date-fns';
 
-async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, itens, discount, obs }) {
+async function salesPDF({ id, created_at, type_sale, paied = null, total_sale = null, client, itens, discount = null, obs }) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
     const loadImage = async (url) => {
@@ -45,7 +45,7 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
         // logo,
         {
             stack: [
-                { text: 'CNPJ: 34.498.355/0001-74 - FONE & ZAP: (35)98859-2759 - EMAIL: jrferragens84@gmail.com'},
+                { text: 'CNPJ: 34.498.355/0001-74 - FONE & ZAP: (35)98859-2759 - EMAIL: jrferragens84@gmail.com' },
             ],
             fontSize: 12,
             alignment: 'center',
@@ -63,9 +63,10 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
 
         {
             stack: [
-                { text: `D O C U M E N T O   A U X I L I A R   D E   V E N D A  -  P E D I D O`, fontSize: 14 },
+                { text: `D O C U M E N T O   A U X I L I A R   D E   V E N D A  - ${type_sale === 'budget' ? 'O R Ç A M E N T O' : 'P E D I D O'}`, fontSize: 14 },
                 { text: `NÃO É DOCUMENTO FISCAL - NÃO É VÁLIDO COMO GARANTIA DE MERCADORIA`, fontSize: 10, bold: true },
-                { text: `N. do documento: ${id}       -       ${created_at && format(parseISO(created_at), 'dd/MM/yyyy')}       -       ${created_at && format(parseISO(created_at), 'HH:mm:ss')}`, fontSize: 12 },
+                type_sale === 'budget' ? { text: `ESTE ORÇAMENTO SÓ É VÁLIDO MEDIANTE A DISPONIBILIDADE DO ESTOQUE`, fontSize: 10, bold: true } : '',
+                { text: `N. do(a) ${type_sale === 'budget' ? 'orçamento' : 'documento'}: ${id}       -       ${created_at && format(parseISO(created_at), 'dd/MM/yyyy')}       -       ${created_at && format(parseISO(created_at), 'HH:mm:ss')}`, fontSize: 12 },
             ],
             alignment: 'center',
             margin: [0, 0, 0, 0] // left, top, right, bottom
@@ -94,7 +95,7 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
 
         {
             stack: [
-                client != null ? ({ text: `${ (client.cpf_cnpj != null && client.cpf_cnpj.length > 11 ? " CNPJ: " : "CPF: ") + (client.cpf_cnpj != null ? client.cpf_cnpj : '') + " / Telefone: " + (client.phone != null ?  client.phone : '')}`})
+                client != null ? ({ text: `${(client.cpf_cnpj != null && client.cpf_cnpj.length > 11 ? " CNPJ: " : "CPF: ") + (client.cpf_cnpj != null ? client.cpf_cnpj : '') + " / Telefone: " + (client.phone != null ? client.phone : '')}` })
                     : { text: `` }
             ],
             fontSize: 11,
@@ -107,9 +108,12 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
     const type = [
         {
             text: [
+                type_sale === 'budget' &&
+                `Este orçamento tem validade de 15 dias`
+                ||
                 `COND. PAGTO:   ${type_sale == "in_cash" ? 'A Vista' : 'A Prazo'} / ${paied == 'yes' ? 'Recebida' : 'A Receber'}`
             ],
-            fontSize: 11,
+            fontSize: type_sale === 'budget' ? 14 : 11,
             margin: [2, 0, 2, 0] // left, top, right, bottom
         },
 
@@ -126,10 +130,12 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
     const dados = itens.map((item) => {
         return [
             { text: item.bar_code, fontSize: 9, margin: [0, 2, 0, 2] },
-            { stack: [
-                {text: item.name, fontSize: 12, margin: [0, 2, 0, 2]},
-                {text: item.obs, fontSize: 8, margin: [0, 2, 0, 2]} 
-            ] },
+            {
+                stack: [
+                    { text: item.name, fontSize: 12, margin: [0, 2, 0, 2] },
+                    { text: item.obs, fontSize: 8, margin: [0, 2, 0, 2] }
+                ]
+            },
             { text: getCurrency(item.qtd), fontSize: 9, margin: [0, 2, 0, 2] },
             { text: convertToBrlCurrency(getCurrency(item.item_value)), fontSize: 9, margin: [0, 2, 0, 2] },
             { text: convertToBrlCurrency(getCurrency(item.item_value * item.qtd / 100)), fontSize: 9, margin: [0, 2, 0, 2] }
@@ -140,7 +146,7 @@ async function salesPDF({ id, created_at, type_sale, paied, total_sale, client, 
         {
             table: {
                 headerRows: 1,
-                widths: ['14%','44%', '6%', '18%', '18%'],
+                widths: ['14%', '44%', '6%', '18%', '18%'],
                 body: [
                     [
                         { text: 'Código', style: 'tableHeader', fontSize: 10 },

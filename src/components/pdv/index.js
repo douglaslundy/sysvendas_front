@@ -77,8 +77,15 @@ export default () => {
 
 
     useEffect(() => {
-        id_pay_metod == "on_term" ? setFormSale({ ...formSale, 'paied': 'no', 'type_sale': 'on_term' }) :
-            setFormSale({ ...formSale, 'paied': 'yes', 'type_sale': 'in_cash' });
+        id_pay_metod == "budget" ?
+            setFormSale({ ...formSale, 'paied': 'no', 'type_sale': 'budget' })
+            :
+            id_pay_metod == "on_term" ?
+                setFormSale({ ...formSale, 'paied': 'no', 'type_sale': 'on_term' })
+                :
+                setFormSale({ ...formSale, 'paied': 'yes', 'type_sale': 'in_cash' });
+
+
     }, [id_pay_metod])
 
     const changeItem = ({ target }) => {
@@ -136,21 +143,10 @@ export default () => {
         'id': "on_term",
         'name': 'a prazo'
     }
-    // ,
-
-    // {
-    //     'id': "budget",
-    //     'name': 'orçamento'
-    // }
     ];
 
     const confirmSale = () => {
-        // id_pay_metod == 'budget' ? 
-        // alert('este é um orçamento') 
-        // : 
-        // (
-            productsCart.length > 0 ? dispatch(turnModal()) : dispatch(addAlertMessage("Insira pelo menos um produto ao carrinho!"))
-        // )
+        productsCart.length > 0 ? dispatch(turnModal()) : dispatch(addAlertMessage("Insira pelo menos um produto ao carrinho!"))
     }
 
     return (

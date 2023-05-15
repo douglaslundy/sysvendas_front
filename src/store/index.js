@@ -9,18 +9,20 @@ import userReducer from './ducks/users';
 import authReducer from './ducks/auth';
 import cartReducer from './ducks/cart';
 import saleReducer from './ducks/sales';
+import budgetReducer from './ducks/budget';
 
 
 export default configureStore({
     reducer: {
         clients: clientReducer,
-        layout: layoutReducer, 
+        layout: layoutReducer,
         categories: categorieReducer,
         products: productReducer,
         units: unitReducer,
         users: userReducer,
         auth: authReducer,
         cart: cartReducer,
-        sales: saleReducer 
+        sales: saleReducer,
+        budgets: budgetReducer
     },
 });
