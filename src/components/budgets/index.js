@@ -11,6 +11,7 @@ import {
     styled,
     TableContainer,
     TablePagination,
+    TextField,
 } from "@mui/material";
 
 import BaseCard from "../baseCard/BaseCard";
@@ -18,10 +19,10 @@ import FeatherIcon from "feather-icons-react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import Receipt from "../modal/salesReceipt";
-import { getAllSales } from "../../store/fetchActions/sale";
+import Receipt from "../modal/budgetReceipt";
+import { getAllBudgets } from "../../store/fetchActions/budget";
 import { turnModalGetSale } from "../../store/ducks/Layout";
-import { showSale } from "../../store/ducks/sales";
+import { showBudget } from "../../store/ducks/budget";
 import salesPDF from "../../reports/sales";
 import BasicDatePicker from "../inputs/datePicker";
 import { convertToBrlCurrency, getCurrency } from "../helpers/formatt/currency";
@@ -40,8 +41,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default () => {
 
-    const { sales, sale } = useSelector(state => state.sales);
+    const { budgets, budget } = useSelector(state => state.budgets);
     const dispatch = useDispatch();
+    const [searchValue, setSearchValue] = useState("");
+    const [allBudgets, setAllBudgets] = useState(budgets);
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10); const handleChangePage = (event, newPage) => {
@@ -53,21 +56,42 @@ export default () => {
         setPage(0);
     };
 
-    useEffect(() => {
-        dispatch(getAllSales());
-    }, []);
 
-    const HandleViewSale = async sale => {
-        dispatch(showSale(sale));
+    const HandleViewBudget = async budget => {
+        dispatch(showBudget(budget));
         dispatch(turnModalGetSale());
     }
 
+    const searchBudgets = ({ target }) => {
+        setSearchValue(target.value.toLowerCase());
+    }
+
+    useEffect(() => {
+        dispatch(getAllBudgets());
+    }, []);
+
+    useEffect(() => {
+        setAllBudgets(searchValue ? [...budgets.filter(bud => bud && bud.id && bud.id.toString().includes(searchValue.toString()))] : budgets);
+    }, [budgets]);
+
+    useEffect(() => {
+        setAllBudgets([...budgets.filter(bud => bud && bud.id && bud.id.toString().includes(searchValue.toString()) || bud.client && bud.client.full_name.toString().includes(searchValue.toString()))]);
+    }, [searchValue]);
+
+
     return (
-        <BaseCard title={`Encontramos ${sales && sales.length} Vendas realizadas no período informado`}>
+        <BaseCard title={`Encontramos ${allBudgets && allBudgets.length} Orçamentos realizados no período informado`}>
 
-            <BasicDatePicker />
+            {/* <BasicDatePicker /> */}
+            <TextField
+                sx={{ width: "85%" }}
+                label="Pesquisar orçamento"
+                name="search"
+                value={searchValue}
+                onChange={searchBudgets}
+            />
 
-            {sale && sale.id &&
+            {budget && budget.id &&
                 <Receipt />
             }
 
@@ -97,12 +121,6 @@ export default () => {
 
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Tipo da venda
-                                </Typography>
-                            </TableCell>
-
-                            <TableCell>
-                                <Typography color="textSecondary" variant="h6">
                                     Total
                                 </Typography>
                             </TableCell>
@@ -116,13 +134,12 @@ export default () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sales &&
-                            sales
+                        {allBudgets &&
+                            allBudgets
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((sale, index) => (
-                                    <StyledTableRow key={sale.id} hover>
+                                .map((budget, index) => (
+                                    <StyledTableRow key={budget.id} hover>
                                         <>
-
                                             <TableCell>
                                                 <Box
                                                     sx={{
@@ -137,7 +154,7 @@ export default () => {
                                                                 fontWeight: "600",
                                                             }}
                                                         >
-                                                            {sale && sale.id}
+                                                            {budget.id != null ? budget.id : ''}
                                                         </Typography>
 
                                                         <Typography
@@ -146,7 +163,7 @@ export default () => {
                                                                 fontSize: "13px",
                                                             }}
                                                         >
-                                                            {sale && sale.created_at && format(parseISO(sale.created_at), 'dd/MM/yyyy HH:mm:ss')}
+                                                            {budget && budget.created_at && format(parseISO(budget.created_at), 'dd/MM/yyyy HH:mm:ss')}
                                                         </Typography>
                                                     </Box>
                                                 </Box>
@@ -166,7 +183,7 @@ export default () => {
                                                                 fontWeight: "600",
                                                             }}
                                                         >
-                                                            {sale.client != null ? sale.client.full_name.substring(0, 35).toUpperCase() : 'VENDA NO BALCÃO'}
+                                                            {budget.client != null ? budget.client.full_name.substring(0, 35).toUpperCase() : 'VENDA NO BALCÃO'}
                                                         </Typography>
 
                                                         <Typography
@@ -175,34 +192,7 @@ export default () => {
                                                                 fontSize: "13px",
                                                             }}
                                                         >
-                                                            {sale.client && sale.client.cpf_cnpj && sale.client.cpf_cnpj}
-                                                        </Typography>
-                                                    </Box>
-                                                </Box>
-                                            </TableCell>
-
-                                            <TableCell align="center">
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                    }}
-                                                >
-                                                    <Box>
-                                                        <Typography
-                                                            variant="h6"
-                                                            sx={{
-                                                                fontWeight: "600",
-                                                            }}
-                                                        >
-                                                            {sale.type_sale == "in_cash" ? "A Vista" : "A Prazo"}
-                                                        </Typography>
-                                                        <Typography
-                                                            color="textSecondary"
-                                                            sx={{
-                                                                fontSize: "13px",
-                                                            }}
-                                                        >
-                                                            {sale.paied == "yes" ? "Recebido" : "A Receber"}
+                                                            {budget.client && budget.client.cpf_cnpj && budget.client.cpf_cnpj}
                                                         </Typography>
                                                     </Box>
                                                 </Box>
@@ -222,8 +212,7 @@ export default () => {
                                                                 fontWeight: "600",
                                                             }}
                                                         >
-                                                            {/* {convertToBrlCurrency(getCurrency(setCurrency(sale.total_sale) - setCurrency(sale.discount)))} */}
-                                                            {convertToBrlCurrency(getCurrency(sale.total_sale - sale.discount))}
+                                                            {convertToBrlCurrency(getCurrency(budget.total_sale))}
                                                         </Typography>
                                                         <Typography
                                                             color="textSecondary"
@@ -231,7 +220,7 @@ export default () => {
                                                                 fontSize: "12px",
                                                             }}
                                                         >
-                                                            {/* {sale.phone} */}
+                                                            {/* {budget.phone} */}
                                                         </Typography>
                                                     </Box>
                                                 </Box>
@@ -240,12 +229,16 @@ export default () => {
                                             <TableCell align="center">
                                                 <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                    <Button title="Visualiar venda" onClick={() => HandleViewSale(sale)} color="primary" size="medium" variant="contained">
+                                                    <Button title="Visualiar venda" onClick={() => HandleViewBudget(budget)} color="primary" size="medium" variant="contained">
                                                         <FeatherIcon icon="eye" width="20" height="20" />
                                                     </Button>
 
-                                                    <Button title="Imprimir venda" onClick={() => salesPDF(sale)} color="error" size="medium" variant="contained">
+                                                    <Button title="Imprimir venda" onClick={() => salesPDF(budget)} color="error" size="medium" variant="contained">
                                                         <FeatherIcon icon="printer" width="20" height="20" />
+                                                    </Button>
+
+                                                    <Button title="Realizar venda" onClick={() => alert("Esta função esta em desenvolvimento, logo será liberada")} color="success" size="medium" variant="contained">
+                                                        <FeatherIcon icon="dollar-sign" width="20" height="20" />
                                                     </Button>
 
                                                 </Box>
@@ -258,7 +251,7 @@ export default () => {
                 </Table>
                 <TablePagination
                     component="div"
-                    count={sales ? sales.length : 0}
+                    count={allBudgets ? allBudgets.length : 0}
                     page={page}
                     onPageChange={handleChangePage}
                     rowsPerPage={rowsPerPage}

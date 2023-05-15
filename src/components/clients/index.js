@@ -249,7 +249,7 @@ export default () => {
                 </Table>
                 <TablePagination
                     component="div"
-                    count={allClients.length}
+                    count={allClients ? allClients.length : 0}
                     page={page}
                     onPageChange={handleChangePage}
                     rowsPerPage={rowsPerPage}

@@ -12,6 +12,12 @@ const Menuitems = [
     profile: "user",
   },
   {
+    title: "Orçamentos", 
+    icon: "dollar-sign",
+    href: "/budgets",
+    profile: "user",
+  },
+  {
     title: "Usuarios", 
     icon: "users",
     href: "/users",

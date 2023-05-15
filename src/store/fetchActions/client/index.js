@@ -100,9 +100,9 @@ export const editClientFetch = (client, cleanForm) => {
                 cleanForm()
             ))
             .catch((error) => {
-                dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                dispatch(addAlertMessage(error ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
                 dispatch(turnLoading());
-                return error.response ? error.response.data : 'erro desconhecido';
+                return error ? error.response.data.message : 'erro desconhecido';
             })
     };
 }

@@ -142,6 +142,11 @@ export default () => {
     {
         'id': "on_term",
         'name': 'a prazo'
+    },
+
+    {
+        'id': "budget",
+        'name': 'orçamento'
     }
     ];
 

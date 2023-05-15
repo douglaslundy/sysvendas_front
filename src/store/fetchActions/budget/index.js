@@ -4,8 +4,6 @@ import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
 import { addBudgets, addBudgetsPerClient } from "../../ducks/budget";
 import { turnAlert, addAlertMessage, turnLoading, turnModalGetBudgets, changeTitleAlert } from "../../ducks/Layout";
-import { getAllClients } from "../client";
-// import budgetsPDF from "../../../reports/budgets";
 import salesPDF from "../../../reports/sales";
 
 import { valueDecrescidFromPercent } from '../../../components/helpers/functions/percent';

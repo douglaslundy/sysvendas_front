@@ -28,10 +28,7 @@ export const getListProductsCart = () => {
         dispatch(turnLoading())
         api
             .get(`/cart/${user}`, config)
-            .then((res) => {
-
-                console.log("todos produtos " + JSON.stringify(res.data));
-                
+            .then((res) => {                
                 dispatch(addProductsCart(res.data));
                 dispatch(turnLoading());
             })
