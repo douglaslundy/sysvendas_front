@@ -311,7 +311,7 @@ export default () => {
                                                                         fontWeight: "600",
                                                                     }}
                                                                 >
-                                                                    {convertToBrlCurrency(getCurrency(prod.sale_value))}
+                                                                    {convertToBrlCurrency(getCurrency(prod.item_value))}
                                                                 </Typography>
                                                             </Box>
                                                         </Box>
@@ -367,7 +367,7 @@ export default () => {
                                                                         fontWeight: "600",
                                                                     }}
                                                                 >
-                                                                    {convertToBrlCurrency(getCurrency(prod.sale_value * prod.qtd / 100))}
+                                                                    {convertToBrlCurrency(getCurrency(prod.item_value * prod.qtd / 100))}
                                                                 </Typography>
                                                             </Box>
                                                         </Box>

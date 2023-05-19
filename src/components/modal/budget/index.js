@@ -8,8 +8,9 @@ import Currency from '../../inputs/textFields/currency';
 import Percent from '../../inputs/textFields/percent';
 import { getAllClients } from '../../../store/fetchActions/client';
 import { addSale } from '../../../store/fetchActions/sale';
-import { addBudget } from '../../../store/fetchActions/budget';
+import { changeBudgetToSale } from '../../../store/fetchActions/budget';
 import ConfirmDialog from '../../confirmDialog';
+import Select from '../../inputs/selects';
 
 import { valueDecrescidFromPercent } from '../../helpers/functions/percent';
 
@@ -22,6 +23,7 @@ import {
 import BaseCard from "../../baseCard/BaseCard";
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
 import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
+import { showBudget } from '../../../store/ducks/budget';
 
 
 const style = {
@@ -40,7 +42,7 @@ const style = {
     overflow: "scroll",
 };
 
-export default function PdvModal(props) {
+export default function BudgetModal(props) {
     const [confirmDialog, setConfirmDialog] = useState({
         isOpen: false,
         title: 'Deseja realmente excluir',
@@ -48,12 +50,15 @@ export default function PdvModal(props) {
     });
 
     const { clients } = useSelector(state => state.clients);
+    const { budget } = useSelector(state => state.budgets);
     const [client, setClient] = useState([]);
 
-    const { isOpenModal, isOpenAlert } = useSelector(state => state.layout);
+    const { isOpenModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
     const [formSale, setFormSale] = useState({
+        id_budget: budget.id ? budget.id : null,
+        total_sale: budget.total_sale ? getCurrency(budget.total_sale) : null,
         id_client: null,
         pay_value: 0,
         paied: "yes",
@@ -61,18 +66,35 @@ export default function PdvModal(props) {
         cash: 0,
         card: 0,
         discount: 0,
-        obs: ""
+        obs: budget.obs ? budget.obs : ""
     });
-    const { id_pay_metod, pay_value, type_sale, total_sale, discount, obs } = formSale;
+    const { id_pay_metod = "cash", pay_value, type_sale, discount, obs, total_sale } = formSale;
+    const { id } = budget;
 
     const changeItem = ({ target }) => {
         setFormSale({ ...formSale, [target.name]: target.value.toUpperCase() });
+    };
+
+    const payMetods = [{
+        'id': "cash",
+        'name': 'a vista'
+    },
+
+    {
+        'id': "on_term",
+        'name': 'a prazo'
+    }
+    ];
+
+    const changeSale = ({ target }) => {
+        setFormSale({ ...formSale, [target.name]: target.value });
     };
 
     const cleanForm = () => {
 
         setFormSale({
             ...formSale,
+            id_budget: null,
             id_client: null,
             pay_value: 0,
             paied: "yes",
@@ -82,24 +104,14 @@ export default function PdvModal(props) {
             discount: 0,
             obs: ""
         });
-
+        dispatch(showBudget({}))
         dispatch(turnModal());
     }
 
-    const handleSave = async () => {
-        type_sale === 'budget' ? handleSaveBudget() : handleSaveSale()
-    }
-
     const handleSaveSale = async () => {
-        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja finalizar esta venda?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: addSale(formSale, cleanForm) });
+        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja finalizar esta venda?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: changeBudgetToSale(formSale, cleanForm) });
         dispatch(changeTitleAlert(`Venda realizada com sucesso!`));
     };
-
-    const handleSaveBudget = async () => {
-        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja finalizar este orçamento?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: addBudget(formSale, cleanForm) });
-        dispatch(changeTitleAlert(`Orçamento gravado com sucesso!`));
-    };
-
 
     const handleClose = () => {
         cleanForm();
@@ -108,6 +120,10 @@ export default function PdvModal(props) {
     const changePayValue = ({ target }) => {
         setFormSale({ ...formSale, pay_value: target.value, [id_pay_metod]: target.value });
     };
+    
+    const getTotalToPay = () => {
+        return convertToBrlCurrency(valueDecrescidFromPercent(total_sale, discount));
+    }
 
     useEffect(() => {
         dispatch(getAllClients());
@@ -125,14 +141,15 @@ export default function PdvModal(props) {
         setFormSale({ ...formSale, id_client: null });
     }, [isOpenModal]);
 
-    const getTotalToPay = () => {
-        return convertToBrlCurrency(valueDecrescidFromPercent(total_sale, discount));
-    }
+    useEffect(() => {
+        id_pay_metod == "on_term" ?
+            setFormSale({ ...formSale, 'paied': 'no', 'type_sale': 'on_term' })
+            :
+            setFormSale({ ...formSale, 'paied': 'yes', 'type_sale': 'in_cash' });
 
-    const paymentType = type_sale === 'in_cash' ? ' A VISTA' : ' A PRAZO';
-    const saleType = type_sale === 'budget' ? 'Orçamento' : 'Venda';
+    }, [id_pay_metod])
 
-    const title = `Finalizar ${saleType} ${type_sale === 'budget' ? '' : paymentType}`;
+    const title = `Efetivar a venda do orçamento ${id}`;
 
     return (
         <div>
@@ -152,7 +169,8 @@ export default function PdvModal(props) {
                         <Grid item xs={12} lg={12}>
                             <BaseCard title={title}>
 
-                                <h4>Total {convertToBrlCurrency(getCurrency(setCurrency(total_sale)))}</h4>
+
+                                <h4>Total {convertToBrlCurrency(total_sale)}</h4>
                                 {setCurrency(discount) > 0 &&
                                     <>
                                         <h5 style={{ color: "red" }}>Desconto {discount}</h5>
@@ -175,9 +193,21 @@ export default function PdvModal(props) {
                                     'minWidth': 300,
                                 }}
                                 >
+
+                                    <Select
+                                        value={id_pay_metod}
+                                        label="Meios de Pagamento"
+                                        name="id_pay_metod"
+                                        store={payMetods}
+                                        changeItem={changeSale}
+                                        wd={"90%"}
+                                    />
+
+
                                     {isOpenModal == true &&
                                         <InputSelectClient
                                             label="Selecione o cliente"
+                                            value={budget.client}
                                             name="client"
                                             clients={clients}
                                             setClient={setClient}
@@ -226,7 +256,7 @@ export default function PdvModal(props) {
                                 </Box>
                                 <br />
                                 <Box sx={{ "& button": { mx: 1 } }}>
-                                    <Button onClick={handleSave} variant="contained" mt={2}>
+                                    <Button onClick={handleSaveSale} variant="contained" mt={2}>
                                         Gravar
                                     </Button>
 

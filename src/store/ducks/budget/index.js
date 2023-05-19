@@ -11,6 +11,7 @@ export const editBudget = createAction('EDIT_BUDGET');
 export const addBudgets = createAction('ADD_BUDGETS');
 export const addBudgetsPerClient = createAction('ADD_BUDGETS_PER_CLIENT');
 export const showBudget = createAction('SHOW_BUDGET');
+export const removeBudget = createAction('REMOVE_BUDGET');
 
 
 export default createReducer(INITIAL_STATE, {
@@ -24,5 +25,7 @@ export default createReducer(INITIAL_STATE, {
 	[addBudgetsPerClient.type]: (state, action) => ({ budgetsPerClient: [...action.payload] }),
 
 	[showBudget.type]: (state, action) => ({ ...state, budget: action.payload }),
+
+	[removeBudget.type]: (state, action) => ({ budgets: [...state.budgets.filter((budget) => budget.id !== action.payload.id_budget)] }),
 });
 

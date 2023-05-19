@@ -2,8 +2,8 @@ import { api } from "../../../services/api";
 import { setCurrency } from "../../../components/helpers/formatt/currency";
 import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
-import { addBudgets, addBudgetsPerClient } from "../../ducks/budget";
-import { turnAlert, addAlertMessage, turnLoading, turnModalGetBudgets, changeTitleAlert } from "../../ducks/Layout";
+import { addBudgets, addBudgetsPerClient, removeBudget } from "../../ducks/budget";
+import { turnAlert, addAlertMessage, turnLoading, turnModalGetBudgets, changeTitleAlert, addMessage } from "../../ducks/Layout";
 import salesPDF from "../../../reports/sales";
 
 import { valueDecrescidFromPercent } from '../../../components/helpers/functions/percent';
@@ -24,6 +24,7 @@ export const addBudget = (budget, cleanForm) => {
         api.post('/budgets', budget)
             .then((res) =>
             (
+                dispatch(addMessage(`Orçamento gravado com sucesso!`)),
                 dispatch(turnAlert()),
                 dispatch(turnLoading()),
                 dispatch(cleanProductsCart()),
@@ -93,6 +94,42 @@ export const getAllBudgetsPerClient = (client) => {
             .catch(() => { dispatch(turnLoading()) })
     }
 }
+
+export const changeBudgetToSale = (sale, cleanForm) => {
+const { 'sysvendas.id': user } = parseCookies();
+    return (dispatch) => {
+        dispatch(turnLoading());
+        // console.log(JSON.stringify(sale))
+        
+        sale = {
+            ...sale,
+            id_user: user,
+            check: setCurrency(sale.check),
+            card: setCurrency(sale.card),
+            cash: setCurrency(sale.cash),
+            pay_value: setCurrency(sale.pay_value),
+            total_sale: setCurrency(sale.total_sale),
+            discount: setCurrency(sale.total_sale) - (setCurrency(valueDecrescidFromPercent(sale.total_sale, sale.discount)) / 100)
+        };
+        // console.log("Valor tratado e" + JSON.stringify({...sale}))
+
+        api.post('/sales/changeBudgetToSale', sale)
+            .then((res) =>
+            (   
+                dispatch(removeBudget(sale)),
+                dispatch(addMessage(`Venda realizada com sucesso!`)),
+                dispatch(turnAlert()),
+                dispatch(turnLoading()),
+                cleanForm(),
+                salesPDF(...res.data.sale)
+            ))
+            .catch((error) => {
+                dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                dispatch(turnLoading());
+                return error.response ? error.response.data : 'erro desconhecido';
+            })
+    };
+};
 
 // export const toPayBudgetsFetch = (form, cleanForm) => {
 //     return (dispatch) => {

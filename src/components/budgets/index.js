@@ -21,12 +21,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Receipt from "../modal/budgetReceipt";
 import { getAllBudgets } from "../../store/fetchActions/budget";
-import { turnModalGetSale } from "../../store/ducks/Layout";
+import { turnModal, turnModalGetSale } from "../../store/ducks/Layout";
 import { showBudget } from "../../store/ducks/budget";
 import salesPDF from "../../reports/sales";
 import BasicDatePicker from "../inputs/datePicker";
 import { convertToBrlCurrency, getCurrency } from "../helpers/formatt/currency";
 import { parseISO, format } from 'date-fns';
+import BudgetModal from "../modal/budget";
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -66,6 +67,11 @@ export default () => {
         setSearchValue(target.value.toLowerCase());
     }
 
+    const confirmSale = async (budget) => {
+        dispatch(showBudget(budget));
+        dispatch(turnModal());
+    }
+
     useEffect(() => {
         dispatch(getAllBudgets());
     }, []);
@@ -92,8 +98,12 @@ export default () => {
             />
 
             {budget && budget.id &&
-                <Receipt />
+                <>
+                    <Receipt />
+                    <BudgetModal />
+                </>
             }
+
 
             <TableContainer>
 
@@ -237,7 +247,7 @@ export default () => {
                                                         <FeatherIcon icon="printer" width="20" height="20" />
                                                     </Button>
 
-                                                    <Button title="Realizar venda" onClick={() => alert("Esta função esta em desenvolvimento, logo será liberada")} color="success" size="medium" variant="contained">
+                                                    <Button title="Realizar venda" onClick={() => confirmSale(budget)} color="success" size="medium" variant="contained">
                                                         <FeatherIcon icon="dollar-sign" width="20" height="20" />
                                                     </Button>
 

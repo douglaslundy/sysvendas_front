@@ -110,7 +110,8 @@ export default () => {
                     value={searchValue}
                     onChange={searchProducts}
                 />
-                <Select value={idCategory}
+                <Select
+                    value={idCategory}
                     label={'Filtrar por categoria'}
                     name={'Filtro'}
                     store={categories}
@@ -120,6 +121,7 @@ export default () => {
                     valueDefault={"TODAS"}
                     valueNull={"SEM CATEGORIA"}
                 />
+                
                 <ProductModal products={products}>
                     <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
                         <FeatherIcon icon="plus" />

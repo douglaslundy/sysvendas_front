@@ -44,7 +44,7 @@ export const addProductCartFetch = (cart, cleanForm) => {
         const prod = {
             id_user: user,
             qtd: setCurrency(cart.qtd),
-            sale_value: setCurrency(cart.product.sale_value),
+            item_value: setCurrency(cart.product.sale_value),
             id_product: cart.product ? cart.product.id : '',
             id_product_stock: cart.product ? cart.product.id_product_stock : '',
             reason: cart.product ? cart.product.reason : 1
@@ -60,7 +60,7 @@ export const addProductCartFetch = (cart, cleanForm) => {
                         id: cart.product.id,
                         name: cart.product.name,
                         bar_code: cart.product.bar_code,
-                        sale_value: setCurrency(cart.product.sale_value),
+                        item_value: setCurrency(cart.product.item_value),
                         reason: cart.product.reason,
                         id_product_stock: cart.product.id_product_stock
                         // id_unity: cart.product.id_unity,
@@ -90,7 +90,6 @@ export const editProductCartFetch = (cart, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
        
-        console.log(JSON.stringify(cart))
         api.put(`/cart/${cart.id}`, cart)
             .then((res) =>
             (
@@ -100,7 +99,7 @@ export const editProductCartFetch = (cart, cleanForm) => {
                         id: cart.product.id,
                         name: cart.product.name,
                         bar_code: cart.product.bar_code,
-                        sale_value: res.data.cart.sale_value,
+                        item_value: res.data.cart.item_value,
                         obs: cart.product.obs,
                         reason: cart.product.reason,
                         id_product_stock: cart.product.id_product_stock

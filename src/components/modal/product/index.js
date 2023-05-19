@@ -125,7 +125,7 @@ export default function ProductModal(props) {
     const handleClose = () => {
         cleanForm();
     };
-    
+
     const [isVisible, setIsVisible] = useState(false);
     const products = props.products.filter((prod) => prod.id == prod.id_product_stock);
 
@@ -205,7 +205,8 @@ export default function ProductModal(props) {
                                         onChange={changeItem}
                                         required
                                     />
-                                    <Select value={id_category}
+                                    <Select
+                                        value={id_category}
                                         label={'Categoria'}
                                         name={'id_category'}
                                         store={categories}
