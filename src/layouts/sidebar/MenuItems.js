@@ -18,6 +18,12 @@ const Menuitems = [
     profile: "user",
   },
   {
+    title: "Vendas", 
+    icon: "activity",
+    href: "/sales",
+    profile: "user",
+  },
+  {
     title: "Usuarios", 
     icon: "users",
     href: "/users",
@@ -58,13 +64,7 @@ const Menuitems = [
     icon: "dollar-sign",
     href: "/valueCategory",
     profile: "user",
-  },
-  {
-    title: "Vendas", 
-    icon: "activity",
-    href: "/sales",
-    profile: "user",
-  },
+  },  
 
   // {
   //   title: "Vendas", 

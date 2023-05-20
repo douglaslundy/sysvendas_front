@@ -91,7 +91,7 @@ export default () => {
             {/* <BasicDatePicker /> */}
             <TextField
                 sx={{ width: "85%" }}
-                label="Pesquisar orçamento"
+                label="Pesquisar orçamento: Código / Cliente"
                 name="search"
                 value={searchValue}
                 onChange={searchBudgets}

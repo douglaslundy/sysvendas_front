@@ -193,13 +193,19 @@ export default function (props) {
 
                                                 <TableCell>
                                                     <Typography color="textSecondary" variant="h6">
-                                                        Data da venda
+                                                        Código
                                                     </Typography>
                                                 </TableCell>
 
                                                 <TableCell>
                                                     <Typography color="textSecondary" variant="h6">
-                                                        Tipo da venda
+                                                        Cliente / Data
+                                                    </Typography>
+                                                </TableCell>
+
+                                                <TableCell>
+                                                    <Typography color="textSecondary" variant="h6">
+                                                        Tipo / Status
                                                     </Typography>
                                                 </TableCell>
 
@@ -230,6 +236,12 @@ export default function (props) {
                                                                     <Box sx={{ "& button": { mx: 1 } }}>
                                                                         <FormControlLabel control={<Switch checked={salesToPay.includes(sale.id)}
                                                                             onClick={() => handleEditForm(sale)} />} />
+                                                                    </Box>
+                                                                </TableCell>
+
+                                                                <TableCell>
+                                                                    <Box sx={{ "& button": { mx: 1 } }}>
+                                                                        {sale && sale.id}
                                                                     </Box>
                                                                 </TableCell>
 
@@ -286,7 +298,7 @@ export default function (props) {
                                                                                     fontSize: "13px",
                                                                                 }}
                                                                             >
-                                                                                {sale.paied == "yes" ? "Recebido" : "A Receber"}
+                                                                                {sale.paied == "yes" ? <FeatherIcon icon="thumbs-up" color="#0b02f7" width="20" height="20" /> : <FeatherIcon icon="thumbs-down" color="#f7020e" width="20" height="20" />}
                                                                             </Typography>
                                                                         </Box>
                                                                     </Box>

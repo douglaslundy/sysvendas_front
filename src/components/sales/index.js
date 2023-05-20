@@ -11,6 +11,7 @@ import {
     styled,
     TableContainer,
     TablePagination,
+    TextField,
 } from "@mui/material";
 
 import BaseCard from "../baseCard/BaseCard";
@@ -43,6 +44,9 @@ export default () => {
     const { sales, sale } = useSelector(state => state.sales);
     const dispatch = useDispatch();
 
+    const [searchValue, setSearchValue] = useState("");
+    const [allSales, setAllSales] = useState(sales);
+
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10); const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -53,19 +57,40 @@ export default () => {
         setPage(0);
     };
 
-    useEffect(() => {
-        dispatch(getAllSales());
-    }, []);
+    const searchSales = ({ target }) => {
+        setSearchValue(target.value.toLowerCase());
+    }
 
+    
     const HandleViewSale = async sale => {
         dispatch(showSale(sale));
         dispatch(turnModalGetSale());
     }
 
+    useEffect(() => {
+        dispatch(getAllSales());
+    }, []);
+
+    useEffect(() => {
+        setAllSales(searchValue ? [...sales.filter(sale => sale && sale.id && sale.id.toString().includes(searchValue.toString()))] : sales);
+    }, [sales]);
+
+    useEffect(() => {
+        setAllSales([...sales.filter(sale => sale && sale.id && sale.id.toString().includes(searchValue.toString()) || sale.client && sale.client.full_name.toString().includes(searchValue.toString()))]);
+    }, [searchValue]);
+
     return (
         <BaseCard title={`Encontramos ${sales && sales.length} Vendas realizadas no período informado`}>
 
-            <BasicDatePicker />
+            {/* <BasicDatePicker /> */}
+
+            <TextField
+                sx={{ width: "85%" }}
+                label="Pesquisar Venda: Código / Cliente"
+                name="search"
+                value={searchValue}
+                onChange={searchSales}
+            />
 
             {sale && sale.id &&
                 <Receipt />
@@ -116,8 +141,8 @@ export default () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sales &&
-                            sales
+                        {allSales &&
+                            allSales
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((sale, index) => (
                                     <StyledTableRow key={sale.id} hover>
@@ -202,7 +227,7 @@ export default () => {
                                                                 fontSize: "13px",
                                                             }}
                                                         >
-                                                            {sale.paied == "yes" ? "Recebido" : "A Receber"}
+                                                            {sale.paied == "yes" ? <FeatherIcon icon="thumbs-up" color="#0b02f7" width="20" height="20" /> : <FeatherIcon icon="thumbs-down" color="#f7020e" width="20" height="20" />}
                                                         </Typography>
                                                     </Box>
                                                 </Box>
@@ -258,7 +283,7 @@ export default () => {
                 </Table>
                 <TablePagination
                     component="div"
-                    count={sales ? sales.length : 0}
+                    count={allSales ? allSales.length : 0}
                     page={page}
                     onPageChange={handleChangePage}
                     rowsPerPage={rowsPerPage}
