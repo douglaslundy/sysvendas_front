@@ -212,7 +212,7 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {client.id ? client.id + ' - ' +  client.cpf_cnpj : ''}
+                                                        {client.id ? (client.cpf_cnpj ? client.id + ' - ' +  client.cpf_cnpj : client.id) : ''}
                                                     </Typography>
                                                 </Box>
                                             </Box>

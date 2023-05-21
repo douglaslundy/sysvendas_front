@@ -19,6 +19,7 @@ import FeatherIcon from "feather-icons-react";
 
 import { useDispatch, useSelector } from "react-redux";
 
+import Select from '../inputs/selects';
 import Receipt from "../modal/salesReceipt";
 import { getAllSales } from "../../store/fetchActions/sale";
 import { turnModalGetSale } from "../../store/ducks/Layout";
@@ -46,6 +47,30 @@ export default () => {
 
     const [searchValue, setSearchValue] = useState("");
     const [allSales, setAllSales] = useState(sales);
+    const [payMethod, setPayMethod] = useState('all');
+
+    const payMethods = [
+        {
+            'id': 'all',
+            'name': 'Todas as vendas'
+        },
+        {
+            'id': 'in_cash',
+            'name': 'A Vista'
+        },
+        {
+            'id': 'on_term',
+            'name': 'A Prazo'
+        },
+        {
+            'id': 'receivable',
+            'name': 'A Prazo Pendentes'
+        },
+        {
+            'id': 'received',
+            'name': 'A prazo Recebidas'
+        }
+    ]
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10); const handleChangePage = (event, newPage) => {
@@ -59,6 +84,10 @@ export default () => {
 
     const searchSales = ({ target }) => {
         setSearchValue(target.value.toLowerCase());
+    }
+
+    const changePayMethod = ({ target }) => {
+        setPayMethod(target.value)
     }
 
 
@@ -75,51 +104,70 @@ export default () => {
         setAllSales(searchValue ? [...sales.filter(sale => sale.id.toString().includes(searchValue.toString()))] : sales);
     }, [sales]);
 
-    // useEffect(() => {
-    //     const filteredSales = sales.filter(sale => {
-    //       const saleId = sale.id.toString().toLowerCase();
-    //       const clientName = sale.client?.full_name.toLowerCase() || '';
-    //       const search = searchValue.toString().toLowerCase().trim();
-
-    //     //   return saleId.includes(search) || clientName.includes(search);
-    //       return saleId === search || clientName.includes(search);
-    //     });
-
-    //     setAllSales(filteredSales);
-    //   }, [searchValue]);
-
-
     useEffect(() => {
-        const removeAccents = str => {
-            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const removeAccents = (str) => {
+          return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         };
-
-        const filteredSales = sales && sales.filter(sale => {
-            const saleId = sale.id.toString();
-            const clientName = sale.client?.full_name || '';
-            const search = removeAccents(searchValue.toString().trim().toLowerCase());
-
-            const normalizedClientName = removeAccents(clientName.toLowerCase());
-
-            return saleId === search || normalizedClientName.includes(search);
+      
+        // Filtro com base no método de pagamento selecionado
+        const filteredSalesByPayMethod = sales.filter((sale) => {
+          if (payMethod === 'all') {
+            return true;
+          } else if (payMethod === 'in_cash' || payMethod === 'on_term') {
+            return sale.type_sale === payMethod;
+          } else if (payMethod === 'received') {
+            return sale.type_sale === 'on_term' && sale.paied === 'yes';
+          } else if (payMethod === 'receivable') {
+            return sale.type_sale === 'on_term' && sale.paied === 'no';
+          }
+          return false;
         });
-
-        setAllSales(filteredSales);
-    }, [searchValue]);
+      
+        // Filtro com base no valor de pesquisa
+        const filteredSalesBySearch = filteredSalesByPayMethod.filter((sale) => {
+          const saleId = sale.id.toString();
+          const clientName = sale.client?.full_name || '';
+          const search = removeAccents(searchValue.toString().trim().toLowerCase());
+      
+          const normalizedClientName = removeAccents(clientName.toLowerCase());
+      
+          return saleId === search || normalizedClientName.includes(search);
+        });
+      
+        setAllSales(filteredSalesBySearch);
+      }, [payMethod, searchValue]);
+      
 
 
     return (
-        <BaseCard title={`Encontramos ${sales && sales.length} Vendas realizadas no período informado`}>
+        <BaseCard title={`Encontramos ${allSales && allSales.length} Vendas realizadas no período informado`}>
 
             {/* <BasicDatePicker /> */}
 
-            <TextField
-                sx={{ width: "85%" }}
-                label="Pesquisar venda: código / cliente"
-                name="search"
-                value={searchValue}
-                onChange={searchSales}
-            />
+            <Box sx={{
+                '& > :not(style)': { mb: 0 },
+                'display': 'flex',
+                'justify-content': 'space-between'
+            }}
+            >
+
+                <TextField
+                    sx={{ width: "70%" }}
+                    label="Pesquisar venda: código / cliente"
+                    name="search"
+                    value={searchValue}
+                    onChange={searchSales}
+                />
+
+                <Select
+                    label="Filtrar"
+                    name="payMethod"
+                    value={payMethod}
+                    store={payMethods}
+                    changeItem={changePayMethod}
+                    wd={"25%"}
+                />
+            </Box>
 
             {sale && sale.id &&
                 <Receipt />
