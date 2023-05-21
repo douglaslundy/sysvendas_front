@@ -11,11 +11,16 @@ import { turnAlert, addMessage, addAlertMessage, turnLoading } from "../../ducks
 // }
 
 export const getAllClients = () => {
-    //     getToken();
+    // getToken();
     const config = {
         transformResponse: [function (data) {
-
             const payload = JSON.parse(data).map(d => {
+                const zip_code = d.addresses ? d.addresses.zip_code : null;
+                const city = d.addresses ? d.addresses.city : null;
+                const street = d.addresses ? d.addresses.street : null;
+                const number = d.addresses ? d.addresses.number : null;
+                const district = d.addresses ? d.addresses.district : null;
+                const complement = d.addresses ? d.addresses.complement : null;
                 return {
                     "id": d.id,
                     "full_name": d.full_name,
@@ -29,14 +34,14 @@ export const getAllClients = () => {
                     "obs": d.obs,
                     "cpf_cnpj": cleanCpfCnpj(d.cpf_cnpj),
                     "phone": cleanPhone(d.phone),
-                    "zip_code": d.addresses.zip_code,
-                    "city": d.addresses.city,
-                    "street": d.addresses.street,
-                    "number": d.addresses.number,
-                    "district": d.addresses.district,
-                    "complement": d.addresses.complement
-                }
-            })
+                    "zip_code": zip_code,
+                    "city": city,
+                    "street": street,
+                    "number": number,
+                    "district": district,
+                    "complement": complement
+                };
+            });
             return payload;
         }]
     }
@@ -47,7 +52,7 @@ export const getAllClients = () => {
         api
             .get('/clients', config)
             .then((res) => {
-                    dispatch(addClients(res.data));
+                dispatch(addClients(res.data));
                 dispatch(turnLoading());
             })
             .catch(() => { dispatch(turnLoading()) })

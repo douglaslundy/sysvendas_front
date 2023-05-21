@@ -220,7 +220,7 @@ export default function ClientModal(props) {
                                             name="zip_code"
                                             value={zip_code ? zip_code : ''}
                                             onChange={changeItem}
-                                            sx={{ width: '36%', mr: 2 }}
+                                            sx={{ width: '26%', mr: 2 }}
                                             inputProps={{
                                                 style: {
                                                     textTransform: "uppercase"
@@ -229,32 +229,31 @@ export default function ClientModal(props) {
                                             }}
                                         />
                                         <TextField
-                                            id="city"
-                                            label={city && city.length > 0 ? `Cidade: ${30 - city.length} caracteres restantes` : 'Cidade'}
-                                            variant="outlined"
-                                            name="city"
-                                            value={city ? city : ''}
-                                            onChange={changeItem}
-                                            sx={{ width: '36%', mr: 2 }}
-                                            inputProps={{
-                                                style: {
-                                                    textTransform: "uppercase"
-                                                },
-                                                maxLength: 30
-                                            }}
-                                        />
-                                        <TextField
                                             id="street"label={street && street.length > 0 ? `Rua: ${100 - street.length} caracteres restantes` : 'Rua'}
                                             variant="outlined"
                                             name="street"
                                             value={street ? street : ''}
                                             onChange={changeItem}
-                                            sx={{ width: '36%' }}
+                                            sx={{ width: '66%', mr: 2 }}
                                             inputProps={{
                                                 style: {
                                                     textTransform: "uppercase"
                                                 },
                                                 maxLength: 100
+                                            }}
+                                        />
+                                        <TextField
+                                            id="number"label={number && number.length > 0 ? `Nº: ${6 - number.length} caracteres restantes` : 'Nº'}
+                                            variant="outlined"
+                                            name="number"
+                                            value={number ? number : ''}
+                                            onChange={changeItem}
+                                            sx={{ width: '16%' }}
+                                            inputProps={{
+                                                style: {
+                                                    textTransform: "uppercase"
+                                                },
+                                                maxLength: 6
                                             }}
                                         />
                                     </Box>
@@ -265,21 +264,7 @@ export default function ClientModal(props) {
                                         'justify-content': 'space-between'
                                     }}
                                     >
-
-                                        <TextField
-                                            id="number"label={number && number.length > 0 ? `Nº: ${6 - number.length} caracteres restantes` : 'Nº'}
-                                            variant="outlined"
-                                            name="number"
-                                            value={number ? number : ''}
-                                            onChange={changeItem}
-                                            sx={{ width: '36%', mr: 2 }}
-                                            inputProps={{
-                                                style: {
-                                                    textTransform: "uppercase"
-                                                },
-                                                maxLength: 6
-                                            }}
-                                        />
+                                        
                                         <TextField
                                             id="complement"
                                             label={complement && complement.length > 0 ? `Complemento: ${50 - complement.length} caracteres restantes` : 'Complemento'}
@@ -287,7 +272,7 @@ export default function ClientModal(props) {
                                             name="complement"
                                             value={complement ? complement : ''}
                                             onChange={changeItem}
-                                            sx={{ width: '36%' }}
+                                            sx={{ width: '36%', mr: 2 }}
                                             inputProps={{
                                                 style: {
                                                     textTransform: "uppercase"
@@ -308,6 +293,21 @@ export default function ClientModal(props) {
                                                     textTransform: "uppercase"
                                                 },
                                                 maxLength: 100
+                                            }}
+                                        />
+                                        <TextField
+                                            id="city"
+                                            label={city && city.length > 0 ? `Cidade: ${30 - city.length} caracteres restantes` : 'Cidade'}
+                                            variant="outlined"
+                                            name="city"
+                                            value={city ? city : ''}
+                                            onChange={changeItem}
+                                            sx={{ width: '36%'}}
+                                            inputProps={{
+                                                style: {
+                                                    textTransform: "uppercase"
+                                                },
+                                                maxLength: 30
                                             }}
                                         />
                                     </Box>
