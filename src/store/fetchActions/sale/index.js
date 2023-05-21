@@ -3,7 +3,7 @@ import { setCurrency } from "../../../components/helpers/formatt/currency";
 import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
 import { addSales, addSalesPerClient } from "../../ducks/sales";
-import { turnAlert, addAlertMessage, turnLoading, turnModalGetSales, changeTitleAlert } from "../../ducks/Layout";
+import { turnAlert, addAlertMessage, turnLoading, turnModalGetPendingSales, turnModalGetAllSales, changeTitleAlert } from "../../ducks/Layout";
 import { getAllClients } from "../client";
 import salesPDF from "../../../reports/sales";
 
@@ -99,7 +99,7 @@ export const getAllSalesPerClient = (client, paied = "all") => {
             .get(`/sales/salesPerClient/${client.id}/${paied}`, config)
             .then((res) => {
                 dispatch(addSalesPerClient(res.data));
-                dispatch(turnModalGetSales());
+                paied === 'no' ? dispatch(turnModalGetPendingSales()) : paied === 'all' && dispatch(turnModalGetAllSales());
                 dispatch(turnLoading());
             })
             .catch(() => { dispatch(turnLoading()) })

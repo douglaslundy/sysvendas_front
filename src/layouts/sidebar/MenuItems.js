@@ -7,13 +7,13 @@ const Menuitems = [
   },
   {
     title: "PDV",
-    icon: "monitor",
+    icon: "shopping-cart",
     href: "/pdv",
     profile: "user",
   },
   {
     title: "Orçamentos", 
-    icon: "dollar-sign",
+    icon: "shopping-bag",
     href: "/budgets",
     profile: "user",
   },

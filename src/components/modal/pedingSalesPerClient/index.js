@@ -25,7 +25,7 @@ import BaseCard from "../../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
 import Receipt from "../../modal/salesReceipt";
 import { showClient } from '../../../store/ducks/clients';
-import { changeTitleAlert, turnModalGetSale, turnModalGetSales } from '../../../store/ducks/Layout';
+import { changeTitleAlert, turnModalGetSale, turnModalGetPendingSales } from '../../../store/ducks/Layout';
 import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
 import { toPaySalesFetch } from '../../../store/fetchActions/sale';
 import ConfirmDialog from "../../confirmDialog";
@@ -63,7 +63,7 @@ export default function (props) {
 
     const { salesPerClient, sale } = useSelector(state => state.sales);
     const { client } = useSelector(state => state.clients);
-    const { isOpenModalGetSales } = useSelector(state => state.layout);
+    const { isOpenModalGetPendingSales } = useSelector(state => state.layout);
     const [totalSale, setTotalSale] = useState(0);
 
     const dispatch = useDispatch();
@@ -119,7 +119,7 @@ export default function (props) {
             // check: 0,
             // card: 0
         });
-        dispatch(turnModalGetSales());
+        dispatch(turnModalGetPendingSales());
         dispatch(showClient({}));
     }
 
@@ -160,7 +160,7 @@ export default function (props) {
             {props.children}
             <Modal
                 keepMounted
-                open={isOpenModalGetSales}
+                open={isOpenModalGetPendingSales}
                 // onClose={handleClose}
                 aria-labelledby="keep-mounted-modal-title"
                 aria-describedby="keep-mounted-modal-description"

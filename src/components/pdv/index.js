@@ -429,7 +429,7 @@ export default () => {
                         />
                         <PdvModal formSale={formSale}>
                             <Button onClick={confirmSale} color="secondary" size="medium" variant="contained">
-                                <FeatherIcon icon="save" width="20" height="20" />
+                                <FeatherIcon icon="credit-card"width="20" height="20" />
                                 CONFIRMAR
                             </Button>
                         </PdvModal>

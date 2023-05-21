@@ -18,13 +18,14 @@ import {
 import BaseCard from "../baseCard/BaseCard";
 import FeatherIcon from "feather-icons-react";
 import ClientModal from "../modal/client";
-import SalesPerClient from "../modal/salesPerClient";
+import PendingSalesPerClient from "../modal/pedingSalesPerClient";
+import AllSalesPerClient from "../modal/allSalesPerClient";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllClients, inactiveClientFetch } from "../../store/fetchActions/client";
 import { getAllSalesPerClient } from "../../store/fetchActions/sale";
 import { showClient } from "../../store/ducks/clients";
-import { changeTitleAlert, turnModal, turnModalGetSales } from "../../store/ducks/Layout";
+import { changeTitleAlert, turnModal, turnModalGetPendingSales } from "../../store/ducks/Layout";
 import ConfirmDialog from "../confirmDialog";
 import { convertToBrlCurrency } from "../helpers/formatt/currency";
 import AlertModal from "../messagesModal";
@@ -62,31 +63,36 @@ export default () => {
 
     useEffect(() => {
         const removeAccents = str => {
-          return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         };
-      
+
         const filteredClients = clients.filter(cli => {
-          const search = removeAccents(searchValue.toString().trim().toLowerCase());
-      
-          if (!search) {
-            return true; // Retorna todos os clientes se nenhum termo de pesquisa for fornecido
-          }
-      
-          const fullName = removeAccents(cli.full_name.toString().trim().toLowerCase());
-          const idMatch = cli.id.toString() === search;
-          const cpfMatch = cli.cpf_cnpj && cli.cpf_cnpj.toString() === search; // Nova condição para pesquisa por CPF
-          const fullNameMatch = fullName.includes(search);
-      
-          return idMatch || cpfMatch || fullNameMatch; // Inclui a pesquisa por CPF na condição de retorno
+            const search = removeAccents(searchValue.toString().trim().toLowerCase());
+
+            if (!search) {
+                return true; // Retorna todos os clientes se nenhum termo de pesquisa for fornecido
+            }
+
+            const fullName = removeAccents(cli.full_name.toString().trim().toLowerCase());
+            const idMatch = cli.id.toString() === search;
+            const cpfMatch = cli.cpf_cnpj && cli.cpf_cnpj.toString() === search; // Nova condição para pesquisa por CPF
+            const fullNameMatch = fullName.includes(search);
+
+            return idMatch || cpfMatch || fullNameMatch; // Inclui a pesquisa por CPF na condição de retorno
         });
-      
+
         setAllClients(filteredClients);
-      }, [searchValue]);
-      
-      
-      
+    }, [searchValue]);
+
+
+
     const HandleGetSales = async client => {
         dispatch(getAllSalesPerClient(client, 'no'));
+        dispatch(showClient(client));
+    }
+
+    const HandleGetAllSales = async client => {
+        dispatch(getAllSalesPerClient(client, 'all'));
         dispatch(showClient(client));
     }
 
@@ -128,12 +134,16 @@ export default () => {
                     sx={{ width: "85%" }}
                     label="Pesquisar cliente: código / nome / CPF ou CNPJ"
                     name="search"
+                    autoComplete="off"
                     value={searchValue}
                     onChange={searchClients}
                 />
 
                 {client &&
-                    <SalesPerClient />
+                    <>
+                        <PendingSalesPerClient />
+                        <AllSalesPerClient />
+                    </>
                 }
 
                 <ClientModal>
@@ -212,7 +222,7 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {client.id ? (client.cpf_cnpj ? client.id + ' - ' +  client.cpf_cnpj : client.id) : ''}
+                                                        {client.id ? (client.cpf_cnpj ? client.id + ' - ' + client.cpf_cnpj : client.id) : ''}
                                                     </Typography>
                                                 </Box>
                                             </Box>
@@ -281,7 +291,11 @@ export default () => {
                                         <TableCell align="center">
                                             <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                <Button title="Receber" onClick={() => { HandleGetSales(client) }} color="primary" size="medium" variant="contained">
+                                                <Button title="Todas as vendas" onClick={() => { HandleGetAllSales(client) }} color="primary" size="medium" variant="contained">
+                                                    <FeatherIcon icon="layers" width="20" height="20" />
+                                                </Button>
+
+                                                <Button title="Receber vendas" onClick={() => { HandleGetSales(client) }} color="primary" size="medium" variant="contained">
                                                     <FeatherIcon icon="dollar-sign" width="20" height="20" />
                                                 </Button>
 
@@ -289,7 +303,7 @@ export default () => {
                                                     <FeatherIcon icon="edit" width="20" height="20" />
                                                 </Button>
 
-                                                <Button title="Inativar cliente" onClick={() => { HandleInactiveClient(client) }} color="error" size="medium" variant="contained">
+                                                <Button title="Excluir cliente" onClick={() => { HandleInactiveClient(client) }} color="error" size="medium" variant="contained">
                                                     <FeatherIcon icon="trash" width="20" height="20" />
                                                 </Button>
 

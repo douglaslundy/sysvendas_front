@@ -6,11 +6,11 @@ const INITIAL_STATE = {
 }
 
 
-export const addClient = createAction('ADD_SALE');
-export const editClient = createAction('EDIT_SALE');
-export const addClients = createAction('ADD_SALES');
-export const showClient = createAction('SHOW_SALE');
-export const inactiveClient = createAction('INACTIVE_SALE');
+export const addClient = createAction('ADD_CLIENT');
+export const editClient = createAction('EDIT_CLIENT');
+export const addClients = createAction('ADD_CLIENTS');
+export const showClient = createAction('SHOW_CLIENT');
+export const inactiveClient = createAction('INACTIVE_CLIENT');
 
 
 export default createReducer(INITIAL_STATE, {

@@ -110,7 +110,7 @@ export default () => {
         };
       
         // Filtro com base no método de pagamento selecionado
-        const filteredSalesByPayMethod = sales.filter((sale) => {
+        const filteredSalesByPayMethod = sales?.filter((sale) => {
           if (payMethod === 'all') {
             return true;
           } else if (payMethod === 'in_cash' || payMethod === 'on_term') {
@@ -124,7 +124,7 @@ export default () => {
         });
       
         // Filtro com base no valor de pesquisa
-        const filteredSalesBySearch = filteredSalesByPayMethod.filter((sale) => {
+        const filteredSalesBySearch = filteredSalesByPayMethod?.filter((sale) => {
           const saleId = sale.id.toString();
           const clientName = sale.client?.full_name || '';
           const search = removeAccents(searchValue.toString().trim().toLowerCase());
@@ -155,6 +155,7 @@ export default () => {
                     sx={{ width: "70%" }}
                     label="Pesquisar venda: código / cliente"
                     name="search"
+                    autoComplete="off"
                     value={searchValue}
                     onChange={searchSales}
                 />
