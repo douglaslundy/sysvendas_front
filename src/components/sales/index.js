@@ -80,33 +80,33 @@ export default () => {
     //       const saleId = sale.id.toString().toLowerCase();
     //       const clientName = sale.client?.full_name.toLowerCase() || '';
     //       const search = searchValue.toString().toLowerCase().trim();
-      
+
     //     //   return saleId.includes(search) || clientName.includes(search);
     //       return saleId === search || clientName.includes(search);
     //     });
-      
+
     //     setAllSales(filteredSales);
     //   }, [searchValue]);
 
-    
+
     useEffect(() => {
         const removeAccents = str => {
-          return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         };
-      
-        const filteredSales = sales.filter(sale => {
-          const saleId = sale.id.toString();
-          const clientName = sale.client?.full_name || '';
-          const search = removeAccents(searchValue.toString().trim().toLowerCase());
-      
-          const normalizedClientName = removeAccents(clientName.toLowerCase());
-      
-          return saleId === search || normalizedClientName.includes(search);
+
+        const filteredSales = sales && sales.filter(sale => {
+            const saleId = sale.id.toString();
+            const clientName = sale.client?.full_name || '';
+            const search = removeAccents(searchValue.toString().trim().toLowerCase());
+
+            const normalizedClientName = removeAccents(clientName.toLowerCase());
+
+            return saleId === search || normalizedClientName.includes(search);
         });
-      
+
         setAllSales(filteredSales);
-      }, [searchValue]);
-      
+    }, [searchValue]);
+
 
     return (
         <BaseCard title={`Encontramos ${sales && sales.length} Vendas realizadas no período informado`}>

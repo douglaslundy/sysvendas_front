@@ -126,7 +126,7 @@ export default () => {
             }}>
                 <TextField
                     sx={{ width: "85%" }}
-                    label="Pesquisar cliente: código / nome / endereço / cidade"
+                    label="Pesquisar cliente: código / nome / CPF ou CNPJ"
                     name="search"
                     value={searchValue}
                     onChange={searchClients}
@@ -156,7 +156,7 @@ export default () => {
                         <TableRow>
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Nome / Código
+                                    Nome / Código - CPF / CNPJ
                                 </Typography>
                             </TableCell>
                             <TableCell>
@@ -212,7 +212,7 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {client.id ? client.id : ''}
+                                                        {client.id ? client.id + ' - ' +  client.cpf_cnpj : ''}
                                                     </Typography>
                                                 </Box>
                                             </Box>
