@@ -61,18 +61,30 @@ export default () => {
     }, [clients]);
 
     useEffect(() => {
-        setAllClients(
-            [
-                ...clients.filter(cli => {
-                    const data = `${cli.id} ${cli.full_name} ${cli.city} ${cli.street} ${cli.number} ${cli.district} ${cli.zip_code}`;
-                    return (
-                        data.includes(searchValue.toString())
-                    );
-                })
-            ]
-        );
-    }, [searchValue]);
-
+        const removeAccents = str => {
+          return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        };
+      
+        const filteredClients = clients.filter(cli => {
+          const search = removeAccents(searchValue.toString().trim().toLowerCase());
+      
+          if (!search) {
+            return true; // Retorna todos os clientes se nenhum termo de pesquisa for fornecido
+          }
+      
+          const fullName = removeAccents(cli.full_name.toString().trim().toLowerCase());
+          const idMatch = cli.id.toString() === search;
+          const cpfMatch = cli.cpf_cnpj && cli.cpf_cnpj.toString() === search; // Nova condição para pesquisa por CPF
+          const fullNameMatch = fullName.includes(search);
+      
+          return idMatch || cpfMatch || fullNameMatch; // Inclui a pesquisa por CPF na condição de retorno
+        });
+      
+        setAllClients(filteredClients);
+      }, [searchValue]);
+      
+      
+      
     const HandleGetSales = async client => {
         dispatch(getAllSalesPerClient(client, 'no'));
         dispatch(showClient(client));

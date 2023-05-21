@@ -61,7 +61,7 @@ export default () => {
         setSearchValue(target.value.toLowerCase());
     }
 
-    
+
     const HandleViewSale = async sale => {
         dispatch(showSale(sale));
         dispatch(turnModalGetSale());
@@ -72,12 +72,41 @@ export default () => {
     }, []);
 
     useEffect(() => {
-        setAllSales(searchValue ? [...sales.filter(sale => sale && sale.id && sale.id.toString().includes(searchValue.toString()))] : sales);
+        setAllSales(searchValue ? [...sales.filter(sale => sale.id.toString().includes(searchValue.toString()))] : sales);
     }, [sales]);
 
+    // useEffect(() => {
+    //     const filteredSales = sales.filter(sale => {
+    //       const saleId = sale.id.toString().toLowerCase();
+    //       const clientName = sale.client?.full_name.toLowerCase() || '';
+    //       const search = searchValue.toString().toLowerCase().trim();
+      
+    //     //   return saleId.includes(search) || clientName.includes(search);
+    //       return saleId === search || clientName.includes(search);
+    //     });
+      
+    //     setAllSales(filteredSales);
+    //   }, [searchValue]);
+
+    
     useEffect(() => {
-        setAllSales([...sales.filter(sale => sale && sale.id && sale.id.toString().includes(searchValue.toString()) || sale.client && sale.client.full_name.toString().includes(searchValue.toString()))]);
-    }, [searchValue]);
+        const removeAccents = str => {
+          return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        };
+      
+        const filteredSales = sales.filter(sale => {
+          const saleId = sale.id.toString();
+          const clientName = sale.client?.full_name || '';
+          const search = removeAccents(searchValue.toString().trim().toLowerCase());
+      
+          const normalizedClientName = removeAccents(clientName.toLowerCase());
+      
+          return saleId === search || normalizedClientName.includes(search);
+        });
+      
+        setAllSales(filteredSales);
+      }, [searchValue]);
+      
 
     return (
         <BaseCard title={`Encontramos ${sales && sales.length} Vendas realizadas no período informado`}>
