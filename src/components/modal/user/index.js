@@ -166,7 +166,7 @@ export default function UserModal(props) {
 
                                     <TextField
                                         id="name"
-                                        label="Nome"
+                                        label={name && name.length > 0 ? `Nome: ${100 - name.length} caracteres restantes` : 'Nome'}
                                         variant="outlined"
                                         name="name"
                                         value={name ? name : ''}
@@ -175,18 +175,25 @@ export default function UserModal(props) {
                                         inputProps={{
                                             style: {
                                                 textTransform: "uppercase"
-                                            }
+                                            },
+                                            maxLength: 100
                                         }}
                                     />
                                     <TextField
                                         id="email"
-                                        label="@Email"
+                                        label={email && email.length > 0 ? `@Email: ${100 - email.length} caracteres restantes` : '@Email'}
                                         variant="outlined"
                                         type="email"
                                         name="email"
                                         value={email ? email : ''}
                                         onChange={changeItem}
                                         required
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                            maxLength: 100
+                                        }}
                                     />
 
                                     <CpfCnpj value={cpf ? cpf : ''}

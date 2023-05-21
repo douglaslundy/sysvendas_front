@@ -38,10 +38,10 @@ export default function CategorieModal(props) {
     const [form, setForm] = useState({
         name: "",
     });
-    
+
     const { categorie } = useSelector(state => state.categories);
 
-    
+
     const { isOpenModal, isOpenAlert } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
@@ -117,17 +117,19 @@ export default function CategorieModal(props) {
                                 <Stack spacing={3}>
                                     <TextField
                                         id="name"
-                                        label="Nome"
+                                        label={name && name.length > 0 ? `Nome: ${30 - name.length} caracteres restantes` : 'Nome'}
                                         variant="outlined"
                                         name="name"
                                         value={name ? name : ''}
                                         onChange={changeItem}
                                         required
-                                        
-                                        inputProps={{ 
-                                            style: { textTransform: "uppercase" 
-                                        } }}
-                                    />                                    
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                            maxLength: 50
+                                        }}
+                                    />
                                 </Stack>
                                 {/* </FormGroup> */}
                                 <br />

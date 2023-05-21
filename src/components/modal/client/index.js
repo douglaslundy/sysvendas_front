@@ -50,12 +50,19 @@ export default function ClientModal(props) {
         fantasy_name: "",
         obs: "",
         limit: "",
+        zip_code: "",
+        city: "",
+        street: "",
+        number: "",
+        district: "",
+        complement: ""
     });
+
     const { client } = useSelector(state => state.clients);
     const { isOpenModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
-    const { full_name, surname, cpf_cnpj, email, phone, im, ie, fantasy_name, obs, limit } = form;
+    const { full_name, surname, cpf_cnpj, email, phone, im, ie, fantasy_name, obs, limit, zip_code, city, street, number, district, complement } = form;
     const [texto, setTexto] = useState();
 
     const changeItem = ({ target }) => {
@@ -74,6 +81,12 @@ export default function ClientModal(props) {
             fantasy_name: "",
             obs: "",
             limit: "",
+            zip_code: "",
+            city: "",
+            street: "",
+            number: "",
+            district: "",
+            complement: ""
         });
         setTexto('');
         dispatch(turnModal());
@@ -135,44 +148,56 @@ export default function ClientModal(props) {
                                 <Stack spacing={3}>
                                     <TextField
                                         id="full_name"
-                                        label="Nome"
+                                        label={full_name && full_name.length > 0 ? `Nome Completo: ${100 - full_name.length} caracteres restantes` : 'Nome Completo'}
                                         variant="outlined"
                                         name="full_name"
                                         value={full_name ? full_name : ''}
                                         onChange={changeItem}
                                         required
-                                        inputProps={{ 
-                                            style: { textTransform: "uppercase" 
-                                        } }}
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                               maxLength: 100
+                                          }}
                                     />
                                     <TextField
                                         id="surname"
-                                        label="Apelido"
+                                        label={surname && surname.length > 0 ? `Apelido: ${50 - surname.length} caracteres restantes` : 'Apelido'}
                                         variant="outlined"
                                         name="surname"
                                         value={surname ? surname : ''}
                                         onChange={changeItem}
-                                        inputProps={{ 
-                                            style: { textTransform: "uppercase" 
-                                        } }}
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                               maxLength: 50
+                                          }}
                                     />
                                     <TextField
-                                        label="@Email"
+                                        label={email && email.length > 0 ? `@Email: ${100 - email.length} caracteres restantes` : '@Email'}
                                         variant="outlined"
                                         type="email"
                                         name="email"
                                         value={email ? email : ''}
                                         onChange={changeItem}
                                         required
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                               maxLength: 100
+                                          }}
                                     />
-                                    
-                                    <CpfCnpj 
+
+                                    <CpfCnpj
                                         value={cpf_cnpj}
                                         label={'CPF / CNPJ'}
                                         name={'cpf_cnpj'}
                                         required={'required'}
                                         changeItem={changeItem}
-                                     />
+                                    />
 
                                     <Phone value={phone}
                                         label={'Telefone'}
@@ -180,7 +205,113 @@ export default function ClientModal(props) {
                                         changeItem={changeItem}
                                     />
 
-                                    <TextField
+
+                                    <Box sx={{
+                                        '& > :not(style)': { mb: 0 },
+                                        'display': 'flex',
+                                        'justify-content': 'space-between'
+                                    }}
+                                    >
+
+                                        <TextField
+                                            id="zip_code"
+                                            label={zip_code && zip_code.length > 0 ? `CEP: ${10 - zip_code.length} caracteres restantes` : 'CEP'}
+                                            variant="outlined"
+                                            name="zip_code"
+                                            value={zip_code ? zip_code : ''}
+                                            onChange={changeItem}
+                                            sx={{ width: '36%', mr: 2 }}
+                                            inputProps={{
+                                                style: {
+                                                    textTransform: "uppercase"
+                                                },
+                                                maxLength: 10
+                                            }}
+                                        />
+                                        <TextField
+                                            id="city"
+                                            label={city && city.length > 0 ? `Cidade: ${30 - city.length} caracteres restantes` : 'Cidade'}
+                                            variant="outlined"
+                                            name="city"
+                                            value={city ? city : ''}
+                                            onChange={changeItem}
+                                            sx={{ width: '36%', mr: 2 }}
+                                            inputProps={{
+                                                style: {
+                                                    textTransform: "uppercase"
+                                                },
+                                                maxLength: 30
+                                            }}
+                                        />
+                                        <TextField
+                                            id="street"label={street && street.length > 0 ? `Rua: ${100 - street.length} caracteres restantes` : 'Rua'}
+                                            variant="outlined"
+                                            name="street"
+                                            value={street ? street : ''}
+                                            onChange={changeItem}
+                                            sx={{ width: '36%' }}
+                                            inputProps={{
+                                                style: {
+                                                    textTransform: "uppercase"
+                                                },
+                                                maxLength: 100
+                                            }}
+                                        />
+                                    </Box>
+
+                                    <Box sx={{
+                                        '& > :not(style)': { mb: 0 },
+                                        'display': 'flex',
+                                        'justify-content': 'space-between'
+                                    }}
+                                    >
+
+                                        <TextField
+                                            id="number"label={number && number.length > 0 ? `Nº: ${6 - number.length} caracteres restantes` : 'Nº'}
+                                            variant="outlined"
+                                            name="number"
+                                            value={number ? number : ''}
+                                            onChange={changeItem}
+                                            sx={{ width: '36%', mr: 2 }}
+                                            inputProps={{
+                                                style: {
+                                                    textTransform: "uppercase"
+                                                },
+                                                maxLength: 6
+                                            }}
+                                        />
+                                        <TextField
+                                            id="complement"
+                                            label={complement && complement.length > 0 ? `Complemento: ${50 - complement.length} caracteres restantes` : 'Complemento'}
+                                            variant="outlined"
+                                            name="complement"
+                                            value={complement ? complement : ''}
+                                            onChange={changeItem}
+                                            sx={{ width: '36%' }}
+                                            inputProps={{
+                                                style: {
+                                                    textTransform: "uppercase"
+                                                },
+                                                maxLength: 50
+                                            }}
+                                        />
+                                        <TextField
+                                            id="district"
+                                            label={district && district.length > 0 ? `Bairro: ${100 - district.length} caracteres restantes` : 'Bairro'}
+                                            variant="outlined"
+                                            name="district"
+                                            value={district ? district : ''}
+                                            onChange={changeItem}
+                                            sx={{ width: '36%', mr: 2 }}
+                                            inputProps={{
+                                                style: {
+                                                    textTransform: "uppercase"
+                                                },
+                                                maxLength: 100
+                                            }}
+                                        />
+                                    </Box>
+                                    {/* <TextField
                                         id="im"
                                         label="Inscrição Municipal"
                                         variant="outlined"
@@ -195,18 +326,21 @@ export default function ClientModal(props) {
                                         name="ie"
                                         value={ie ? ie : ''}
                                         onChange={changeItem}
-                                    />
+                                    /> */}
 
                                     <TextField
                                         id="fantasy_name"
-                                        label="Nome Fantasia"
+                                        label={fantasy_name && fantasy_name.length > 0 ? `Nome Fantasia: ${50 - fantasy_name.length} caracteres restantes` : 'Nome Fantasia'}
                                         variant="outlined"
                                         name="fantasy_name"
                                         value={fantasy_name ? fantasy_name : ''}
                                         onChange={changeItem}
-                                        inputProps={{ 
-                                            style: { textTransform: "uppercase" 
-                                        } }}
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                            maxLength: 50
+                                        }}
                                     />
 
                                     <Currency value={limit}
@@ -217,15 +351,18 @@ export default function ClientModal(props) {
 
                                     <TextField
                                         id="obs"
-                                        label="OBS"
+                                        label={obs && obs.length > 0 ? `OBS: ${500 - obs.length} caracteres restantes` : 'OBS'}
                                         multiline
                                         rows={4}
                                         value={obs ? obs : ''}
                                         name="obs"
                                         onChange={changeItem}
-                                        inputProps={{ 
-                                            style: { textTransform: "uppercase" 
-                                        } }}
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                            maxLength: 500
+                                        }}
                                     />
                                 </Stack>
                                 {/* </FormGroup> */}

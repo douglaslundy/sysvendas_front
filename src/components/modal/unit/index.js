@@ -38,10 +38,10 @@ export default function UnitModal(props) {
     const [form, setForm] = useState({
         name: "",
     });
-    
+
     const { unit } = useSelector(state => state.units);
 
-    
+
     const { isOpenModal, isOpenAlert } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
@@ -49,7 +49,7 @@ export default function UnitModal(props) {
     const [texto, setTexto] = useState();
 
     const changeItem = ({ target }) => {
-        setForm({ ...form, [target.name]: target.value.toUpperCase() });
+        setForm({ ...form, [target.name]: target.value });
     };
 
     const cleanForm = () => {
@@ -116,14 +116,19 @@ export default function UnitModal(props) {
                                 <Stack spacing={3}>
                                     <TextField
                                         id="name"
-                                        label="Nome"
+                                        label={name && name.length > 0 ? `Nome: ${3 - name.length} caracteres restantes` : 'Nome'}
                                         variant="outlined"
                                         name="name"
                                         value={name ? name : ''}
                                         onChange={changeItem}
                                         required
-                                        inputProps={{ maxLength: 3 }}
-                                    />                                    
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                            maxLength: 3
+                                        }}
+                                    />
                                 </Stack>
                                 {/* </FormGroup> */}
                                 <br />

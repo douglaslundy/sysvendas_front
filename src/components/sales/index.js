@@ -86,7 +86,7 @@ export default () => {
 
             <TextField
                 sx={{ width: "85%" }}
-                label="Pesquisar Venda: Código / Cliente"
+                label="Pesquisar venda: código / cliente"
                 name="search"
                 value={searchValue}
                 onChange={searchSales}

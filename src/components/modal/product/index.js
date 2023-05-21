@@ -184,7 +184,7 @@ export default function ProductModal(props) {
                                 <Stack spacing={3}>
                                     <TextField
                                         id="name"
-                                        label="Nome do Produto"
+                                        label={name && name.length > 0 ? `Nome do Produto: ${100 - name.length} caracteres restantes` : 'Nome do Produto'}
                                         variant="outlined"
                                         name="name"
                                         value={name ? name : ''}
@@ -193,17 +193,24 @@ export default function ProductModal(props) {
                                         inputProps={{
                                             style: {
                                                 textTransform: "uppercase"
-                                            }
+                                            },
+                                            maxLength: 100
                                         }}
                                     />
                                     <TextField
                                         id="bar_code"
-                                        label="Código de Barras"
+                                        label={bar_code && bar_code.length > 0 ? `Código de Barras: ${50 - bar_code.length} caracteres restantes` : 'Código de Barras'}
                                         variant="outlined"
                                         name="bar_code"
                                         value={bar_code ? bar_code : ''}
                                         onChange={changeItem}
                                         required
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                            maxLength: 50
+                                        }}
                                     />
                                     <Select
                                         value={id_category}

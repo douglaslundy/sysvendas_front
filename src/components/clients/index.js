@@ -48,19 +48,29 @@ export default () => {
 
     const dispatch = useDispatch();
     const { clients, client } = useSelector(state => state.clients);
-    const [searchValue, setSearchValue] = useState();
+    const [searchValue, setSearchValue] = useState("");
     const [allClients, setAllClients] = useState(clients);
 
     useEffect(() => {
         dispatch(getAllClients());
     }, []);
-    
+
     useEffect(() => {
-        setAllClients(searchValue ? [...clients.filter(cli => cli.full_name.toLowerCase().indexOf(searchValue) > -1)] : clients);
+        // setAllClients(searchValue ? [...clients.filter(cli => cli.full_name.toLowerCase().indexOf(searchValue) > -1)] : clients);
+        setAllClients(searchValue ? [...clients.filter(cli => cli.full_name.toString().includes(searchValue.toString()))] : clients);
     }, [clients]);
-    
+
     useEffect(() => {
-        setAllClients([...clients.filter(cli => cli && cli.full_name && cli.full_name.toLowerCase().indexOf(searchValue) > -1)]);
+        setAllClients(
+            [
+                ...clients.filter(cli => {
+                    const data = `${cli.id} ${cli.full_name} ${cli.city} ${cli.street} ${cli.number} ${cli.district} ${cli.zip_code}`;
+                    return (
+                        data.includes(searchValue.toString())
+                    );
+                })
+            ]
+        );
     }, [searchValue]);
 
     const HandleGetSales = async client => {
@@ -96,7 +106,7 @@ export default () => {
 
     return (
         <BaseCard title={`Você possui ${allClients.length} Clientes Cadastrados`}>
-             <AlertModal />
+            <AlertModal />
             <Box sx={{
                 '& > :not(style)': { m: 2 },
                 'display': 'flex',
@@ -104,7 +114,7 @@ export default () => {
             }}>
                 <TextField
                     sx={{ width: "85%" }}
-                    label="Pesquisar cliente"
+                    label="Pesquisar cliente: código / nome / endereço / cidade"
                     name="search"
                     value={searchValue}
                     onChange={searchClients}
@@ -134,7 +144,12 @@ export default () => {
                         <TableRow>
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Nome / Apelido
+                                    Nome / Código
+                                </Typography>
+                            </TableCell>
+                            <TableCell>
+                                <Typography color="textSecondary" variant="h6">
+                                    Endereço
                                 </Typography>
                             </TableCell>
                             <TableCell>
@@ -185,7 +200,35 @@ export default () => {
                                                             fontSize: "13px",
                                                         }}
                                                     >
-                                                        {client.surname ? client.surname.substring(0, 30).toUpperCase() : ''}
+                                                        {client.id ? client.id : ''}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        </TableCell>
+
+                                        <TableCell>
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                <Box>
+                                                    <Typography
+                                                        variant="h6"
+                                                        sx={{
+                                                            fontWeight: "600",
+                                                        }}
+                                                    >
+                                                        {client.street && client.number ? client.street.substring(0, 35).toUpperCase() + ', ' + client.number : ''}
+                                                    </Typography>
+                                                    <Typography
+                                                        color="textSecondary"
+                                                        sx={{
+                                                            fontSize: "13px",
+                                                        }}
+                                                    >
+                                                        {client.district && client.city ? client.district.substring(0, 30).toUpperCase() + ', ' + client.city.substring(0, 30).toUpperCase() : ''}
                                                     </Typography>
                                                 </Box>
                                             </Box>
