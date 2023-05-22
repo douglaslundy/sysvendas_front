@@ -3,7 +3,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { convertToBrlCurrency, getCurrency } from '../../components/helpers/formatt/currency';
 import { parseISO, format } from 'date-fns';
 
-async function salesPDF({ id, created_at, type_sale, paied = null, total_sale = null, client, itens, discount = null, obs }) {
+async function salesPDF({ id, created_at, updated_at, type_sale, paied = null, total_sale = null, client, itens, discount = null, obs }) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
     const loadImage = async (url) => {
@@ -66,7 +66,7 @@ async function salesPDF({ id, created_at, type_sale, paied = null, total_sale = 
                 { text: `D O C U M E N T O   A U X I L I A R   D E   V E N D A  - ${type_sale === 'budget' ? 'O R Ç A M E N T O' : 'P E D I D O'}`, fontSize: 14 },
                 { text: `NÃO É DOCUMENTO FISCAL - NÃO É VÁLIDO COMO GARANTIA DE MERCADORIA`, fontSize: 10, bold: true },
                 type_sale === 'budget' ? { text: `ESTE ORÇAMENTO SÓ É VÁLIDO MEDIANTE A DISPONIBILIDADE DO ESTOQUE`, fontSize: 10, bold: true } : '',
-                { text: `N. do(a) ${type_sale === 'budget' ? 'orçamento' : 'documento'}: ${id}       -       ${created_at && format(parseISO(created_at), 'dd/MM/yyyy')}       -       ${created_at && format(parseISO(created_at), 'HH:mm:ss')}`, fontSize: 12 },
+                { text: `N. do(a) ${type_sale === 'budget' ? 'orçamento' : 'documento'}: ${id}       -       ${created_at && format(parseISO(created_at), 'dd/MM/yyyy HH:mm:ss')}       -       ${created_at && format(parseISO(created_at), 'HH:mm:ss')}`, fontSize: 12 },
             ],
             alignment: 'center',
             margin: [0, 0, 0, 0] // left, top, right, bottom
@@ -112,6 +112,15 @@ async function salesPDF({ id, created_at, type_sale, paied = null, total_sale = 
                 `Este orçamento tem validade de 15 dias`
                 ||
                 `COND. PAGTO:   ${type_sale == "in_cash" ? 'A Vista' : 'A Prazo'} / ${paied == 'yes' ? 'Recebida' : 'A Receber'}`
+            ],
+            fontSize: type_sale === 'budget' ? 14 : 11,
+            margin: [2, 0, 2, 0] // left, top, right, bottom
+        },
+        {
+
+            text: [
+                paied === 'yes' &&
+                `Data do pagamento:   ${updated_at && format(parseISO(updated_at), 'dd/MM/yyyy HH:mm:ss')}` || ''
             ],
             fontSize: type_sale === 'budget' ? 14 : 11,
             margin: [2, 0, 2, 0] // left, top, right, bottom

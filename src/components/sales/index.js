@@ -106,37 +106,37 @@ export default () => {
 
     useEffect(() => {
         const removeAccents = (str) => {
-          return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         };
-      
+
         // Filtro com base no método de pagamento selecionado
         const filteredSalesByPayMethod = sales?.filter((sale) => {
-          if (payMethod === 'all') {
-            return true;
-          } else if (payMethod === 'in_cash' || payMethod === 'on_term') {
-            return sale.type_sale === payMethod;
-          } else if (payMethod === 'received') {
-            return sale.type_sale === 'on_term' && sale.paied === 'yes';
-          } else if (payMethod === 'receivable') {
-            return sale.type_sale === 'on_term' && sale.paied === 'no';
-          }
-          return false;
+            if (payMethod === 'all') {
+                return true;
+            } else if (payMethod === 'in_cash' || payMethod === 'on_term') {
+                return sale.type_sale === payMethod;
+            } else if (payMethod === 'received') {
+                return sale.type_sale === 'on_term' && sale.paied === 'yes';
+            } else if (payMethod === 'receivable') {
+                return sale.type_sale === 'on_term' && sale.paied === 'no';
+            }
+            return false;
         });
-      
+
         // Filtro com base no valor de pesquisa
         const filteredSalesBySearch = filteredSalesByPayMethod?.filter((sale) => {
-          const saleId = sale.id.toString();
-          const clientName = sale.client?.full_name || '';
-          const search = removeAccents(searchValue.toString().trim().toLowerCase());
-      
-          const normalizedClientName = removeAccents(clientName.toLowerCase());
-      
-          return saleId === search || normalizedClientName.includes(search);
+            const saleId = sale.id.toString();
+            const clientName = sale.client?.full_name || '';
+            const search = removeAccents(searchValue.toString().trim().toLowerCase());
+
+            const normalizedClientName = removeAccents(clientName.toLowerCase());
+
+            return saleId === search || normalizedClientName.includes(search);
         });
-      
+
         setAllSales(filteredSalesBySearch);
-      }, [payMethod, searchValue]);
-      
+    }, [payMethod, searchValue]);
+
 
 
     return (
@@ -188,19 +188,28 @@ export default () => {
 
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Código / Data
+                                    Código
+                                </Typography>
+                                <Typography color="textSecondary" variant="h6">
+                                    Data da venda
                                 </Typography>
                             </TableCell>
 
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Cliente / CPF / CNPJ
+                                    Cliente
+                                </Typography>
+                                <Typography color="textSecondary" variant="h6">
+                                    CPF / CNPJ
                                 </Typography>
                             </TableCell>
 
                             <TableCell>
-                                <Typography color="textSecondary" variant="h6">
+                                <Typography color="textSecondary" align="center" variant="h6">
                                     Tipo da venda
+                                </Typography>
+                                <Typography color="textSecondary" align="center" variant="h6">
+                                    Data do pagamento
                                 </Typography>
                             </TableCell>
 
@@ -287,7 +296,8 @@ export default () => {
                                             <TableCell align="center">
                                                 <Box
                                                     sx={{
-                                                        display: "flex",
+                                                        // display: "flex",
+                                                        alignItems: "center",
                                                     }}
                                                 >
                                                     <Box>
@@ -306,6 +316,14 @@ export default () => {
                                                             }}
                                                         >
                                                             {sale.paied == "yes" ? <FeatherIcon icon="thumbs-up" color="#0b02f7" width="20" height="20" /> : <FeatherIcon icon="thumbs-down" color="#f7020e" width="20" height="20" />}
+                                                        </Typography>
+                                                        <Typography
+                                                            color="textSecondary"
+                                                            sx={{
+                                                                fontSize: "12px",
+                                                            }}
+                                                        >
+                                                            {sale.paied == "yes" ? format(parseISO(sale.updated_at), 'dd/MM/yyyy HH:mm:ss') : ''}
                                                         </Typography>
                                                     </Box>
                                                 </Box>

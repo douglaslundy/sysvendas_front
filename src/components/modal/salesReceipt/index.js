@@ -52,7 +52,7 @@ export default function SalesReceipt(props) {
     const dispatch = useDispatch();
     const { isOpenModalGetSale } = useSelector(state => state.layout);
     const { sale } = useSelector(state => state.sales);
-    const { id, created_at, type_sale, paied, total_sale, client, itens, discount } = sale;
+    const { id, created_at, updated_at, type_sale, paied, total_sale, client, itens, discount } = sale;
 
     const handleClose = () => {
         dispatch(turnModalGetSale());
@@ -75,6 +75,11 @@ export default function SalesReceipt(props) {
                     <hr />
                     <h3>JR Ferragens - Data : {created_at && format(parseISO(created_at), 'dd/MM/yyyy HH:mm:ss')}</h3>
                     <h5>Venda Nº: {id} / {type_sale == "in_cash" ? 'A Vista' : 'A Prazo'} / Venda Recebida {paied == 'yes' ? 'SIM' : 'NÃO'}</h5>
+                    {paied == 'yes' &&
+                        <>
+                            {/* <hr /> */}
+                            <h5>Data do recebimento : {updated_at && format(parseISO(updated_at), 'dd/MM/yyyy HH:mm:ss')}</h5>
+                        </>}
                     <hr />
                     <h3>CLIENTE: {client != null ? client.full_name : 'VENDA NO BALCÃO'}</h3>
                     <hr />
