@@ -6,8 +6,23 @@ const Provisoria = () => {
     <BaseCard title="SysVendas">
       <h1>Novidades...</h1>
 
-      <h2>#Criado botão e campo de observação por item no carrinho!</h2>
-      <h4>... 06/05/2023</h4> 
+      <h2>#Criado cadastro de endereço!</h2>
+      <h4>... 21/05/2023</h4> 
+
+      <h4>#Criado cadastro e finalização de orçamento!</h4>
+      <h6>... 21/05/2023</h6> 
+      
+      <h4>#Criado pesquisa por tipo, como vendas a vista, a prazo, a prazo pendentes e pagas!</h4>
+      <h6>... 20/05/2023</h6> 
+
+      <h4>#Criado botão de exibição de todas as vendas por cliente, filtrando por a vista, a prazo, a prazo pagas e pendentes!</h4>
+      <h6>... 20/05/2023</h6> 
+
+      <h4>#Criado pesquisa de clientes e vendas por código!</h4>
+      <h6>... 19/05/2023</h6> 
+     
+      <h4>#Criado botão e campo de observação por item no carrinho!</h4>
+      <h6>... 06/05/2023</h6> 
 
       <h4>#Criado botao para alterar quantidade do item no carrinho</h4>
       <h6>... 06/05/2023</h6>
