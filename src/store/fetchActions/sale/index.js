@@ -7,6 +7,8 @@ import { turnAlert, addAlertMessage, turnLoading, turnModalGetPendingSales, turn
 import { getAllClients } from "../client";
 import salesPDF from "../../../reports/sales";
 
+import { parseISO, format, setDate } from 'date-fns';
+
 import { valueDecrescidFromPercent } from '../../../components/helpers/functions/percent';
 
 
@@ -28,7 +30,7 @@ export const addSale = (sale, cleanForm) => {
 
         api.post('/sales', sale)
             .then((res) =>
-            (        
+            (
                 dispatch(turnAlert()),
                 dispatch(turnLoading()),
                 dispatch(cleanProductsCart()),
@@ -67,6 +69,54 @@ export const getAllSales = () => {
 
         api
             .get('/sales', config)
+            .then((res) => {
+                dispatch(addSales(res.data));
+                dispatch(turnLoading());
+            })
+            .catch(() => { dispatch(turnLoading()) })
+    }
+}
+
+
+export const getAllSalesPerDate = (dateBegin, dateEnd) => {
+
+    const form = {};
+
+    if (dateBegin) {
+        form.date_begin = format(dateBegin, 'yyyy/MM/dd');
+    }
+
+    if (dateEnd) {
+        form.date_end = format(dateEnd, 'yyyy/MM/dd');
+    }
+
+
+    // const form = {
+    //     "date_begin": dateBegin,
+    //     "date_end": dateEnd
+    // }
+
+    console.log(JSON.stringify(form.date_begin))
+
+    const config = {
+        transformResponse: [function (data) {
+
+            const payload = JSON.parse(data).map(sale => {
+                return {
+                    ...sale,
+                    "total_sale": sale.total_sale,
+                    "discount": sale.discount
+                }
+            })
+            return payload;
+        }]
+    }
+
+    return (dispatch) => {
+        dispatch(turnLoading());
+
+        api
+            .get(`/sales`, { params: form, ...config }) // Pass the 'form' object as a request parameter
             .then((res) => {
                 dispatch(addSales(res.data));
                 dispatch(turnLoading());

@@ -21,13 +21,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Select from '../inputs/selects';
 import Receipt from "../modal/salesReceipt";
-import { getAllSales } from "../../store/fetchActions/sale";
+import { getAllSales, getAllSalesPerDate } from "../../store/fetchActions/sale";
 import { turnModalGetSale } from "../../store/ducks/Layout";
 import { showSale } from "../../store/ducks/sales";
 import salesPDF from "../../reports/sales";
 import BasicDatePicker from "../inputs/datePicker";
 import { convertToBrlCurrency, getCurrency } from "../helpers/formatt/currency";
-import { parseISO, format } from 'date-fns';
+import { parseISO, format, setDate } from 'date-fns';
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -48,6 +48,9 @@ export default () => {
     const [searchValue, setSearchValue] = useState("");
     const [allSales, setAllSales] = useState(sales);
     const [payMethod, setPayMethod] = useState('all');
+
+    const [dateBegin, setDateBegin] = useState(null);
+    const [dateEnd, setDateEnd] = useState(null);
 
     const payMethods = [
         {
@@ -137,15 +140,46 @@ export default () => {
         setAllSales(filteredSalesBySearch);
     }, [payMethod, searchValue]);
 
-
+    const getSalesPerDate = () => {
+        dispatch(getAllSalesPerDate(dateBegin, dateEnd));
+    }
+    const resetGetSales = () => {
+        dispatch(getAllSales());
+        setDateBegin(null)
+        setDateEnd(null)
+        setSearchValue('')
+    }
 
     return (
         <BaseCard title={`Encontramos ${allSales && allSales.length} Vendas realizadas no período informado`}>
 
-            {/* <BasicDatePicker /> */}
+            <BasicDatePicker
+                sx={{ mr: 2 }}
+                label="Data de Início"
+                name="date_begin"
+                value={dateBegin}
+                setValue={setDateBegin}
+            />
+
+            <BasicDatePicker
+                sx={{ mr: 2 }}
+                label="Data de Fim"
+                name="date_end"
+                value={dateEnd}
+                disabled={!dateBegin}
+                setValue={setDateEnd}
+            />
+
+            <Button title="Buscar" onClick={getSalesPerDate} disabled={!dateBegin} color="success" size="medium" variant="contained">
+                <FeatherIcon icon="search" width="45" height="45" />
+            </Button>
+
+            <Button title="Resetar Busca por data(s)" onClick={resetGetSales} disabled={!dateBegin} sx={{ml: 2}} color="primary" size="medium" variant="contained">
+                <FeatherIcon icon="refresh-cw" width="45" height="45" />
+            </Button>
 
             <Box sx={{
-                '& > :not(style)': { mb: 0 },
+                '& > :not(style)': { mb: 0, mt: 2 },
                 'display': 'flex',
                 'justify-content': 'space-between'
             }}
