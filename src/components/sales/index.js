@@ -24,6 +24,7 @@ import Receipt from "../modal/salesReceipt";
 import { getAllSales, getAllSalesPerDate } from "../../store/fetchActions/sale";
 import { turnModalGetSale } from "../../store/ducks/Layout";
 import { showSale } from "../../store/ducks/sales";
+import salePDF from "../../reports/sale";
 import salesPDF from "../../reports/sales";
 import BasicDatePicker from "../inputs/datePicker";
 import { convertToBrlCurrency, getCurrency } from "../helpers/formatt/currency";
@@ -141,13 +142,18 @@ export default () => {
     }, [payMethod, searchValue]);
 
     const getSalesPerDate = () => {
+        setPayMethod('all')
         dispatch(getAllSalesPerDate(dateBegin, dateEnd));
     }
     const resetGetSales = () => {
         dispatch(getAllSales());
         setDateBegin(null)
         setDateEnd(null)
+        setPayMethod('all')
         setSearchValue('')
+    }
+    const printerSales = () => {
+        salesPDF(allSales)
     }
 
     return (
@@ -172,6 +178,10 @@ export default () => {
 
             <Button title="Buscar" onClick={getSalesPerDate} disabled={!dateBegin} color="success" size="medium" variant="contained">
                 <FeatherIcon icon="search" width="45" height="45" />
+            </Button>
+
+            <Button title="Imprimir Vendas" onClick={printerSales} sx={{ml: 2}} color="secondary" size="medium" variant="contained">
+                <FeatherIcon icon="printer" width="45" height="45" />
             </Button>
 
             <Button title="Resetar Busca por data(s)" onClick={resetGetSales} sx={{ml: 2}} color="primary" size="medium" variant="contained">
@@ -399,7 +409,7 @@ export default () => {
                                                         <FeatherIcon icon="eye" width="20" height="20" />
                                                     </Button>
 
-                                                    <Button title="Imprimir venda" onClick={() => salesPDF(sale)} color="error" size="medium" variant="contained">
+                                                    <Button title="Imprimir venda" onClick={() => salePDF(sale)} color="secondary" size="medium" variant="contained">
                                                         <FeatherIcon icon="printer" width="20" height="20" />
                                                     </Button>
 

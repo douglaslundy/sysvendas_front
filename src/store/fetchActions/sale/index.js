@@ -5,7 +5,7 @@ import { cleanProductsCart } from "../../ducks/cart";
 import { addSales, addSalesPerClient } from "../../ducks/sales";
 import { turnAlert, addAlertMessage, turnLoading, turnModalGetPendingSales, turnModalGetAllSales, changeTitleAlert } from "../../ducks/Layout";
 import { getAllClients } from "../client";
-import salesPDF from "../../../reports/sales";
+import salePDF from "../../../reports/sale";
 
 import { format } from 'date-fns';
 
@@ -36,7 +36,7 @@ export const addSale = (sale, cleanForm) => {
                 dispatch(turnLoading()),
                 dispatch(cleanProductsCart()),
                 cleanForm(),
-                salesPDF(...res.data.sale)
+                salePDF(...res.data.sale)
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));

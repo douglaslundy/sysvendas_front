@@ -3,7 +3,8 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { convertToBrlCurrency, getCurrency } from '../../components/helpers/formatt/currency';
 import { parseISO, format } from 'date-fns';
 
-async function salesPDF({ id, created_at, updated_at, type_sale, paied = null, total_sale = null, client, itens, discount = null, obs, user }) {
+// async function salesPDF({ id, created_at, updated_at, type_sale, paied = null, total_sale = null, client, itens, discount = null, obs, user }) {
+async function salesPDF(sales) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
     const loadImage = async (url) => {
@@ -20,15 +21,15 @@ async function salesPDF({ id, created_at, updated_at, type_sale, paied = null, t
         return base64ImageData;
     };
 
-    const title = [
-        {
-            text: `Relatório da Venda Nº ${id}`,
-            fontSize: 18,
-            bold: true,
-            alignment: 'center',
-            margin: [20, 20, 0, 45] // left, top, right, bottom
-        }
-    ];
+    // const title = [
+    //     {
+    //         text: `Relatório da Venda Nº ${id}`,
+    //         fontSize: 18,
+    //         bold: true,
+    //         alignment: 'center',
+    //         margin: [20, 20, 0, 45] // left, top, right, bottom
+    //     }
+    // ];
 
     const logo = [
         {
@@ -52,174 +53,59 @@ async function salesPDF({ id, created_at, updated_at, type_sale, paied = null, t
             margin: [0, 40, 0, 5] // left, top, right, bottom
         },
 
-        {
-            stack: [
-                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------` },
-            ],
-            fontSize: 12,
-            alignment: 'center',
-            margin: [0, 0, 0, 0] // left, top, right, bottom
-        },
-
-        {
-            stack: [
-                { text: `D O C U M E N T O   A U X I L I A R   D E   V E N D A  - ${type_sale === 'budget' ? 'O R Ç A M E N T O' : 'P E D I D O'}`, fontSize: 14 },
-                { text: `NÃO É DOCUMENTO FISCAL - NÃO É VÁLIDO COMO GARANTIA DE MERCADORIA`, fontSize: 10, bold: true },
-                type_sale === 'budget' ? { text: `ESTE ORÇAMENTO SÓ É VÁLIDO MEDIANTE A DISPONIBILIDADE DO ESTOQUE`, fontSize: 10, bold: true } : '',
-                { text: `N. do(a) ${type_sale === 'budget' ? 'orçamento' : 'documento'}: ${id}       -       ${created_at && format(parseISO(created_at), 'dd/MM/yyyy HH:mm:ss')}       -       ${created_at && format(parseISO(created_at), 'HH:mm:ss')}`, fontSize: 12 },
-            ],
-            alignment: 'center',
-            margin: [0, 0, 0, 0] // left, top, right, bottom
-        },
-
-        {
-            stack: [
-                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------` },
-            ],
-            fontSize: 12,
-            alignment: 'center',
-            margin: [0, 0, 0, 0] // left, top, right, bottom
-        }
     ];
 
-    const name = [
-        {
-            stack: [
-                client != null ? ({ text: `CLIENTE: ${client.id} - ${client.full_name}` })
-                    : { text: `CLIENTE: VENDA NO BALCÃO` }
-            ],
-            fontSize: 11,
-            bold: true,
-            margin: [2, 0, 2, 0] // left, top, right, bottom
-        },
-
-        {
-            stack: [
-                client != null ? ({ text: `${(client.cpf_cnpj != null && client.cpf_cnpj.length > 11 ? " CNPJ: " : "CPF: ") + (client.cpf_cnpj != null ? client.cpf_cnpj : '') + " / Telefone: " + (client.phone != null ? client.phone : '')}` })
-                    : { text: `` }
-            ],
-            fontSize: 11,
-            bold: false,
-            margin: [2, 0, 2, 0] // left, top, right, bottom
-        },
-
-    ];
-
-    const type = [
-        {
-            text: [
-                type_sale === 'budget' &&
-                `Este orçamento tem validade de 15 dias`
-                ||
-                `COND. PAGTO:   ${type_sale == "in_cash" ? 'A Vista' : 'A Prazo'} / ${paied == 'yes' ? 'Recebida' : 'A Receber'}`
-            ],
-            fontSize: type_sale === 'budget' ? 14 : 11,
-            margin: [2, 0, 2, 0] // left, top, right, bottom
-        },
-        {
-
-            text: [
-                paied === 'yes' &&
-                `Data do pagamento:   ${updated_at && format(parseISO(updated_at), 'dd/MM/yyyy HH:mm:ss')}` || ''
-            ],
-            fontSize: type_sale === 'budget' ? 14 : 11,
-            margin: [2, 0, 2, 0] // left, top, right, bottom
-        },
-
-        {
-            stack: [
-                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------` },
-            ],
-            fontSize: 12,
-            alignment: 'center',
-            margin: [0, 0, 0, 0] // left, top, right, bottom
-        }
-    ];
-
-    const dados = itens.map((item) => {
+    const dados = sales.map((sale) => {
         return [
-            { text: item.bar_code, fontSize: 9, margin: [0, 2, 0, 2] },
             {
                 stack: [
-                    { text: item.name, fontSize: 12, margin: [0, 2, 0, 2] },
-                    { text: item.obs, fontSize: 8, margin: [0, 2, 0, 2] }
+                    { text: sale.id, fontSize: 9, margin: [0, 2, 0, 2] },
+                    { text: format(parseISO(sale.created_at), 'dd/MM/yyyy HH:mm:ss'), fontSize: 9, margin: [0, 2, 0, 2] }
                 ]
             },
-            { text: getCurrency(item.qtd), fontSize: 9, margin: [0, 2, 0, 2] },
-            { text: convertToBrlCurrency(getCurrency(item.item_value)), fontSize: 9, margin: [0, 2, 0, 2] },
-            { text: convertToBrlCurrency(getCurrency(item.item_value * item.qtd / 100)), fontSize: 9, margin: [0, 2, 0, 2] }
+            {
+                stack: [
+                    { text: sale.client && sale.client.full_name ? sale.client.id +' - ' + sale.client.full_name : 'VENDA NO BALCÃO' , fontSize: 9, margin: [0, 2, 0, 2] },
+                    { text: sale.user.id +' - ' + sale.user.name, fontSize: 9, margin: [0, 2, 0, 2] },
+                ]
+            },
+            {
+                stack: [
+                    { text: sale.type_sale === 'in_cash' ? 'A Vista' : 'A Prazo', fontSize: 9, margin: [0, 2, 0, 2] },
+                    { text: sale.paied === 'yes' ? format(parseISO(sale.updated_at), 'dd/MM/yyyy HH:mm:ss') : 'Pagamento Pendente' , fontSize: 9, margin: [0, 2, 0, 2] }
+                ]
+            },
+            { text: convertToBrlCurrency(getCurrency(sale.total_sale)), fontSize: 9, margin: [0, 2, 0, 2] },
         ]
     });
 
-    const details = [
+    const data = [
         {
             table: {
                 headerRows: 1,
-                widths: ['14%', '44%', '6%', '18%', '18%'],
+                widths: ['20%', '45%', '20%', '15%'],
                 body: [
                     [
-                        { text: 'Código', style: 'tableHeader', fontSize: 10 },
-                        { text: 'Descrição', style: 'tableHeader', fontSize: 10 },
-                        { text: 'Qtd', style: 'tableHeader', fontSize: 10 },
-                        { text: 'Preço Unitário', style: 'tableHeader', fontSize: 10 },
-                        { text: 'Total', style: 'tableHeader', fontSize: 10 }
+                        { text: 'Código / Data', style: 'tableHeader', fontSize: 10 },
+                        { text: 'Cliente / Vendedor', style: 'tableHeader', fontSize: 10 },
+                        { text: 'Venda / Pagamento', style: 'tableHeader', fontSize: 10 },
+                        { text: 'Total', style: 'tableHeader', fontSize: 10 },
                     ],
                     ...dados
                 ]
             },
             // layout: 'lightHorizontalLines' // headerLineOnly
-            layout: 'headerLineOnly'
+            // layout: 'headerLineOnly'
+            layout: {
+				fillColor: function (rowIndex, node, columnIndex) {
+					return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
+				}
+            },fontSize: 12,
+            alignment: 'left',
+            margin: [0, 0, 0, 0] // left, top, right, bottom
         }
     ];
 
-
-    const total = [
-
-        {
-            stack: [
-                { text: `--------------------------------------------------------------------------------------------------------------------------------------------------------------------------` },
-            ],
-            fontSize: 12,
-            alignment: 'center',
-            margin: [0, 5, 0, 0] // left, top, right, bottom
-        },
-
-        {
-
-            text: [
-                `TOTAL: ${convertToBrlCurrency(getCurrency(total_sale))}`,
-            ],
-            fontSize: 10,
-            alignment: 'right',
-            bold: true,
-            margin: [2, 2, 2, 2] // left, top, right, bottom
-        }
-    ];
-    const discountLabel = [
-        {
-
-            text: [
-                `DESCONTO: ${convertToBrlCurrency(getCurrency(discount))}`,
-            ],
-            fontSize: 10,
-            alignment: 'right',
-            color: 'red',
-            bold: true,
-            margin: [2, 2, 2, 2] // left, top, right, bottom
-        }
-    ];
-    const totalPaied = [
-        {
-
-            text: [
-                `TOTAL PAGO: ${convertToBrlCurrency(getCurrency(total_sale - discount))}`,
-            ],
-            alignment: 'right',
-            fontSize: 12,
-            bold: true,
-            margin: [2, 2, 2, 2] // left, top, right, bottom
-        }
-    ];
 
     function footer(currentPage, pageCount) {
         return [
@@ -232,49 +118,13 @@ async function salesPDF({ id, created_at, updated_at, type_sale, paied = null, t
         ]
     }
 
-    const lbObs = [
-
-        {
-            stack: [
-                { text: `Vendedor.: ${user ? user.id +' - ' + user.name : ''}` },
-                { text: `Obs.: ${obs ? obs : ''}` },
-            ],
-            fontSize: 10,
-            alignment: 'left',
-            margin: [0, discount > 0 ? -45 : -13, 200, 10] // left, top, right, bottom
-        }
-    ];
-
-    const lbSingn = [
-
-        {
-            stack: [
-                { text: `------------------------------------------------------------------------` },
-            ],
-            fontSize: 10,
-            alignment: 'center',
-            margin: [0, 0, 0, 0] // left, top, right, bottom
-        },
-
-        {
-
-            text: [
-                `COMPRADOR / RECEBEDOR`,
-            ],
-            fontSize: 10,
-            alignment: 'center',
-            margin: [0, 0, 0, 0]  // left, top, right, bottom
-        }
-    ];
-
     const definitions = {
         pageSize: 'A4',
         pageOrientation: 'portrait',
         pageMargins: [15, 50, 15, 40],
         header: [logo],
-        content: [company, name, type, details, total, discount > 0 ? [discountLabel, totalPaied] : '', lbObs, lbSingn
-        ],
-        // footer: footer
+        content: [company, data],
+        footer: footer
     };
 
     pdfMake.createPdf(definitions).print();

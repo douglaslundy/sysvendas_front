@@ -9,6 +9,9 @@ const Provisoria = () => {
       <h2>#Inserido vendedor, no momento da venda, e na nota!</h2>
       <h4>... 04/06/2023</h4> 
 
+      <h4>#Criado botão para impressão de vendas por data!</h4>
+      <h6>... 04/06/2023</h6> 
+
       <h4>#Criado cadastro de endereço!</h4>
       <h6>... 21/05/2023</h6> 
 

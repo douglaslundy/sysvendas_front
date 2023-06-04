@@ -23,7 +23,7 @@ import Receipt from "../modal/budgetReceipt";
 import { getAllBudgets } from "../../store/fetchActions/budget";
 import { turnModal, turnModalGetSale } from "../../store/ducks/Layout";
 import { showBudget } from "../../store/ducks/budget";
-import salesPDF from "../../reports/sales";
+import salePDF from "../../reports/sale";
 import BasicDatePicker from "../inputs/datePicker";
 import { convertToBrlCurrency, getCurrency } from "../helpers/formatt/currency";
 import { parseISO, format } from 'date-fns';
@@ -243,7 +243,7 @@ export default () => {
                                                         <FeatherIcon icon="eye" width="20" height="20" />
                                                     </Button>
 
-                                                    <Button title="Imprimir venda" onClick={() => salesPDF(budget)} color="error" size="medium" variant="contained">
+                                                    <Button title="Imprimir venda" onClick={() => salePDF(budget)} color="secondary" size="medium" variant="contained">
                                                         <FeatherIcon icon="printer" width="20" height="20" />
                                                     </Button>
 

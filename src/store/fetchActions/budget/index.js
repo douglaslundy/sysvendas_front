@@ -4,7 +4,7 @@ import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
 import { addBudgets, addBudgetsPerClient, removeBudget } from "../../ducks/budget";
 import { turnAlert, addAlertMessage, turnLoading, turnModalGetBudgets, changeTitleAlert, addMessage } from "../../ducks/Layout";
-import salesPDF from "../../../reports/sales";
+import salePDF from "../../../reports/sale";
 
 import { valueDecrescidFromPercent } from '../../../components/helpers/functions/percent';
 
@@ -30,7 +30,7 @@ export const addBudget = (budget, cleanForm) => {
                 dispatch(turnLoading()),
                 dispatch(cleanProductsCart()),
                 cleanForm(),
-                salesPDF(...res.data.budget)
+                salePDF(...res.data.budget)
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
@@ -121,7 +121,7 @@ export const changeBudgetToSale = (sale, cleanForm) => {
                 dispatch(turnAlert()),
                 dispatch(turnLoading()),
                 cleanForm(),
-                salesPDF(...res.data.sale)
+                salePDF(...res.data.sale)
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
