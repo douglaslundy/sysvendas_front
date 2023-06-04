@@ -13,9 +13,13 @@ export default function index(props) {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
   const loading = open && options.length === 0;
+  const { label, name, setProduct, products, wd } = props;
 
   useEffect(() => {
     let active = true;
+
+    // treço teste afim de solucionar o bug que da quando e selecionado o mesmo valor no select que foi selecionado a ultima vez
+    setProduct({})
 
     if (!loading) {
       return undefined;
@@ -41,7 +45,6 @@ export default function index(props) {
     }
   }, [open]);
 
-  const { label, name, setProduct, products, wd } = props;
   // const [selectedId, setSelectedId] = useState(0);
 
   const getProduct = (id) => {

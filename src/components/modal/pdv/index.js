@@ -22,6 +22,7 @@ import {
 import BaseCard from "../../baseCard/BaseCard";
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
 import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
+import { getAllUsers } from '../../../store/fetchActions/user';
 
 
 const style = {
@@ -48,13 +49,16 @@ export default function PdvModal(props) {
     });
 
     const { clients } = useSelector(state => state.clients);
+    const { users } = useSelector(state => state.users);
     const [client, setClient] = useState([]);
+    const [user, setUser] = useState([]);
 
     const { isOpenModal, isOpenAlert } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
     const [formSale, setFormSale] = useState({
         id_client: null,
+        id_user: null,
         pay_value: 0,
         paied: "yes",
         check: 0,
@@ -74,6 +78,7 @@ export default function PdvModal(props) {
         setFormSale({
             ...formSale,
             id_client: null,
+            id_user: null,
             pay_value: 0,
             paied: "yes",
             check: 0,
@@ -111,18 +116,24 @@ export default function PdvModal(props) {
 
     useEffect(() => {
         dispatch(getAllClients());
+        dispatch(getAllUsers());
     }, []);
 
-    useEffect(() => {
-        setFormSale({ ...formSale, id_client: client?.id });
-    }, [client]);
 
     useEffect(() => {
         setFormSale({ ...formSale, ...props.formSale })
     }, [props.formSale]);
 
     useEffect(() => {
-        setFormSale({ ...formSale, id_client: null });
+        setFormSale({ ...formSale, id_user: user?.id });
+    }, [user]);
+
+    useEffect(() => {
+        setFormSale({ ...formSale, id_client: client?.id });
+    }, [client]);
+
+    useEffect(() => {
+        setFormSale({ ...formSale, id_client: null, id_user: null });
     }, [isOpenModal]);
 
     const getTotalToPay = () => {
@@ -176,14 +187,27 @@ export default function PdvModal(props) {
                                 }}
                                 >
                                     {isOpenModal == true &&
-                                        <InputSelectClient
-                                            label="Selecione o cliente"
-                                            name="client"
-                                            clients={clients}
-                                            setClient={setClient}
-                                            wd={"90%"}
-                                        />
+                                        <>
+                                            <InputSelectClient
+                                                id="sailor"
+                                                label="Selecione o vendedor"
+                                                name="user"
+                                                clients={users}
+                                                setClient={setUser}
+                                                wd={"90%"}
+                                            />
+
+                                            <InputSelectClient
+                                                id="client"
+                                                label="Selecione o cliente"
+                                                name="client"
+                                                clients={clients}
+                                                setClient={setClient}
+                                                wd={"90%"}
+                                            />
+                                        </>
                                     }
+
                                     {type_sale !== 'on_term' && type_sale !== 'budget' &&
                                         <Percent
                                             value={discount}

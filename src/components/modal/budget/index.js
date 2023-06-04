@@ -24,6 +24,7 @@ import BaseCard from "../../baseCard/BaseCard";
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
 import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
 import { showBudget } from '../../../store/ducks/budget';
+import { getAllUsers } from '../../../store/fetchActions/user';
 
 
 const style = {
@@ -53,10 +54,14 @@ export default function BudgetModal(props) {
     const { budget } = useSelector(state => state.budgets);
     const [client, setClient] = useState([]);
 
+    const { users } = useSelector(state => state.users);
+    const [user, setUser] = useState([]);
+
     const { isOpenModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
     const [formSale, setFormSale] = useState({
+        id_user: null,
         id_budget: budget.id ? budget.id : null,
         total_sale: budget.total_sale ? getCurrency(budget.total_sale) : null,
         id_client: null,
@@ -96,6 +101,7 @@ export default function BudgetModal(props) {
             ...formSale,
             id_budget: null,
             id_client: null,
+            id_user: null,
             pay_value: 0,
             paied: "yes",
             check: 0,
@@ -120,18 +126,23 @@ export default function BudgetModal(props) {
     const changePayValue = ({ target }) => {
         setFormSale({ ...formSale, pay_value: target.value, [id_pay_metod]: target.value });
     };
-    
+
     const getTotalToPay = () => {
         return convertToBrlCurrency(valueDecrescidFromPercent(total_sale, discount));
     }
 
     useEffect(() => {
         dispatch(getAllClients());
+        dispatch(getAllUsers());
     }, []);
 
     useEffect(() => {
         setFormSale({ ...formSale, id_client: client?.id });
     }, [client]);
+
+    useEffect(() => {
+        setFormSale({ ...formSale, id_user: user?.id });
+    }, [user]);
 
     useEffect(() => {
         setFormSale({ ...formSale, ...props.formSale })
@@ -205,15 +216,29 @@ export default function BudgetModal(props) {
 
 
                                     {isOpenModal == true &&
-                                        <InputSelectClient
-                                            label="Selecione o cliente"
-                                            value={budget.client}
-                                            name="client"
-                                            clients={clients}
-                                            setClient={setClient}
-                                            wd={"90%"}
-                                        />
+                                        <>
+                                            <InputSelectClient
+                                                id="sailor"
+                                                label="Selecione o vendedor"
+                                                name="user"
+                                                value={budget.user}
+                                                clients={users}
+                                                setClient={setUser}
+                                                wd={"90%"}
+                                            />
+
+                                            <InputSelectClient
+                                                id="client"
+                                                label="Selecione o cliente"
+                                                name="client"
+                                                value={budget.client}
+                                                clients={clients}
+                                                setClient={setClient}
+                                                wd={"90%"}
+                                            />
+                                        </>
                                     }
+
                                     {type_sale !== 'on_term' && type_sale !== 'budget' &&
                                         <Percent
                                             value={discount}

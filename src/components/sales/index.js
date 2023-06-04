@@ -174,7 +174,7 @@ export default () => {
                 <FeatherIcon icon="search" width="45" height="45" />
             </Button>
 
-            <Button title="Resetar Busca por data(s)" onClick={resetGetSales} disabled={!dateBegin} sx={{ml: 2}} color="primary" size="medium" variant="contained">
+            <Button title="Resetar Busca por data(s)" onClick={resetGetSales} sx={{ml: 2}} color="primary" size="medium" variant="contained">
                 <FeatherIcon icon="refresh-cw" width="45" height="45" />
             </Button>
 
@@ -234,7 +234,7 @@ export default () => {
                                     Cliente
                                 </Typography>
                                 <Typography color="textSecondary" variant="h6">
-                                    CPF / CNPJ
+                                    Vendedor
                                 </Typography>
                             </TableCell>
 
@@ -321,7 +321,7 @@ export default () => {
                                                                 fontSize: "13px",
                                                             }}
                                                         >
-                                                            {sale.client && sale.client.cpf_cnpj && sale.client.cpf_cnpj}
+                                                            {sale.user && sale.user.id + ' - ' + sale.user.name.substring(0, 30).toUpperCase()}
                                                         </Typography>
                                                     </Box>
                                                 </Box>

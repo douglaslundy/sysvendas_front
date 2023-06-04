@@ -7,7 +7,7 @@ import { turnAlert, addAlertMessage, turnLoading, turnModalGetPendingSales, turn
 import { getAllClients } from "../client";
 import salesPDF from "../../../reports/sales";
 
-import { parseISO, format, setDate } from 'date-fns';
+import { format } from 'date-fns';
 
 import { valueDecrescidFromPercent } from '../../../components/helpers/functions/percent';
 
@@ -19,6 +19,7 @@ export const addSale = (sale, cleanForm) => {
 
         sale = {
             ...sale,
+            id_seller: sale.id_user ? sale.id_user : null,
             id_user: user,
             check: setCurrency(sale.check),
             card: setCurrency(sale.card),
@@ -95,8 +96,6 @@ export const getAllSalesPerDate = (dateBegin, dateEnd) => {
     //     "date_begin": dateBegin,
     //     "date_end": dateEnd
     // }
-
-    console.log(JSON.stringify(form.date_begin))
 
     const config = {
         transformResponse: [function (data) {

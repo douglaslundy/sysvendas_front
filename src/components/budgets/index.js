@@ -125,7 +125,7 @@ export default () => {
 
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Cliente / CPF / CNPJ
+                                    Cliente / Vendedor
                                 </Typography>
                             </TableCell>
 
@@ -202,7 +202,7 @@ export default () => {
                                                                 fontSize: "13px",
                                                             }}
                                                         >
-                                                            {budget.client && budget.client.cpf_cnpj && budget.client.cpf_cnpj}
+                                                            {budget.user && budget.user.id + ' - ' + budget.user.name.substring(0, 30).toUpperCase()}
                                                         </Typography>
                                                     </Box>
                                                 </Box>

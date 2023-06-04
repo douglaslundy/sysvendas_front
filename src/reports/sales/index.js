@@ -3,7 +3,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { convertToBrlCurrency, getCurrency } from '../../components/helpers/formatt/currency';
 import { parseISO, format } from 'date-fns';
 
-async function salesPDF({ id, created_at, updated_at, type_sale, paied = null, total_sale = null, client, itens, discount = null, obs }) {
+async function salesPDF({ id, created_at, updated_at, type_sale, paied = null, total_sale = null, client, itens, discount = null, obs, user }) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
     const loadImage = async (url) => {
@@ -236,6 +236,7 @@ async function salesPDF({ id, created_at, updated_at, type_sale, paied = null, t
 
         {
             stack: [
+                { text: `Vendedor.: ${user ? user.id +' - ' + user.name : ''}` },
                 { text: `Obs.: ${obs ? obs : ''}` },
             ],
             fontSize: 10,

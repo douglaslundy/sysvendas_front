@@ -15,6 +15,7 @@ export const addBudget = (budget, cleanForm) => {
         dispatch(turnLoading());
 
         budget = {
+            id_seller: budget.id_user ? budget.id_user : null,
             id_user: user,
             id_client: budget.id_client,
             total_sale: setCurrency(budget.total_sale),
@@ -96,12 +97,12 @@ export const getAllBudgetsPerClient = (client) => {
 }
 
 export const changeBudgetToSale = (sale, cleanForm) => {
-const { 'sysvendas.id': user } = parseCookies();
+    const { 'sysvendas.id': user } = parseCookies();
     return (dispatch) => {
         dispatch(turnLoading());
-        // console.log(JSON.stringify(sale))
-        
+
         sale = {
+            id_seller: sale.id_user ? sale.id_user : null,
             ...sale,
             id_user: user,
             check: setCurrency(sale.check),
@@ -111,11 +112,10 @@ const { 'sysvendas.id': user } = parseCookies();
             total_sale: setCurrency(sale.total_sale),
             discount: setCurrency(sale.total_sale) - (setCurrency(valueDecrescidFromPercent(sale.total_sale, sale.discount)) / 100)
         };
-        // console.log("Valor tratado e" + JSON.stringify({...sale}))
 
         api.post('/sales/changeBudgetToSale', sale)
             .then((res) =>
-            (   
+            (
                 dispatch(removeBudget(sale)),
                 dispatch(addMessage(`Venda realizada com sucesso!`)),
                 dispatch(turnAlert()),
