@@ -30,6 +30,10 @@ export const loginFetch = (dataUser) => {
                     maxAge: 60 * 60 * 72, // 72 hour
                 }),
 
+                setCookie(undefined, 'sysvendas.company_id', res.data.user.company_id, {
+                    maxAge: 60 * 60 * 72, // 72 hour
+                }),
+
 
                 dispatch(turnLoading()),
                 Router.push('/')
@@ -55,6 +59,7 @@ export const logoutFetch = () => {
                 destroyCookie(null, 'sysvendas.token'),
                 destroyCookie(null, 'sysvendas.username'),
                 destroyCookie(null, 'sysvendas.profile'),
+                destroyCookie(null, 'sysvendas.company_id'),
                 Router.push('/login'),
             ))
             .catch((error) => {

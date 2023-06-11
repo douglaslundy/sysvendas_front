@@ -204,6 +204,7 @@ export default function UserModal(props) {
                                     />
 
                                     <TextField
+                                        id="password"
                                         margin="normal"
                                         required
                                         fullWidth
@@ -212,10 +213,10 @@ export default function UserModal(props) {
                                         type="password"
                                         value={password ? password : ''}
                                         onChange={changeItem}
-                                        id="password"
                                     />
 
                                     <TextField
+                                        id="password2"
                                         margin="normal"
                                         required
                                         fullWidth
@@ -224,7 +225,6 @@ export default function UserModal(props) {
                                         type="password"
                                         value={password2 ? password2 : ''}
                                         onChange={changeItem}
-                                        id="password2"
                                     />
 
                                 </Stack>

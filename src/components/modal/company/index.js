@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import AlertModal from '../../messagesModal'
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import Phone from '../../inputs/textFields/phone';
-import Currency from '../../inputs/textFields/currency';
 import CpfCnpj from '../../inputs/textFields/cpfCnpj';
+import Phone from '../../inputs/textFields/phone';
 
 import {
     Grid,
@@ -13,13 +12,17 @@ import {
     TextField,
     Alert,
     Button,
+    InputLabel,
+    Select,
+    MenuItem,
+    FormControl
 } from "@mui/material";
 
 import BaseCard from "../../baseCard/BaseCard";
 
-import { showClient } from '../../../store/ducks/clients';
-import { editClientFetch, addClientFetch } from '../../../store/fetchActions/client';
-import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
+import { showCompany } from '../../../store/ducks/companies';
+import { editCompanyFetch } from '../../../store/fetchActions/company';
+import { turnCompanyModal, changeTitleAlert, addAlertMessage } from '../../../store/ducks/Layout';
 
 
 const style = {
@@ -36,33 +39,35 @@ const style = {
     overflow: "scroll",
 };
 
-export default function ClientModal(props) {
-
+export default function CompanyModal(props) {
 
     const [form, setForm] = useState({
-        full_name: "",
-        surname: "",
-        email: "",
-        cpf_cnpj: "",
-        phone: "",
-        im: "",
-        ie: "",
         fantasy_name: "",
-        obs: "",
-        limit: "",
+        corporate_name: "",
+        email: "",
+        cnpj: "",
+        ie: "",
+        im: "",
+        balance: "",
         zip_code: "",
         city: "",
         street: "",
         number: "",
-        district: "",
-        complement: ""
+        complement: "",
+        neighborhood: "",
+        phone: "",
+        validity_date: "",
+        active: "",
+        marked: "",
+        password: "",
+        password2: "",
     });
 
-    const { client } = useSelector(state => state.clients);
-    const { isOpenModal } = useSelector(state => state.layout);
+    const { company } = useSelector(state => state.companies);
+    const { isOpenCompanyModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
-    const { full_name, surname, cpf_cnpj, email, phone, im, ie, fantasy_name, obs, limit, zip_code, city, street, number, district, complement } = form;
+    const { fantasy_name, corporate_name, email, cnpj, ie, im, balance, zip_code, city, street, number, complement, neighborhood, phone, active, marked, password, password2 } = form;
     const [texto, setTexto] = useState();
 
     const changeItem = ({ target }) => {
@@ -71,41 +76,43 @@ export default function ClientModal(props) {
 
     const cleanForm = () => {
         setForm({
-            full_name: "",
-            surname: "",
-            email: "",
-            cpf_cnpj: "",
-            phone: "",
-            im: "",
-            ie: "",
             fantasy_name: "",
-            obs: "",
-            limit: "",
+            corporate_name: "",
+            email: "",
+            cnpj: "",
+            ie: "",
+            im: "",
+            balance: "",
             zip_code: "",
             city: "",
             street: "",
             number: "",
-            district: "",
-            complement: ""
+            complement: "",
+            neighborhood: "",
+            phone: "",
+            validity_date: "",
+            active: "",
+            marked: "",
+            password: "",
+            password2: "",
         });
         setTexto('');
-        dispatch(turnModal());
-        dispatch(showClient({}));
+        dispatch(turnCompanyModal());
+        dispatch(showCompany({}));
     }
 
 
     const handleSaveData = async () => {
-        client && client.id ? handlePutData() : handlePostData()
+        password && password !== password2 ? dispatch(addAlertMessage("As senhas precisam ser iguais")) : handlePutData()
     }
 
-    const handlePostData = async () => {
-        dispatch(changeTitleAlert(`O cliente ${form.full_name} foi Cadastrado com sucesso!`));
-        dispatch(addClientFetch(form, cleanForm));
-    };
-
     const handlePutData = async () => {
-        dispatch(changeTitleAlert(`O cliente ${form.full_name} foi atualizado com sucesso!`));
-        dispatch(editClientFetch(form, cleanForm));
+
+        if (password && password !== password2)
+            alert("erro")
+
+        dispatch(changeTitleAlert(`Os dados da empresa foram atualizados com sucesso!`));
+        dispatch(editCompanyFetch(form, cleanForm));
     };
 
     const handleClose = () => {
@@ -113,18 +120,17 @@ export default function ClientModal(props) {
     };
 
     useEffect(() => {
+        if (company && company.cnpj)
+            setForm(company);
 
-        if (client && client.id)
-            setForm(client);
-
-    }, [client]);
+    }, [company]);
 
     return (
         <div>
             {props.children}
             <Modal
                 keepMounted
-                open={isOpenModal}
+                open={isOpenCompanyModal}
                 onClose={handleClose}
                 aria-labelledby="keep-mounted-modal-title"
                 aria-describedby="keep-mounted-modal-description"
@@ -135,7 +141,7 @@ export default function ClientModal(props) {
 
                     <Grid container spacing={0}>
                         <Grid item xs={12} lg={12}>
-                            <BaseCard title={client && client.id ? "Editar Cliente" : "Cadastrar Cliente"}>
+                            <BaseCard title={company && company.cnpj ? "Editar dados da Empresa" : "Erro ao resgatar dados da empresa"}>
                                 {texto &&
                                     <Alert variant="filled" severity="warning">
                                         {texto}
@@ -146,41 +152,13 @@ export default function ClientModal(props) {
 
                                 {/* <FormGroup > */}
                                 <Stack spacing={3}>
+
                                     <TextField
-                                        id="full_name"
-                                        label={full_name && full_name.length > 0 ? `Nome Completo: ${100 - full_name.length} caracteres restantes` : 'Nome Completo'}
+                                        id="company_fantasy_name"
+                                        label={fantasy_name && fantasy_name.length > 0 ? `Nome Fantasia: ${100 - fantasy_name.length} caracteres restantes` : 'Nome Fantasia'}
                                         variant="outlined"
-                                        name="full_name"
-                                        value={full_name ? full_name : ''}
-                                        onChange={changeItem}
-                                        required
-                                        inputProps={{
-                                            style: {
-                                                textTransform: "uppercase"
-                                            },
-                                            maxLength: 100
-                                        }}
-                                    />
-                                    <TextField
-                                        id="surname"
-                                        label={surname && surname.length > 0 ? `Apelido: ${50 - surname.length} caracteres restantes` : 'Apelido'}
-                                        variant="outlined"
-                                        name="surname"
-                                        value={surname ? surname : ''}
-                                        onChange={changeItem}
-                                        inputProps={{
-                                            style: {
-                                                textTransform: "uppercase"
-                                            },
-                                            maxLength: 50
-                                        }}
-                                    />
-                                    <TextField
-                                        label={email && email.length > 0 ? `@Email: ${100 - email.length} caracteres restantes` : '@Email'}
-                                        variant="outlined"
-                                        type="email"
-                                        name="email"
-                                        value={email ? email : ''}
+                                        name="fantasy_name"
+                                        value={fantasy_name ? fantasy_name : ''}
                                         onChange={changeItem}
                                         required
                                         inputProps={{
@@ -191,12 +169,72 @@ export default function ClientModal(props) {
                                         }}
                                     />
 
-                                    <CpfCnpj
-                                        value={cpf_cnpj}
-                                        label={'CPF / CNPJ'}
-                                        name={'cpf_cnpj'}
-                                        required={'required'}
+                                    <TextField
+                                        id="company_corporate_name"
+                                        label={corporate_name && corporate_name.length > 0 ? `Razão Social: ${100 - fantasy_name.length} caracteres restantes` : 'Razão Social'}
+                                        variant="outlined"
+                                        name="corporate_name"
+                                        value={corporate_name ? corporate_name : ''}
+                                        onChange={changeItem}
+                                        required
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                            maxLength: 100
+                                        }}
+                                    />
+                                    <TextField
+                                        id="company_email"
+                                        label={email && email.length > 0 ? `@Email: ${100 - email.length} caracteres restantes` : '@Email'}
+                                        variant="outlined"
+                                        type="email"
+                                        name="email"
+                                        value={email ? email : ''}
+                                        onChange={changeItem}
+                                        required
+                                        inputProps={{
+                                            maxLength: 100
+                                        }}
+                                    />
+
+                                    <CpfCnpj value={cnpj ? cnpj : ''}
+                                        label={'CNPJ'}
+                                        name={'cnpj'}
                                         changeItem={changeItem}
+                                        disabled={company && company.cnpj ? true : false}
+                                    />
+
+                                    <TextField
+                                        id="company_ie"
+                                        label={ie && ie.length > 0 ? `Inscrição Estadual: ${18 - ie.length} caracteres restantes` : 'Inscrição Estadual'}
+                                        variant="outlined"
+                                        name="ie"
+                                        value={ie ? ie : ''}
+                                        onChange={changeItem}
+                                        required
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                            maxLength: 18
+                                        }}
+                                    />
+
+                                    <TextField
+                                        id="company_im"
+                                        label={im && im.length > 0 ? `Inscrição Municipal: ${18 - im.length} caracteres restantes` : 'Inscrição Municipal'}
+                                        variant="outlined"
+                                        name="im"
+                                        value={im ? im : ''}
+                                        onChange={changeItem}
+                                        required
+                                        inputProps={{
+                                            style: {
+                                                textTransform: "uppercase"
+                                            },
+                                            maxLength: 20
+                                        }}
                                     />
 
                                     <Phone value={phone}
@@ -214,7 +252,7 @@ export default function ClientModal(props) {
                                     >
 
                                         <TextField
-                                            id="zip_code"
+                                            id="company_zip_code"
                                             label={zip_code && zip_code.length > 0 ? `CEP: ${10 - zip_code.length} caracteres restantes` : 'CEP'}
                                             variant="outlined"
                                             name="zip_code"
@@ -229,7 +267,7 @@ export default function ClientModal(props) {
                                             }}
                                         />
                                         <TextField
-                                            id="street" label={street && street.length > 0 ? `Rua: ${100 - street.length} caracteres restantes` : 'Rua'}
+                                            id="company_street" label={street && street.length > 0 ? `Rua: ${100 - street.length} caracteres restantes` : 'Rua'}
                                             variant="outlined"
                                             name="street"
                                             value={street ? street : ''}
@@ -243,7 +281,7 @@ export default function ClientModal(props) {
                                             }}
                                         />
                                         <TextField
-                                            id="number" label={number && number.length > 0 ? `Nº: ${6 - number.length} caracteres restantes` : 'Nº'}
+                                            id="company_number" label={number && number.length > 0 ? `Nº: ${6 - number.length} caracteres restantes` : 'Nº'}
                                             variant="outlined"
                                             name="number"
                                             value={number ? number : ''}
@@ -253,7 +291,7 @@ export default function ClientModal(props) {
                                                 style: {
                                                     textTransform: "uppercase"
                                                 },
-                                                maxLength: 6
+                                                maxLength: 10
                                             }}
                                         />
                                     </Box>
@@ -266,7 +304,7 @@ export default function ClientModal(props) {
                                     >
 
                                         <TextField
-                                            id="complement"
+                                            id="company_complement"
                                             label={complement && complement.length > 0 ? `Complemento: ${50 - complement.length} caracteres restantes` : 'Complemento'}
                                             variant="outlined"
                                             name="complement"
@@ -281,11 +319,11 @@ export default function ClientModal(props) {
                                             }}
                                         />
                                         <TextField
-                                            id="district"
-                                            label={district && district.length > 0 ? `Bairro: ${100 - district.length} caracteres restantes` : 'Bairro'}
+                                            id="company_district"
+                                            label={neighborhood && neighborhood.length > 0 ? `Bairro: ${100 - neighborhood.length} caracteres restantes` : 'Bairro'}
                                             variant="outlined"
-                                            name="district"
-                                            value={district ? district : ''}
+                                            name="neighborhood"
+                                            value={neighborhood ? neighborhood : ''}
                                             onChange={changeItem}
                                             sx={{ width: '36%', mr: 2 }}
                                             inputProps={{
@@ -296,7 +334,7 @@ export default function ClientModal(props) {
                                             }}
                                         />
                                         <TextField
-                                            id="city"
+                                            id="company_city"
                                             label={city && city.length > 0 ? `Cidade: ${30 - city.length} caracteres restantes` : 'Cidade'}
                                             variant="outlined"
                                             name="city"
@@ -311,64 +349,35 @@ export default function ClientModal(props) {
                                             }}
                                         />
                                     </Box>
-                                    {/* <TextField
-                                        id="im"
-                                        label="Inscrição Municipal"
-                                        variant="outlined"
-                                        name="im"
-                                        value={im ? im : ''}
-                                        onChange={changeItem}
-                                    />
-                                    <TextField
-                                        id="ie"
-                                        label="Inscrição Estadual"
-                                        variant="outlined"
-                                        name="ie"
-                                        value={ie ? ie : ''}
-                                        onChange={changeItem}
-                                    /> */}
 
                                     <TextField
-                                        id="fantasy_name"
-                                        label={fantasy_name && fantasy_name.length > 0 ? `Nome Fantasia: ${50 - fantasy_name.length} caracteres restantes` : 'Nome Fantasia'}
-                                        variant="outlined"
-                                        name="fantasy_name"
-                                        value={fantasy_name ? fantasy_name : ''}
+                                        id="company_password"
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="password"
+                                        label="Senha"
+                                        type="password"
+                                        value={password ? password : ''}
                                         onChange={changeItem}
-                                        inputProps={{
-                                            style: {
-                                                textTransform: "uppercase"
-                                            },
-                                            maxLength: 50
-                                        }}
-                                    />
-
-                                    <Currency
-                                        id="limit"
-                                        value={limit}
-                                        label={'Limite'}
-                                        name={'limit'}
-                                        changeItem={changeItem}
                                     />
 
                                     <TextField
-                                        id="obs"
-                                        label={obs && obs.length > 0 ? `OBS: ${500 - obs.length} caracteres restantes` : 'OBS'}
-                                        multiline
-                                        rows={4}
-                                        value={obs ? obs : ''}
-                                        name="obs"
+                                        id="company_password2"
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="password2"
+                                        label="Repita a Senha"
+                                        type="password"
+                                        value={password2 ? password2 : ''}
                                         onChange={changeItem}
-                                        inputProps={{
-                                            style: {
-                                                textTransform: "uppercase"
-                                            },
-                                            maxLength: 500
-                                        }}
                                     />
+
                                 </Stack>
                                 {/* </FormGroup> */}
                                 <br />
+                                {texto}
                                 <Box sx={{ "& button": { mx: 1 } }}>
                                     <Button onClick={handleSaveData} variant="contained" mt={2}>
                                         Gravar
@@ -384,6 +393,6 @@ export default function ClientModal(props) {
 
                 </Box>
             </Modal>
-        </div>
+        </div >
     );
 }

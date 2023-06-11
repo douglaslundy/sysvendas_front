@@ -17,8 +17,11 @@ import { useDispatch } from "react-redux";
 import { AuthContext } from "../../contexts/AuthContext";
 import { logoutFetch } from "../../store/fetchActions/auth";
 import UserModal from "../../components/modal/user";
+import CompanyModal from "../../components/modal/company";
 import { turnUserModal } from "../../store/ducks/Layout";
+import { turnCompanyModal } from "../../store/ducks/Layout";
 import { getUserFetch } from "../../store/fetchActions/user";
+import { getCompanyFetch } from "../../store/fetchActions/company";
 
 function logout(dispatch) {
   dispatch(logoutFetch());
@@ -39,15 +42,22 @@ const ProfileDD = () => {
 
   const { username } = useContext(AuthContext);
   const { user } = useContext(AuthContext);
+  const { company } = useContext(AuthContext);
   
   const HandleEditUser = async user => {
     dispatch(getUserFetch(user));
     dispatch(turnUserModal());
 }
 
+  const HandleEditCompany = async company => {
+    dispatch(getCompanyFetch(company));
+    dispatch(turnCompanyModal());
+}
+
   return (
     <>
     <UserModal />
+    <CompanyModal />
       <Button
         aria-label="menu"
         color="inherit"
@@ -108,6 +118,10 @@ const ProfileDD = () => {
         <Box>
           <ListItemButton>
             <ListItemText primary="Meus Dados" onClick={() => HandleEditUser(user)} />
+          </ListItemButton>
+
+          <ListItemButton>
+            <ListItemText primary="Dados da Empresa" onClick={() => HandleEditCompany(company)} />
           </ListItemButton>
 
           <Divider />

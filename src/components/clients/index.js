@@ -97,8 +97,16 @@ export default () => {
     }
 
     const HandleEditClient = async client => {
-        dispatch(showClient(client));
-        dispatch(turnModal());
+
+        setConfirmDialog({
+            ...confirmDialog, isOpen: true, title: `Deseja Editar o cliente ${client.full_name}`, confirm:
+
+                () => (
+                    dispatch(showClient(client)),
+                    dispatch(turnModal())
+                )
+
+        })
     }
 
     const HandleInactiveClient = async client => {
@@ -327,7 +335,8 @@ export default () => {
             </TableContainer>
             <ConfirmDialog
                 confirmDialog={confirmDialog}
-                setConfirmDialog={setConfirmDialog} />
+                setConfirmDialog={setConfirmDialog}
+                isAuthenticated />
 
         </BaseCard >
     );

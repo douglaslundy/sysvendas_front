@@ -6,6 +6,7 @@ const INITIAL_STATE = {
     isOpenLoading: false,
     isOpenModal: false, 
     isOpenUserModal: false, 
+    isOpenCompanyModal: false, 
     isOpenModalGetPendingSales: false, 
     isOpenModalGetAllSales: false, 
     isOpenModalGetSale: false,
@@ -32,6 +33,8 @@ export const turnObsCartModal = createAction('isOpenObsCartModal');
 export const turnQtdCartModal = createAction('isOpenQtdCartModal');
 
 export const turnUserModal = createAction('IS_OPEN_USER_MODAL');
+
+export const turnCompanyModal = createAction('IS_OPEN_COMPANY_MODAL');
 
 export const turnModalGetPendingSales = createAction('IS_OPEN_MODAL_GET_PENDING_SALES');
 
@@ -61,6 +64,8 @@ export default createReducer(INITIAL_STATE, {
    [turnQtdCartModal.type] : (state, action) => ({...state, isOpenQtdCartModal: ( !state.isOpenQtdCartModal)}),
    
    [turnUserModal.type] : (state, action) => ({...state, isOpenUserModal: ( !state.isOpenUserModal)}),
+
+   [turnCompanyModal.type] : (state, action) => ({...state, isOpenCompanyModal: ( !state.isOpenCompanyModal)}),
    
    [turnModalGetSale.type] : (state, action) => ({...state, isOpenModalGetSale: ( !state.isOpenModalGetSale)}),
    
