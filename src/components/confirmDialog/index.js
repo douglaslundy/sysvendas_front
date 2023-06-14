@@ -68,7 +68,7 @@ export default function ConfirmDialog(props) {
             ?
             confirmAuth(action)
             :
-            setConfirmDialog({ ...confirmDialog, isOpen: false })
+            action()
     }
 
     //função que realiza a validação atraves da senha master, esta função é chamada dentro de onClikConfirm
