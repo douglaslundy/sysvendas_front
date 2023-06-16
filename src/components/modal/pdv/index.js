@@ -45,13 +45,15 @@ export default function PdvModal(props) {
     const [confirmDialog, setConfirmDialog] = useState({
         isOpen: false,
         title: 'Deseja realmente excluir',
-        subTitle: 'Esta ação não poderá ser desfeita',
+        subTitle: 'Esta ação não poderá ser desfeita'
     });
 
     const { clients } = useSelector(state => state.clients);
     const { users } = useSelector(state => state.users);
     const [client, setClient] = useState([]);
     const [user, setUser] = useState([]);
+    const [isTrue, setIsTrue] = useState(false);
+    const [titleIsAuth, setTitleIsAuth] = useState('');
 
     const { isOpenModal, isOpenAlert } = useSelector(state => state.layout);
     const dispatch = useDispatch();
@@ -95,7 +97,15 @@ export default function PdvModal(props) {
         type_sale === 'budget' ? handleSaveBudget() : handleSaveSale()
     }
 
+    const checksIfSellingIsAllowed = (limit = 0, debit = 0, total = 0) => {
+        limit < (debit + total) ? (setIsTrue(true), setTitleIsAuth('Cliente sem limite para esta compra!')) : setIsTrue(false);
+    }
+
     const handleSaveSale = async () => {
+
+        if (type_sale === "on_term")
+            checksIfSellingIsAllowed(setCurrency(client.limit), setCurrency(client.debit_balance), setCurrency(total_sale));
+
         setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja finalizar esta venda?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: addSale(formSale, cleanForm) });
         dispatch(changeTitleAlert(`Venda realizada com sucesso!`));
     };
@@ -115,12 +125,6 @@ export default function PdvModal(props) {
     };
 
     useEffect(() => {
-        dispatch(getAllClients());
-        dispatch(getAllUsers());
-    }, []);
-
-
-    useEffect(() => {
         setFormSale({ ...formSale, ...props.formSale })
     }, [props.formSale]);
 
@@ -129,12 +133,24 @@ export default function PdvModal(props) {
     }, [user]);
 
     useEffect(() => {
+        // console.log(JSON.stringify(client.marked))
         setFormSale({ ...formSale, id_client: client?.id });
     }, [client]);
 
     useEffect(() => {
-        setFormSale({ ...formSale, id_client: null, id_user: null });
+        if (isOpenModal === true) {
+            dispatch(getAllClients());
+            dispatch(getAllUsers());
+            setFormSale({ ...formSale, id_client: null, id_user: null });
+        }
+
+        if (isOpenModal === false) {
+            setIsTrue(false);
+            setClient({})
+        }
+
     }, [isOpenModal]);
+
 
     const getTotalToPay = () => {
         return convertToBrlCurrency(valueDecrescidFromPercent(total_sale, discount));
@@ -260,6 +276,8 @@ export default function PdvModal(props) {
                                 </Box>
                                 <ConfirmDialog
                                     confirmDialog={confirmDialog}
+                                    isAuthenticated={isTrue}
+                                    titleIsAuth={titleIsAuth}
                                     setConfirmDialog={setConfirmDialog} />
                             </BaseCard>
                         </Grid>

@@ -43,7 +43,7 @@ const useStyles = makeStyles(
     ));
 
 export default function ConfirmDialog(props) {
-    const { confirmDialog, setConfirmDialog, isAuthenticated } = props;
+    const { confirmDialog, setConfirmDialog, isAuthenticated, titleIsAuth } = props;
     const [password, setPassword] = useState();
     const [masterPassword, setMasterPassword] = useState();
     const { company } = useContext(AuthContext);
@@ -120,7 +120,7 @@ export default function ConfirmDialog(props) {
             </DialogContent>
 
             {isAuthenticated &&
-                <BaseCard title="Esta ação requer autenticação">
+                <BaseCard title={titleIsAuth ? titleIsAuth : 'Esta ação requer autenticação'}>
                     {text &&
                         <Alert variant="filled" severity="error">
                             {text}

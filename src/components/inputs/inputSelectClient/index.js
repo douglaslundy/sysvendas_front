@@ -41,7 +41,7 @@ export default function index(props) {
     }
   }, [open]);
 
-  const { value, label, name, setClient, clients, wd } = props;
+  const { id, value, label, name, setClient, clients, wd } = props;
   const [selectedId, setSelectedId] = useState(value?.id || 0); // Definir o ID selecionado como o valor padrão
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function index(props) {
 
   return (
     <Autocomplete
-      id="client"
+      id={id}
       value={value}
       sx={wd ? { width: wd } : { width: "85%" }}
       open={open}
