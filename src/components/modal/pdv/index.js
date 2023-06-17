@@ -98,13 +98,20 @@ export default function PdvModal(props) {
     }
 
     const checksIfSellingIsAllowed = (limit = 0, debit = 0, total = 0) => {
-        limit < (debit + total) ? (setIsTrue(true), setTitleIsAuth('Cliente sem limite para esta compra!')) : setIsTrue(false);
+        limit < (debit + total) && (setIsTrue(true), setTitleIsAuth('Cliente sem limite para esta compra!'));
+    }
+
+    const checksIfClientIsMarked = (marked = 0) => {
+        marked && (setIsTrue(true), setTitleIsAuth('Cliente possui restrições!'));
     }
 
     const handleSaveSale = async () => {
 
-        if (type_sale === "on_term")
+        if (type_sale === "on_term") {
             checksIfSellingIsAllowed(setCurrency(client.limit), setCurrency(client.debit_balance), setCurrency(total_sale));
+            checksIfClientIsMarked(client.marked);
+        }
+
 
         setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja finalizar esta venda?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: addSale(formSale, cleanForm) });
         dispatch(changeTitleAlert(`Venda realizada com sucesso!`));
@@ -133,7 +140,7 @@ export default function PdvModal(props) {
     }, [user]);
 
     useEffect(() => {
-        // console.log(JSON.stringify(client.marked))
+        isTrue && setIsTrue(false);
         setFormSale({ ...formSale, id_client: client?.id });
     }, [client]);
 

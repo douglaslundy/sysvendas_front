@@ -6,8 +6,11 @@ const Provisoria = () => {
     <BaseCard title="SysVendas">
       <h1>Novidades...</h1>
 
-      <h2>#Inserido bloqueio de venda para clientes sem limite</h2>
-      <h4>... 16/06/2023</h4> 
+      <h2>#Inserido bloqueio de venda para clientes sem limite ou cliente bloqueado</h2>
+      <h4>... 17/06/2023</h4> 
+
+      <h4>#Inserido componente de bloqueio de cliente em editar cliente</h4>
+      <h6>... 16/06/2023</h6> 
 
       <h4>#Inserido vendedor, no momento da venda, e na nota!</h4>
       <h6>... 04/06/2023</h6> 

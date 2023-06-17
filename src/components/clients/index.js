@@ -190,7 +190,7 @@ export default () => {
 
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Debito
+                                    Debito / Limite
                                 </Typography>
                             </TableCell>
 
@@ -213,6 +213,7 @@ export default () => {
                                                 sx={{
                                                     display: "flex",
                                                     alignItems: "center",
+                                                    color: client.marked ? '#F20F38' : '#000000'
                                                 }}
                                             >
                                                 <Box>
@@ -294,6 +295,7 @@ export default () => {
 
                                         <TableCell>
                                             <Typography variant="h6">{convertToBrlCurrency(client.debit_balance)}</Typography>
+                                            <Typography variant="h6">{convertToBrlCurrency(client.limit)}</Typography>
                                         </TableCell>
 
                                         <TableCell align="center">
@@ -336,7 +338,8 @@ export default () => {
             <ConfirmDialog
                 confirmDialog={confirmDialog}
                 setConfirmDialog={setConfirmDialog}
-                isAuthenticated />
+                isAuthenticated 
+                />
 
         </BaseCard >
     );

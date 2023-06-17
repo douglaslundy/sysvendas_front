@@ -13,6 +13,9 @@ import {
     TextField,
     Alert,
     Button,
+    FormGroup,
+    FormControlLabel,
+    Switch,
 } from "@mui/material";
 
 import BaseCard from "../../baseCard/BaseCard";
@@ -55,14 +58,15 @@ export default function ClientModal(props) {
         street: "",
         number: "",
         district: "",
-        complement: ""
+        complement: "",
+        marked: 0
     });
 
     const { client } = useSelector(state => state.clients);
     const { isOpenModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
 
-    const { full_name, surname, cpf_cnpj, email, phone, im, ie, fantasy_name, obs, limit, zip_code, city, street, number, district, complement } = form;
+    const { full_name, surname, cpf_cnpj, email, phone, im, ie, fantasy_name, obs, limit, zip_code, city, street, number, district, complement, marked } = form;
     const [texto, setTexto] = useState();
 
     const changeItem = ({ target }) => {
@@ -86,13 +90,17 @@ export default function ClientModal(props) {
             street: "",
             number: "",
             district: "",
-            complement: ""
+            complement: "",
+            marked: 0
         });
         setTexto('');
         dispatch(turnModal());
         dispatch(showClient({}));
     }
 
+    const handleisMarked = () => {
+        setForm({...form, marked: !marked})
+    }
 
     const handleSaveData = async () => {
         client && client.id ? handlePutData() : handlePostData()
@@ -145,7 +153,9 @@ export default function ClientModal(props) {
                                 <br />
 
                                 {/* <FormGroup > */}
+
                                 <Stack spacing={3}>
+
                                     <TextField
                                         id="full_name"
                                         label={full_name && full_name.length > 0 ? `Nome Completo: ${100 - full_name.length} caracteres restantes` : 'Nome Completo'}
@@ -351,6 +361,7 @@ export default function ClientModal(props) {
                                         changeItem={changeItem}
                                     />
 
+
                                     <TextField
                                         id="obs"
                                         label={obs && obs.length > 0 ? `OBS: ${500 - obs.length} caracteres restantes` : 'OBS'}
@@ -366,6 +377,19 @@ export default function ClientModal(props) {
                                             maxLength: 500
                                         }}
                                     />
+
+                                    <FormGroup>
+                                        <FormControlLabel
+                                            control={
+                                                <Switch checked={marked}
+                                                    onClick={handleisMarked}
+                                                />}
+
+                                            label={marked ? "Bloqueado" : "Desbloqueado"}
+                                        />
+                                    </FormGroup>
+
+
                                 </Stack>
                                 {/* </FormGroup> */}
                                 <br />
