@@ -177,11 +177,11 @@ export default () => {
                                     Nome / Código - CPF / CNPJ
                                 </Typography>
                             </TableCell>
-                            <TableCell>
+                            {/* <TableCell>
                                 <Typography color="textSecondary" variant="h6">
                                     Endereço
                                 </Typography>
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
                                     Empresa / Telefone
@@ -237,7 +237,7 @@ export default () => {
                                             </Box>
                                         </TableCell>
 
-                                        <TableCell>
+                                        {/* <TableCell>
                                             <Box
                                                 sx={{
                                                     display: "flex",
@@ -263,7 +263,7 @@ export default () => {
                                                     </Typography>
                                                 </Box>
                                             </Box>
-                                        </TableCell>
+                                        </TableCell> */}
 
                                         <TableCell>
                                             <Box
