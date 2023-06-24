@@ -29,6 +29,7 @@ import { changeTitleAlert, turnModal, turnModalGetPendingSales } from "../../sto
 import ConfirmDialog from "../confirmDialog";
 import { convertToBrlCurrency } from "../helpers/formatt/currency";
 import AlertModal from "../messagesModal";
+import Select from '../inputs/selects';
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -130,6 +131,43 @@ export default () => {
         setPage(0);
     };
 
+    const [typeOfClient, setTypeOfClient] = useState(2);
+
+    const typeOfClients = [
+        {
+            'id': 2,
+            'name': 'Todos'
+        },
+        {
+            'id': 0,
+            'name': 'Desbloqueados'
+        },
+        {
+            'id': 1,
+            'name': 'Bloqueados'
+        },
+    ];
+
+    const changeTtypeOfClients = ({target}) => {
+        setTypeOfClient(target.value);
+    }
+
+    useEffect(() => {
+        
+        const filteredClients = clients?.filter((client) => {
+            if(typeOfClient === 0){
+                return client.marked === 0;
+            } else if (typeOfClient === 1){
+                return client.marked === 1;    
+            } else if (typeOfClient === 2){
+                return client;    
+            }
+        });
+        
+        setAllClients(filteredClients);
+
+    }, [typeOfClient])
+
     return (
         <BaseCard title={`Você possui ${allClients.length} Clientes Cadastrados`}>
             <AlertModal />
@@ -139,7 +177,7 @@ export default () => {
                 'justify-content': 'stretch'
             }}>
                 <TextField
-                    sx={{ width: "85%" }}
+                    sx={{ width: "60%" }}
                     label="Pesquisar cliente: código / nome / CPF ou CNPJ"
                     name="search"
                     autoComplete="off"
@@ -147,12 +185,14 @@ export default () => {
                     onChange={searchClients}
                 />
 
-                {client &&
-                    <>
-                        <PendingSalesPerClient />
-                        <AllSalesPerClient />
-                    </>
-                }
+                <Select
+                    label="Filtrar"
+                    name="typeOfClient"
+                    value={typeOfClient}
+                    store={typeOfClients}
+                    changeItem={changeTtypeOfClients}
+                    wd={"25%"}
+                />
 
                 <ClientModal>
                     <Fab onClick={() => { dispatch(turnModal()) }} color="primary" aria-label="add">
@@ -160,6 +200,14 @@ export default () => {
                     </Fab>
                 </ClientModal>
             </Box>
+
+            {client &&
+                <>
+                    <PendingSalesPerClient />
+                    <AllSalesPerClient />
+                </>
+            }
+
 
             <TableContainer>
 
@@ -338,8 +386,8 @@ export default () => {
             <ConfirmDialog
                 confirmDialog={confirmDialog}
                 setConfirmDialog={setConfirmDialog}
-                isAuthenticated 
-                />
+                isAuthenticated
+            />
 
         </BaseCard >
     );
