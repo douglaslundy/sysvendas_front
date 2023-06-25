@@ -53,40 +53,6 @@ export default () => {
     const [searchValue, setSearchValue] = useState("");
     const [allClients, setAllClients] = useState(clients);
 
-    useEffect(() => {
-        dispatch(getAllClients());
-    }, []);
-
-    useEffect(() => {
-        // setAllClients(searchValue ? [...clients.filter(cli => cli.full_name.toLowerCase().indexOf(searchValue) > -1)] : clients);
-        setAllClients(searchValue ? [...clients.filter(cli => cli.full_name.toString().includes(searchValue.toString()))] : clients);
-    }, [clients]);
-
-    useEffect(() => {
-        const removeAccents = str => {
-            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        };
-
-        const filteredClients = clients.filter(cli => {
-            const search = removeAccents(searchValue.toString().trim().toLowerCase());
-
-            if (!search) {
-                return true; // Retorna todos os clientes se nenhum termo de pesquisa for fornecido
-            }
-
-            const fullName = removeAccents(cli.full_name.toString().trim().toLowerCase());
-            const idMatch = cli.id.toString() === search;
-            const cpfMatch = cli.cpf_cnpj && cli.cpf_cnpj.toString() === search; // Nova condição para pesquisa por CPF
-            const fullNameMatch = fullName.includes(search);
-
-            return idMatch || cpfMatch || fullNameMatch; // Inclui a pesquisa por CPF na condição de retorno
-        });
-
-        setAllClients(filteredClients);
-    }, [searchValue]);
-
-
-
     const HandleGetSales = async client => {
         dispatch(getAllSalesPerClient(client, 'no'));
         dispatch(showClient(client));
@@ -153,6 +119,38 @@ export default () => {
     }
 
     useEffect(() => {
+        dispatch(getAllClients());
+    }, []);
+
+    useEffect(() => {        
+        setAllClients(searchValue ? [...clients.filter(cli => cli.full_name.toString().includes(searchValue.toString()))] : clients);
+        setTypeOfClient(2);
+    }, [clients]);
+
+    useEffect(() => {
+        const removeAccents = str => {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        };
+
+        const filteredClients = clients.filter(cli => {
+            const search = removeAccents(searchValue.toString().trim().toLowerCase());
+
+            if (!search) {
+                return true; // Retorna todos os clientes se nenhum termo de pesquisa for fornecido
+            }
+
+            const fullName = removeAccents(cli.full_name.toString().trim().toLowerCase());
+            const idMatch = cli.id.toString() === search;
+            const cpfMatch = cli.cpf_cnpj && cli.cpf_cnpj.toString() === search; // Nova condição para pesquisa por CPF
+            const fullNameMatch = fullName.includes(search);
+
+            return idMatch || cpfMatch || fullNameMatch; // Inclui a pesquisa por CPF na condição de retorno
+        });
+
+        setAllClients(filteredClients);
+    }, [searchValue]);
+
+    useEffect(() => {
         
         const filteredClients = clients?.filter((client) => {
             if(typeOfClient === 0){
@@ -167,6 +165,7 @@ export default () => {
         setAllClients(filteredClients);
 
     }, [typeOfClient])
+
 
     return (
         <BaseCard title={`Você possui ${allClients.length} Clientes Cadastrados`}>
@@ -232,7 +231,7 @@ export default () => {
                             </TableCell> */}
                             <TableCell>
                                 <Typography color="textSecondary" variant="h6">
-                                    Empresa / Telefone
+                                    Empresa / Telefone / Obs
                                 </Typography>
                             </TableCell>
 
@@ -317,7 +316,8 @@ export default () => {
                                             <Box
                                                 sx={{
                                                     display: "flex",
-                                                    alignItems: "left"
+                                                    alignItems: "left",
+                                                    color: client.marked ? '#F20F38' : '#000000'
                                                 }}
                                             >
                                                 <Box>
@@ -336,6 +336,14 @@ export default () => {
                                                         }}
                                                     >
                                                         {client.phone}
+                                                    </Typography>
+                                                    <Typography
+                                                        color="textPrimary"
+                                                        sx={{
+                                                            fontSize: "12px",
+                                                        }}
+                                                    >
+                                                        {client.obs && client.obs.substring(0, 30)}
                                                     </Typography>
                                                 </Box>
                                             </Box>
