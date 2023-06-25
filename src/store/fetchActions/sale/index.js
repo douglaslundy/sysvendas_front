@@ -10,6 +10,7 @@ import salePDF from "../../../reports/sale";
 import { format } from 'date-fns';
 
 import { valueDecrescidFromPercent } from '../../../components/helpers/functions/percent';
+import blockedClientsPdf from "../../../reports/blockedClients";
 
 
 export const addSale = (sale, cleanForm) => {
@@ -174,6 +175,29 @@ export const toPaySalesFetch = (form, cleanForm) => {
                 dispatch(turnAlert()),
                 dispatch(turnLoading()),
                 cleanForm()
+            ))
+            .catch((error) => {
+                dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                dispatch(turnLoading());
+                return error.response ? error.response.data : 'erro desconhecido';
+            })
+    };
+}
+
+
+export const checkOverdueSales = () => {
+    return (dispatch) => {
+        dispatch(turnLoading());
+
+        api.get(`/sales/getBlockedClients/get`)
+            .then((res) =>
+            (
+                res.data.length <= 0 
+                ?
+                dispatch(addAlertMessage('A busca não encontrou registros, você não teve clientes bloqueados hoje!!!'))
+                : 
+                blockedClientsPdf(res.data),
+                dispatch(turnLoading())
             ))
             .catch((error) => {
                 dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));

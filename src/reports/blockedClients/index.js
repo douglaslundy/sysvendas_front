@@ -3,8 +3,11 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { convertToBrlCurrency, getCurrency } from '../../components/helpers/formatt/currency';
 import { parseISO, format } from 'date-fns';
 
-async function salesPDF(sales) {
+async function blockedClientsPdf(clients) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    const currentDate = new Date();
+const formattedDate = `${currentDate.getDate().toString().padStart(2, '0')}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getFullYear()} ${currentDate.getHours().toString().padStart(2, '0')}:${currentDate.getMinutes().toString().padStart(2, '0')}:${currentDate.getSeconds().toString().padStart(2, '0')}`;
+
 
     const loadImage = async (url) => {
         const response = await fetch(url);
@@ -19,16 +22,6 @@ async function salesPDF(sales) {
         });
         return base64ImageData;
     };
-
-    // const title = [
-    //     {
-    //         text: `Relatório da Venda Nº ${id}`,
-    //         fontSize: 18,
-    //         bold: true,
-    //         alignment: 'center',
-    //         margin: [20, 20, 0, 45] // left, top, right, bottom
-    //     }
-    // ];
 
     const logo = [
         {
@@ -51,44 +44,51 @@ async function salesPDF(sales) {
             alignment: 'center',
             margin: [0, 40, 0, 5] // left, top, right, bottom
         },
+        {
+            stack: [
+                { text: `Clientes bloqueados - compras vencidas a mais de 45 dias`},
+            ],
+            fontSize: 12,
+            alignment: 'left',
+            margin: [0, 10, 0, 5] // left, top, right, bottom
+        },
 
     ];
 
-    const dados = sales.map((sale) => {
+    const dados = clients.length > 0 && clients.map((cli) => {
         return [
             {
                 stack: [
-                    { text: sale.id, fontSize: 9, margin: [0, 2, 0, 2] },
-                    { text: format(parseISO(sale.created_at), 'dd/MM/yyyy HH:mm:ss'), fontSize: 9, margin: [0, 2, 0, 2] }
+                    { text: cli.id, fontSize: 9, margin: [0, 2, 0, 2] },
+                    { text: cli.cpf_cnpj, fontSize: 9, margin: [0, 2, 0, 2] }
                 ]
             },
             {
                 stack: [
-                    { text: sale.client && sale.client.full_name ? sale.client.id +' - ' + sale.client.full_name : 'VENDA NO BALCÃO' , fontSize: 9, margin: [0, 2, 0, 2] },
-                    { text: sale.user.id +' - ' + sale.user.name, fontSize: 9, margin: [0, 2, 0, 2] },
+                    { text: cli.full_name.toUpperCase(), fontSize: 9, margin: [0, 2, 0, 2] },
+                    // { text: cli.user.id +' - ' + cli.user.name, fontSize: 9, margin: [0, 2, 0, 2] },
                 ]
             },
             {
                 stack: [
-                    { text: sale.type_sale === 'in_cash' ? 'A Vista' : 'A Prazo', fontSize: 9, margin: [0, 2, 0, 2] },
-                    { text: sale.paied === 'yes' ? format(parseISO(sale.updated_at), 'dd/MM/yyyy HH:mm:ss') : 'Pagamento Pendente' , fontSize: 9, margin: [0, 2, 0, 2] }
+                    { text: convertToBrlCurrency(getCurrency(cli.debit_balance)), fontSize: 9, margin: [0, 2, 0, 2] },
                 ]
             },
-            { text: convertToBrlCurrency(getCurrency(sale.total_sale)), fontSize: 9, margin: [0, 2, 0, 2] },
+            { text: cli.phone, fontSize: 9, margin: [0, 2, 0, 2] },
         ]
     });
 
-    const data = [
+    const data = dados.length > 0 && [
         {
             table: {
                 headerRows: 1,
-                widths: ['20%', '45%', '20%', '15%'],
+                widths: ['20%', '45%', '15%', '20%'],
                 body: [
                     [
-                        { text: 'Código / Data', style: 'tableHeader', fontSize: 10 },
-                        { text: 'Cliente / Vendedor', style: 'tableHeader', fontSize: 10 },
-                        { text: 'Venda / Pagamento', style: 'tableHeader', fontSize: 10 },
-                        { text: 'Total', style: 'tableHeader', fontSize: 10 },
+                        { text: 'Código / CPF - CPNJ', style: 'tableHeader', fontSize: 10 },
+                        { text: 'Nome', style: 'tableHeader', fontSize: 10 },
+                        { text: 'Saldo Devedor', style: 'tableHeader', fontSize: 10 },
+                        { text: 'Telefone', style: 'tableHeader', fontSize: 10 },
                     ],
                     ...dados
                 ]
@@ -102,6 +102,17 @@ async function salesPDF(sales) {
             },fontSize: 12,
             alignment: 'left',
             margin: [0, 0, 0, 0] // left, top, right, bottom
+        }
+    ];
+
+    const dateLabel = [
+        {
+
+            text: `Relatório gerado em ${formattedDate}`,
+            fontSize: 10,
+            alignment: 'right',
+            bold: true,
+            margin: [2, 10, 2, 2] // left, top, right, bottom
         }
     ];
 
@@ -120,14 +131,15 @@ async function salesPDF(sales) {
     const definitions = {
         pageSize: 'A4',
         pageOrientation: 'portrait',
+        // pageOrientation: 'landscape',
         pageMargins: [15, 50, 15, 40],
         header: [logo],
-        content: [company, data],
+        content: [company, data, dateLabel],
         footer: footer
     };
 
-    pdfMake.createPdf(definitions).print();
+    pdfMake.createPdf(definitions).download(`Clientes_bloqueados_em_${formattedDate}`);
 
 }
 
-export default salesPDF;
+export default blockedClientsPdf;

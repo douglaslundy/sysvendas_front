@@ -486,7 +486,6 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "yarn dev": "npm run dev",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
   },
   "repository": {
@@ -499,5 +498,8 @@
   "bugs": {
     "url": "https://github.com/douglaslundy/sysvendas_front/issues"
   },
-  "homepage": "https://github.com/douglaslundy/sysvendas_front#readme"
+  "homepage": "https://github.com/douglaslundy/sysvendas_front#readme",
+  "directories": {
+    "test": "tests"
+  }
 }
