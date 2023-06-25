@@ -92,7 +92,7 @@ export default function Provisoria() {
       <ConfirmDialog
         confirmDialog={confirmDialog}
         setConfirmDialog={setConfirmDialog}
-        isAuthenticated={false}
+        isAuthenticated={true}
       />
     </BaseCard>
   );

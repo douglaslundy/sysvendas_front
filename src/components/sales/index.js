@@ -22,13 +22,14 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from '../inputs/selects';
 import Receipt from "../modal/salesReceipt";
 import { getAllSales, getAllSalesPerDate } from "../../store/fetchActions/sale";
-import { turnModalGetSale } from "../../store/ducks/Layout";
+import { addAlertMessage, turnModalGetSale } from "../../store/ducks/Layout";
 import { showSale } from "../../store/ducks/sales";
 import salePDF from "../../reports/sale";
 import salesPDF from "../../reports/sales";
 import BasicDatePicker from "../inputs/datePicker";
 import { convertToBrlCurrency, getCurrency } from "../helpers/formatt/currency";
 import { parseISO, format, setDate } from 'date-fns';
+import AlertModal from "../messagesModal";
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -153,40 +154,48 @@ export default () => {
         setSearchValue('')
     }
     const printerSales = () => {
-        salesPDF(allSales)
+        allSales.length <= 0
+            ?
+            dispatch(addAlertMessage('A busca não encontrou registros, você não realizou vendas no periodo informado!!!'))
+            :
+            salesPDF(allSales)
     }
 
     return (
         <BaseCard title={`Encontramos ${allSales && allSales.length} Vendas realizadas no período informado`}>
 
-            <BasicDatePicker
-                sx={{ mr: 2 }}
-                label="Data de Início"
-                name="date_begin"
-                value={dateBegin}
-                setValue={setDateBegin}
-            />
+            <AlertModal />
 
-            <BasicDatePicker
-                sx={{ mr: 2 }}
-                label="Data de Fim"
-                name="date_end"
-                value={dateEnd}
-                disabled={!dateBegin}
-                setValue={setDateEnd}
-            />
+            <Box sx={{ mt: 1 }}>
+                <BasicDatePicker
+                    sx={{ mr: 2 }}
+                    label="Data de Início"
+                    name="date_begin"
+                    value={dateBegin}
+                    setValue={setDateBegin}
+                />
 
-            <Button title="Buscar" onClick={getSalesPerDate} disabled={!dateBegin} color="success" size="medium" variant="contained">
-                <FeatherIcon icon="search" width="45" height="45" />
-            </Button>
+                <BasicDatePicker
+                    sx={{ mr: 2 }}
+                    label="Data de Fim"
+                    name="date_end"
+                    value={dateEnd}
+                    disabled={!dateBegin}
+                    setValue={setDateEnd}
+                />
 
-            <Button title="Imprimir Vendas" onClick={printerSales} sx={{ml: 2}} color="secondary" size="medium" variant="contained">
-                <FeatherIcon icon="printer" width="45" height="45" />
-            </Button>
+                <Button title="Buscar" onClick={getSalesPerDate} disabled={!dateBegin} color="success" size="medium" variant="contained">
+                    <FeatherIcon icon="search" width="45" height="45" />
+                </Button>
 
-            <Button title="Resetar Busca por data(s)" onClick={resetGetSales} sx={{ml: 2}} color="primary" size="medium" variant="contained">
-                <FeatherIcon icon="refresh-cw" width="45" height="45" />
-            </Button>
+                <Button title="Imprimir Vendas" onClick={printerSales} sx={{ ml: 2 }} color="secondary" size="medium" variant="contained">
+                    <FeatherIcon icon="printer" width="45" height="45" />
+                </Button>
+
+                <Button title="Resetar Busca por data(s)" onClick={resetGetSales} sx={{ ml: 2 }} color="primary" size="medium" variant="contained">
+                    <FeatherIcon icon="refresh-cw" width="45" height="45" />
+                </Button>
+            </Box>
 
             <Box sx={{
                 '& > :not(style)': { mb: 0, mt: 2 },

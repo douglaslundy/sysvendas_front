@@ -54,7 +54,27 @@ async function salesPDF(sales) {
 
     ];
 
+    let totalInSight = 0;
+    let termTotal = 0;
+    let totalPendingTerm = 0;
+    let totalOnTermReceived = 0;
+    let totalSales = 0;
+
     const dados = sales.map((sale) => {
+        if (sale.type_sale === 'in_cash')
+            totalInSight += sale.total_sale;
+
+        if (sale.type_sale === 'on_term')
+            termTotal += sale.total_sale;
+
+        if (sale.type_sale === 'on_term' && sale.paied === 'no')
+            totalPendingTerm += sale.total_sale;
+
+        if (sale.type_sale === 'on_term' && sale.paied === 'yes')
+            totalOnTermReceived += sale.total_sale;
+
+        totalSales += sale.total_sale;
+
         return [
             {
                 stack: [
@@ -64,14 +84,14 @@ async function salesPDF(sales) {
             },
             {
                 stack: [
-                    { text: sale.client && sale.client.full_name ? sale.client.id +' - ' + sale.client.full_name : 'VENDA NO BALCÃO' , fontSize: 9, margin: [0, 2, 0, 2] },
-                    { text: sale.user.id +' - ' + sale.user.name, fontSize: 9, margin: [0, 2, 0, 2] },
+                    { text: sale.client && sale.client.full_name ? sale.client.id + ' - ' + sale.client.full_name.toUpperCase() : 'VENDA NO BALCÃO', fontSize: 9, margin: [0, 2, 0, 2] },
+                    { text: sale.user.id + ' - ' + sale.user.name, fontSize: 9, margin: [0, 2, 0, 2] },
                 ]
             },
             {
                 stack: [
                     { text: sale.type_sale === 'in_cash' ? 'A Vista' : 'A Prazo', fontSize: 9, margin: [0, 2, 0, 2] },
-                    { text: sale.paied === 'yes' ? format(parseISO(sale.updated_at), 'dd/MM/yyyy HH:mm:ss') : 'Pagamento Pendente' , fontSize: 9, margin: [0, 2, 0, 2] }
+                    { text: sale.paied === 'yes' ? sale?.updated_at && format(parseISO(sale?.updated_at), 'dd/MM/yyyy HH:mm:ss') : 'Pagamento Pendente', fontSize: 9, margin: [0, 2, 0, 2] }
                 ]
             },
             { text: convertToBrlCurrency(getCurrency(sale.total_sale)), fontSize: 9, margin: [0, 2, 0, 2] },
@@ -96,14 +116,46 @@ async function salesPDF(sales) {
             // layout: 'lightHorizontalLines' // headerLineOnly
             // layout: 'headerLineOnly'
             layout: {
-				fillColor: function (rowIndex, node, columnIndex) {
-					return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
-				}
-            },fontSize: 12,
+                fillColor: function (rowIndex, node, columnIndex) {
+                    return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
+                }
+            }, fontSize: 12,
             alignment: 'left',
             margin: [0, 0, 0, 0] // left, top, right, bottom
         }
     ];
+
+    const summary = {
+        stack: [
+            {text: [
+                { text: `Total à vista:  ` },
+                { text: `${convertToBrlCurrency(getCurrency(totalInSight))}`, bold: true, fontSize: 14 },
+            ]},
+
+            {text: [
+                { text: `Total à prazo:  ` },
+                { text: `${convertToBrlCurrency(getCurrency(termTotal))}`, bold: true, fontSize: 14 },
+            ]},
+            
+            {text: [
+                { text: `Total à prazo pendente:  ` },
+                { text: `${convertToBrlCurrency(getCurrency(totalPendingTerm))}`, bold: true, fontSize: 14 },
+            ]},
+
+            {text: [
+                { text: `Total à prazo recebido:  ` },
+                { text: `${convertToBrlCurrency(getCurrency(totalOnTermReceived))}`, bold: true, fontSize: 14 },
+            ]},
+
+            {text: [
+                { text: `Total de vendas:  ` },
+                { text: `${convertToBrlCurrency(getCurrency(totalSales))}`, bold: true, fontSize: 14 },
+            ]},
+        ],
+        fontSize: 12,
+        alignment: 'right',
+        margin: [0, 5, 0, 5] // left, top, right, bottom
+    };
 
 
     function footer(currentPage, pageCount) {
@@ -122,7 +174,7 @@ async function salesPDF(sales) {
         pageOrientation: 'portrait',
         pageMargins: [15, 50, 15, 40],
         header: [logo],
-        content: [company, data],
+        content: [company, data, summary],
         footer: footer
     };
 
