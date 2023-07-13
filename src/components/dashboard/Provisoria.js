@@ -26,11 +26,11 @@ export default function Provisoria() {
     <BaseCard title="SysVendas">
       
       <AlertModal />
-
+{/* 
       <Button title="Pesquisar Vendas Vencidas" onClick={checkSales} color="success" size="medium" variant="contained">
         Buscar clientes com compras vencidas
         <FeatherIcon icon="lock" width="45" height="45" />
-      </Button>
+      </Button> */}
 
 
       <h1>Novidades...</h1>

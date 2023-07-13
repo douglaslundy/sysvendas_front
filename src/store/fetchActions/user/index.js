@@ -2,6 +2,7 @@ import { api } from "../../../services/api";
 import { cleanCpfCnpj } from "../../../components/helpers/formatt/cpf_cnpj";
 import { inactiveUser, addUser, editUser, addUsers, showUser } from "../../ducks/users";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
+import { parseCookies } from "nookies";
 
 export const getAllUsers = () => {
     // getToken();
@@ -20,11 +21,14 @@ export const getAllUsers = () => {
 }
 
 export const addUserFetch = (user, cleanForm) => {
+    const { 'sysvendas.company_id': company } = parseCookies();
+
     return (dispatch) => {
         dispatch(turnLoading())
         user = {
             ...user,
             cpf: cleanCpfCnpj(user.cpf),
+            company_id: company,
         };
         api.post('/users', user)
             .then((res) =>
