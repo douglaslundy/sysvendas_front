@@ -376,7 +376,7 @@ export default () => {
                                                                 fontSize: "12px",
                                                             }}
                                                         >
-                                                            {sale.paied == "yes" ? format(parseISO(sale.updated_at), 'dd/MM/yyyy HH:mm:ss') : ''}
+                                                            {sale.paied == "yes" && sale.updated_at ? format(parseISO(sale.updated_at), 'dd/MM/yyyy HH:mm:ss') : ''}
                                                         </Typography>
                                                     </Box>
                                                 </Box>
