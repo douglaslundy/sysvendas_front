@@ -18,8 +18,9 @@ export default function index(props) {
   useEffect(() => {
     let active = true;
 
-    // treço teste afim de solucionar o bug que da quando e selecionado o mesmo valor no select que foi selecionado a ultima vez
-    setProduct({})
+    // trecho teste afim de solucionar o bug que da quando e selecionado o mesmo valor no select que foi selecionado a ultima vez
+    if (!open)
+      setProduct({})
 
     if (!loading) {
       return undefined;
@@ -45,18 +46,14 @@ export default function index(props) {
     }
   }, [open]);
 
-  // const [selectedId, setSelectedId] = useState(0);
 
   const getProduct = (id) => {
-    // setSelectedId(id);
-    // setProduct(products.filter((prod) => prod.id == selectedId)[0]);
     setProduct(products.filter((prod) => prod.id == id)[0]);
   }
 
   return (
     <Autocomplete
       id="product"
-      // sx={{ width: "85%" }}
       sx={wd ? { width: wd } : { width: "85%" }}
       open={open}
       onOpen={() => {
@@ -66,7 +63,7 @@ export default function index(props) {
         setOpen(false);
       }}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      getOptionLabel={(option) => `${option.name} - Preço ${option.sale_value}`}
+      getOptionLabel={(option) => `${option.name} - R$ ${option.sale_value} -  Código ${option.bar_code}`.toUpperCase()}
       noOptionsText={"Produto inexistente!"}
       options={options}
       loading={loading}
