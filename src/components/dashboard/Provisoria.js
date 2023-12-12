@@ -35,8 +35,14 @@ export default function Provisoria() {
 
       <h1>Novidades...</h1>
 
-      <h2>#Criado Botão para bloqueio de clientes com vendas vencidas</h2>
-      <h4>... 24/06/2023</h4>
+      <h2>#Corrigido BUG na venda, quando 2 telas logadas ao mesmo tempo, estão com carrinhos desatualizados</h2>
+      <h4>... 12/12/2023</h4>
+      
+      <h4>#Corrigido BUG de inserir produto no PDV</h4>
+      <h6>... 12/12/2023</h6>
+
+      <h4>#Criado Botão para bloqueio de clientes com vendas vencidas</h4>
+      <h6>... 24/06/2023</h6>
       
       <h4>#Criado filtro de clientes bloqueados</h4>
       <h6>... 24/06/2023</h6>

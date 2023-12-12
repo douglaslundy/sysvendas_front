@@ -27,6 +27,8 @@ export const addSale = (sale, cleanForm) => {
             cash: setCurrency(sale.cash),
             pay_value: setCurrency(sale.pay_value),
             total_sale: setCurrency(sale.total_sale),
+            
+            // esta rotina converte o desconto que chega em percentagem, exemplo : 50% para o valor decimal real, exemplo 10000
             discount: setCurrency(sale.total_sale) - (setCurrency(valueDecrescidFromPercent(sale.total_sale, sale.discount)) / 100)
         };
 
