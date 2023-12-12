@@ -57,6 +57,7 @@ export default () => {
         id_pay_metod: "cash",
         type_sale: 'in_cash',
         total_sale: 0,
+        total_itens: 0
     });
     const [product, setProduct] = useState([]);
     const { qtd } = formCart;
@@ -67,7 +68,7 @@ export default () => {
     }, [product]);
 
     useEffect(() => {
-        setFormSale({ ...formSale, ['total_sale']: getTotal(productsCart) })
+        setFormSale({ ...formSale, ['total_sale']: getTotal(productsCart), total_itens: productsCart.length })
     }, [productsCart]);
 
     useEffect(() => {
