@@ -272,6 +272,8 @@ export default function PdvModal(props) {
 
                                 </Box>
                                 <br />
+                                <AlertModal />
+                                <br />
                                 <Box sx={{ "& button": { mx: 1 } }}>
                                     <Button onClick={handleSave} variant="contained" mt={2}>
                                         Gravar

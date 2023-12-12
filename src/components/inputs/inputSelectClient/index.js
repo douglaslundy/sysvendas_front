@@ -64,7 +64,7 @@ export default function index(props) {
         setOpen(false);
       }}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      getOptionLabel={(option) => `${option.full_name ? option.full_name : option.name}`}
+      getOptionLabel={(option) => `${option.full_name ? option.full_name : option.name}`.toUpperCase()}
       noOptionsText={"Busca não retornou resultados!"}
       options={options}
       loading={loading}
