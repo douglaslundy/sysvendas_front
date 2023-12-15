@@ -236,7 +236,7 @@ async function salePDF({ id, created_at, updated_at, type_sale, paied = null, to
 
         {
             stack: [
-                { text: `Vendedor.: ${user ? user.id +' - ' + user.name : ''}` },
+                { text: `Vendedor.: ${user ? user.id +' - ' + user.name.toUpperCase() : ''}` },
                 { text: `Obs.: ${obs ? obs : ''}` },
             ],
             fontSize: 10,
