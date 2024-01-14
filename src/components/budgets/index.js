@@ -143,121 +143,129 @@ export default () => {
 
                         </TableRow>
                     </TableHead>
-                    <TableBody>
-                        {allBudgets &&
-                            allBudgets
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((budget, index) => (
-                                    <StyledTableRow key={budget.id} hover>
-                                        <>
-                                            <TableCell>
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        alignItems: "left",
-                                                    }}
-                                                >
-                                                    <Box>
-                                                        <Typography
-                                                            variant="h6"
-                                                            sx={{
-                                                                fontWeight: "600",
-                                                            }}
-                                                        >
-                                                            {budget.id != null ? budget.id : ''}
-                                                        </Typography>
+                    {allBudgets.length >= 1 ?
+                        <TableBody>
+                            {allBudgets &&
+                                allBudgets
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map((budget, index) => (
+                                        <StyledTableRow key={budget.id} hover>
+                                            <>
+                                                <TableCell>
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            alignItems: "left",
+                                                        }}
+                                                    >
+                                                        <Box>
+                                                            <Typography
+                                                                variant="h6"
+                                                                sx={{
+                                                                    fontWeight: "600",
+                                                                }}
+                                                            >
+                                                                {budget.id != null ? budget.id : ''}
+                                                            </Typography>
 
-                                                        <Typography
-                                                            color="textSecondary"
-                                                            sx={{
-                                                                fontSize: "13px",
-                                                            }}
-                                                        >
-                                                            {budget && budget.created_at && format(parseISO(budget.created_at), 'dd/MM/yyyy HH:mm:ss')}
-                                                        </Typography>
+                                                            <Typography
+                                                                color="textSecondary"
+                                                                sx={{
+                                                                    fontSize: "13px",
+                                                                }}
+                                                            >
+                                                                {budget && budget.created_at && format(parseISO(budget.created_at), 'dd/MM/yyyy HH:mm:ss')}
+                                                            </Typography>
+                                                        </Box>
                                                     </Box>
-                                                </Box>
-                                            </TableCell>
+                                                </TableCell>
 
-                                            <TableCell>
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        alignItems: "left",
-                                                    }}
-                                                >
-                                                    <Box>
-                                                        <Typography
-                                                            variant="h6"
-                                                            sx={{
-                                                                fontWeight: "600",
-                                                            }}
-                                                        >
-                                                            {budget.client != null ? budget.client.full_name.substring(0, 35).toUpperCase() : 'VENDA NO BALCÃO'}
-                                                        </Typography>
+                                                <TableCell>
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            alignItems: "left",
+                                                        }}
+                                                    >
+                                                        <Box>
+                                                            <Typography
+                                                                variant="h6"
+                                                                sx={{
+                                                                    fontWeight: "600",
+                                                                }}
+                                                            >
+                                                                {budget.client != null ? budget.client.full_name.substring(0, 35).toUpperCase() : 'VENDA NO BALCÃO'}
+                                                            </Typography>
 
-                                                        <Typography
-                                                            color="textSecondary"
-                                                            sx={{
-                                                                fontSize: "13px",
-                                                            }}
-                                                        >
-                                                            {budget.user && budget.user.id + ' - ' + budget.user.name.substring(0, 30).toUpperCase()}
-                                                        </Typography>
+                                                            <Typography
+                                                                color="textSecondary"
+                                                                sx={{
+                                                                    fontSize: "13px",
+                                                                }}
+                                                            >
+                                                                {budget.user && budget.user.id + ' - ' + budget.user.name.substring(0, 30).toUpperCase()}
+                                                            </Typography>
+                                                        </Box>
                                                     </Box>
-                                                </Box>
-                                            </TableCell>
+                                                </TableCell>
 
-                                            <TableCell>
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        alignItems: "left"
-                                                    }}
-                                                >
-                                                    <Box>
-                                                        <Typography
-                                                            variant="h6"
-                                                            sx={{
-                                                                fontWeight: "600",
-                                                            }}
-                                                        >
-                                                            {convertToBrlCurrency(getCurrency(budget.total_sale))}
-                                                        </Typography>
-                                                        <Typography
-                                                            color="textSecondary"
-                                                            sx={{
-                                                                fontSize: "12px",
-                                                            }}
-                                                        >
-                                                            {/* {budget.phone} */}
-                                                        </Typography>
+                                                <TableCell>
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            alignItems: "left"
+                                                        }}
+                                                    >
+                                                        <Box>
+                                                            <Typography
+                                                                variant="h6"
+                                                                sx={{
+                                                                    fontWeight: "600",
+                                                                }}
+                                                            >
+                                                                {convertToBrlCurrency(getCurrency(budget.total_sale))}
+                                                            </Typography>
+                                                            <Typography
+                                                                color="textSecondary"
+                                                                sx={{
+                                                                    fontSize: "12px",
+                                                                }}
+                                                            >
+                                                                {/* {budget.phone} */}
+                                                            </Typography>
+                                                        </Box>
                                                     </Box>
-                                                </Box>
-                                            </TableCell>
+                                                </TableCell>
 
-                                            <TableCell align="center">
-                                                <Box sx={{ "& button": { mx: 1 } }}>
+                                                <TableCell align="center">
+                                                    <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                    <Button title="Visualiar venda" onClick={() => HandleViewBudget(budget)} color="primary" size="medium" variant="contained">
-                                                        <FeatherIcon icon="eye" width="20" height="20" />
-                                                    </Button>
+                                                        <Button title="Visualiar venda" onClick={() => HandleViewBudget(budget)} color="primary" size="medium" variant="contained">
+                                                            <FeatherIcon icon="eye" width="20" height="20" />
+                                                        </Button>
 
-                                                    <Button title="Imprimir venda" onClick={() => salePDF(budget)} color="secondary" size="medium" variant="contained">
-                                                        <FeatherIcon icon="printer" width="20" height="20" />
-                                                    </Button>
+                                                        <Button title="Imprimir venda" onClick={() => salePDF(budget)} color="secondary" size="medium" variant="contained">
+                                                            <FeatherIcon icon="printer" width="20" height="20" />
+                                                        </Button>
 
-                                                    <Button title="Realizar venda" onClick={() => confirmSale(budget)} color="success" size="medium" variant="contained">
-                                                        <FeatherIcon icon="dollar-sign" width="20" height="20" />
-                                                    </Button>
+                                                        <Button title="Realizar venda" onClick={() => confirmSale(budget)} color="success" size="medium" variant="contained">
+                                                            <FeatherIcon icon="dollar-sign" width="20" height="20" />
+                                                        </Button>
 
-                                                </Box>
-                                            </TableCell>
-                                        </>
+                                                    </Box>
+                                                </TableCell>
+                                            </>
 
-                                    </StyledTableRow>
-                                ))}
-                    </TableBody>
+                                        </StyledTableRow>
+                                    ))}
+                        </TableBody>
+                        :
+                        <TableCell align="center">
+                            Nenhum registro encontrado!
+
+                        </TableCell>
+                    }
+
                 </Table>
                 <TablePagination
                     component="div"

@@ -280,155 +280,165 @@ export default () => {
 
                         </TableRow>
                     </TableHead>
-                    <TableBody>
-                        {allSales &&
-                            allSales
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((sale, index) => (
-                                    <StyledTableRow key={sale.id} hover>
-                                        <>
+                    {
+                        allSales.length >= 1 ?
 
-                                            <TableCell>
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        alignItems: "left",
-                                                    }}
-                                                >
-                                                    <Box>
-                                                        <Typography
-                                                            variant="h6"
+                            <TableBody>
+                                {allSales &&
+                                    allSales
+                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .map((sale, index) => (
+                                            <StyledTableRow key={sale.id} hover>
+                                                <>
+
+                                                    <TableCell>
+                                                        <Box
                                                             sx={{
-                                                                fontWeight: "600",
+                                                                display: "flex",
+                                                                alignItems: "left",
                                                             }}
                                                         >
-                                                            {sale && sale.id}
-                                                        </Typography>
+                                                            <Box>
+                                                                <Typography
+                                                                    variant="h6"
+                                                                    sx={{
+                                                                        fontWeight: "600",
+                                                                    }}
+                                                                >
+                                                                    {sale && sale.id}
+                                                                </Typography>
 
-                                                        <Typography
-                                                            color="textSecondary"
+                                                                <Typography
+                                                                    color="textSecondary"
+                                                                    sx={{
+                                                                        fontSize: "13px",
+                                                                    }}
+                                                                >
+                                                                    {sale && sale.created_at && format(parseISO(sale.created_at), 'dd/MM/yyyy HH:mm:ss')}
+                                                                </Typography>
+                                                            </Box>
+                                                        </Box>
+                                                    </TableCell>
+
+                                                    <TableCell>
+                                                        <Box
                                                             sx={{
-                                                                fontSize: "13px",
+                                                                display: "flex",
+                                                                alignItems: "left",
                                                             }}
                                                         >
-                                                            {sale && sale.created_at && format(parseISO(sale.created_at), 'dd/MM/yyyy HH:mm:ss')}
-                                                        </Typography>
-                                                    </Box>
-                                                </Box>
-                                            </TableCell>
+                                                            <Box>
+                                                                <Typography
+                                                                    variant="h6"
+                                                                    sx={{
+                                                                        fontWeight: "600",
+                                                                    }}
+                                                                >
+                                                                    {sale.client != null ? sale.client.full_name.substring(0, 35).toUpperCase() : 'VENDA NO BALCÃO'}
+                                                                </Typography>
 
-                                            <TableCell>
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        alignItems: "left",
-                                                    }}
-                                                >
-                                                    <Box>
-                                                        <Typography
-                                                            variant="h6"
+                                                                <Typography
+                                                                    color="textSecondary"
+                                                                    sx={{
+                                                                        fontSize: "13px",
+                                                                    }}
+                                                                >
+                                                                    {sale.user && sale.user.id + ' - ' + sale.user.name.substring(0, 30).toUpperCase()}
+                                                                </Typography>
+                                                            </Box>
+                                                        </Box>
+                                                    </TableCell>
+
+                                                    <TableCell align="center">
+                                                        <Box
                                                             sx={{
-                                                                fontWeight: "600",
+                                                                // display: "flex",
+                                                                alignItems: "center",
                                                             }}
                                                         >
-                                                            {sale.client != null ? sale.client.full_name.substring(0, 35).toUpperCase() : 'VENDA NO BALCÃO'}
-                                                        </Typography>
+                                                            <Box>
+                                                                <Typography
+                                                                    variant="h6"
+                                                                    sx={{
+                                                                        fontWeight: "600",
+                                                                    }}
+                                                                >
+                                                                    {sale.type_sale == "in_cash" ? "A Vista" : "A Prazo"}
+                                                                </Typography>
+                                                                <Typography
+                                                                    color="textSecondary"
+                                                                    sx={{
+                                                                        fontSize: "13px",
+                                                                    }}
+                                                                >
+                                                                    {sale.paied == "yes" ? <FeatherIcon icon="thumbs-up" color="#0b02f7" width="20" height="20" /> : <FeatherIcon icon="thumbs-down" color="#f7020e" width="20" height="20" />}
+                                                                </Typography>
+                                                                <Typography
+                                                                    color="textSecondary"
+                                                                    sx={{
+                                                                        fontSize: "12px",
+                                                                    }}
+                                                                >
+                                                                    {sale.paied == "yes" && sale.updated_at ? format(parseISO(sale.updated_at), 'dd/MM/yyyy HH:mm:ss') : ''}
+                                                                </Typography>
+                                                            </Box>
+                                                        </Box>
+                                                    </TableCell>
 
-                                                        <Typography
-                                                            color="textSecondary"
+                                                    <TableCell>
+                                                        <Box
                                                             sx={{
-                                                                fontSize: "13px",
+                                                                display: "flex",
+                                                                alignItems: "left"
                                                             }}
                                                         >
-                                                            {sale.user && sale.user.id + ' - ' + sale.user.name.substring(0, 30).toUpperCase()}
-                                                        </Typography>
-                                                    </Box>
-                                                </Box>
-                                            </TableCell>
+                                                            <Box>
+                                                                <Typography
+                                                                    variant="h6"
+                                                                    sx={{
+                                                                        fontWeight: "600",
+                                                                    }}
+                                                                >
+                                                                    {/* {convertToBrlCurrency(getCurrency(setCurrency(sale.total_sale) - setCurrency(sale.discount)))} */}
+                                                                    {convertToBrlCurrency(getCurrency(sale.total_sale - sale.discount))}
+                                                                </Typography>
+                                                                <Typography
+                                                                    color="textSecondary"
+                                                                    sx={{
+                                                                        fontSize: "12px",
+                                                                    }}
+                                                                >
+                                                                    {/* {sale.phone} */}
+                                                                </Typography>
+                                                            </Box>
+                                                        </Box>
+                                                    </TableCell>
 
-                                            <TableCell align="center">
-                                                <Box
-                                                    sx={{
-                                                        // display: "flex",
-                                                        alignItems: "center",
-                                                    }}
-                                                >
-                                                    <Box>
-                                                        <Typography
-                                                            variant="h6"
-                                                            sx={{
-                                                                fontWeight: "600",
-                                                            }}
-                                                        >
-                                                            {sale.type_sale == "in_cash" ? "A Vista" : "A Prazo"}
-                                                        </Typography>
-                                                        <Typography
-                                                            color="textSecondary"
-                                                            sx={{
-                                                                fontSize: "13px",
-                                                            }}
-                                                        >
-                                                            {sale.paied == "yes" ? <FeatherIcon icon="thumbs-up" color="#0b02f7" width="20" height="20" /> : <FeatherIcon icon="thumbs-down" color="#f7020e" width="20" height="20" />}
-                                                        </Typography>
-                                                        <Typography
-                                                            color="textSecondary"
-                                                            sx={{
-                                                                fontSize: "12px",
-                                                            }}
-                                                        >
-                                                            {sale.paied == "yes" && sale.updated_at ? format(parseISO(sale.updated_at), 'dd/MM/yyyy HH:mm:ss') : ''}
-                                                        </Typography>
-                                                    </Box>
-                                                </Box>
-                                            </TableCell>
+                                                    <TableCell align="center">
+                                                        <Box sx={{ "& button": { mx: 1 } }}>
 
-                                            <TableCell>
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        alignItems: "left"
-                                                    }}
-                                                >
-                                                    <Box>
-                                                        <Typography
-                                                            variant="h6"
-                                                            sx={{
-                                                                fontWeight: "600",
-                                                            }}
-                                                        >
-                                                            {/* {convertToBrlCurrency(getCurrency(setCurrency(sale.total_sale) - setCurrency(sale.discount)))} */}
-                                                            {convertToBrlCurrency(getCurrency(sale.total_sale - sale.discount))}
-                                                        </Typography>
-                                                        <Typography
-                                                            color="textSecondary"
-                                                            sx={{
-                                                                fontSize: "12px",
-                                                            }}
-                                                        >
-                                                            {/* {sale.phone} */}
-                                                        </Typography>
-                                                    </Box>
-                                                </Box>
-                                            </TableCell>
+                                                            <Button title="Visualiar venda" onClick={() => HandleViewSale(sale)} color="primary" size="medium" variant="contained">
+                                                                <FeatherIcon icon="eye" width="20" height="20" />
+                                                            </Button>
 
-                                            <TableCell align="center">
-                                                <Box sx={{ "& button": { mx: 1 } }}>
+                                                            <Button title="Imprimir venda" onClick={() => salePDF(sale)} color="secondary" size="medium" variant="contained">
+                                                                <FeatherIcon icon="printer" width="20" height="20" />
+                                                            </Button>
 
-                                                    <Button title="Visualiar venda" onClick={() => HandleViewSale(sale)} color="primary" size="medium" variant="contained">
-                                                        <FeatherIcon icon="eye" width="20" height="20" />
-                                                    </Button>
+                                                        </Box>
+                                                    </TableCell>
+                                                </>
 
-                                                    <Button title="Imprimir venda" onClick={() => salePDF(sale)} color="secondary" size="medium" variant="contained">
-                                                        <FeatherIcon icon="printer" width="20" height="20" />
-                                                    </Button>
+                                            </StyledTableRow>
+                                        ))}
+                            </TableBody>
+                            :
+                            <TableCell align="center">
+                                Nenhum registro encontrado!
 
-                                                </Box>
-                                            </TableCell>
-                                        </>
+                            </TableCell>
+                    }
 
-                                    </StyledTableRow>
-                                ))}
-                    </TableBody>
                 </Table>
                 <TablePagination
                     component="div"

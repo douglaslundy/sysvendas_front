@@ -114,7 +114,7 @@ export default () => {
         },
     ];
 
-    const changeTtypeOfClients = ({target}) => {
+    const changeTtypeOfClients = ({ target }) => {
         setTypeOfClient(target.value);
     }
 
@@ -122,7 +122,7 @@ export default () => {
         dispatch(getAllClients());
     }, []);
 
-    useEffect(() => {        
+    useEffect(() => {
         setAllClients(searchValue ? [...clients.filter(cli => cli.full_name.toString().includes(searchValue.toString()))] : clients);
         setTypeOfClient(2);
     }, [clients]);
@@ -151,17 +151,17 @@ export default () => {
     }, [searchValue]);
 
     useEffect(() => {
-        
+
         const filteredClients = clients?.filter((client) => {
-            if(typeOfClient === 0){
+            if (typeOfClient === 0) {
                 return client.marked === 0;
-            } else if (typeOfClient === 1){
-                return client.marked === 1;    
-            } else if (typeOfClient === 2){
-                return client;    
+            } else if (typeOfClient === 1) {
+                return client.marked === 1;
+            } else if (typeOfClient === 2) {
+                return client;
             }
         });
-        
+
         setAllClients(filteredClients);
 
     }, [typeOfClient])
@@ -249,42 +249,43 @@ export default () => {
 
                         </TableRow>
                     </TableHead>
-                    <TableBody>
-                        {allClients
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((client, index) => (
-                                <StyledTableRow key={client.id} hover>
-                                    <>
-                                        <TableCell>
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    color: client.marked ? '#F20F38' : '#000000'
-                                                }}
-                                            >
-                                                <Box>
-                                                    <Typography
-                                                        variant="h6"
-                                                        sx={{
-                                                            fontWeight: "600",
-                                                        }}
-                                                    >
-                                                        {client.full_name ? client.full_name.substring(0, 35).toUpperCase() : ''}
-                                                    </Typography>
-                                                    <Typography
-                                                        color="textSecondary"
-                                                        sx={{
-                                                            fontSize: "13px",
-                                                        }}
-                                                    >
-                                                        {client.id ? (client.cpf_cnpj ? client.id + ' - ' + client.cpf_cnpj : client.id) : ''}
-                                                    </Typography>
+                    {allClients.length >= 1 ?
+                        <TableBody>
+                            {allClients
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((client, index) => (
+                                    <StyledTableRow key={client.id} hover>
+                                        <>
+                                            <TableCell>
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        color: client.marked ? '#F20F38' : '#000000'
+                                                    }}
+                                                >
+                                                    <Box>
+                                                        <Typography
+                                                            variant="h6"
+                                                            sx={{
+                                                                fontWeight: "600",
+                                                            }}
+                                                        >
+                                                            {client.full_name ? client.full_name.substring(0, 35).toUpperCase() : ''}
+                                                        </Typography>
+                                                        <Typography
+                                                            color="textSecondary"
+                                                            sx={{
+                                                                fontSize: "13px",
+                                                            }}
+                                                        >
+                                                            {client.id ? (client.cpf_cnpj ? client.id + ' - ' + client.cpf_cnpj : client.id) : ''}
+                                                        </Typography>
+                                                    </Box>
                                                 </Box>
-                                            </Box>
-                                        </TableCell>
+                                            </TableCell>
 
-                                        {/* <TableCell>
+                                            {/* <TableCell>
                                             <Box
                                                 sx={{
                                                     display: "flex",
@@ -312,75 +313,82 @@ export default () => {
                                             </Box>
                                         </TableCell> */}
 
-                                        <TableCell>
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    alignItems: "left",
-                                                    color: client.marked ? '#F20F38' : '#000000'
-                                                }}
-                                            >
-                                                <Box>
-                                                    <Typography
-                                                        variant="h6"
-                                                        sx={{
-                                                            fontWeight: "600",
-                                                        }}
-                                                    >
-                                                        {client.fantasy_name ? client.fantasy_name.substring(0, 30).toUpperCase() : ''}
-                                                    </Typography>
-                                                    <Typography
-                                                        color="textSecondary"
-                                                        sx={{
-                                                            fontSize: "12px",
-                                                        }}
-                                                    >
-                                                        {client.phone}
-                                                    </Typography>
-                                                    <Typography
-                                                        color="textPrimary"
-                                                        sx={{
-                                                            fontSize: "12px",
-                                                        }}
-                                                    >
-                                                        {client.obs && client.obs.substring(0, 30)}
-                                                    </Typography>
+                                            <TableCell>
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        alignItems: "left",
+                                                        color: client.marked ? '#F20F38' : '#000000'
+                                                    }}
+                                                >
+                                                    <Box>
+                                                        <Typography
+                                                            variant="h6"
+                                                            sx={{
+                                                                fontWeight: "600",
+                                                            }}
+                                                        >
+                                                            {client.fantasy_name ? client.fantasy_name.substring(0, 30).toUpperCase() : ''}
+                                                        </Typography>
+                                                        <Typography
+                                                            color="textSecondary"
+                                                            sx={{
+                                                                fontSize: "12px",
+                                                            }}
+                                                        >
+                                                            {client.phone}
+                                                        </Typography>
+                                                        <Typography
+                                                            color="textPrimary"
+                                                            sx={{
+                                                                fontSize: "12px",
+                                                            }}
+                                                        >
+                                                            {client.obs && client.obs.substring(0, 30)}
+                                                        </Typography>
+                                                    </Box>
                                                 </Box>
-                                            </Box>
-                                        </TableCell>
+                                            </TableCell>
 
-                                        <TableCell>
-                                            <Typography variant="h6">{convertToBrlCurrency(client.debit_balance)}</Typography>
-                                            <Typography variant="h6">{convertToBrlCurrency(client.limit)}</Typography>
-                                        </TableCell>
+                                            <TableCell>
+                                                <Typography variant="h6">{convertToBrlCurrency(client.debit_balance)}</Typography>
+                                                <Typography variant="h6">{convertToBrlCurrency(client.limit)}</Typography>
+                                            </TableCell>
 
-                                        <TableCell align="center">
-                                            <Box sx={{ "& button": { mx: 1 } }}>
+                                            <TableCell align="center">
+                                                <Box sx={{ "& button": { mx: 1 } }}>
 
-                                                <Button title="Todas as vendas" onClick={() => { HandleGetAllSales(client) }} color="primary" size="medium" variant="contained">
-                                                    <FeatherIcon icon="layers" width="20" height="20" />
-                                                </Button>
+                                                    <Button title="Todas as vendas" onClick={() => { HandleGetAllSales(client) }} color="primary" size="medium" variant="contained">
+                                                        <FeatherIcon icon="layers" width="20" height="20" />
+                                                    </Button>
 
-                                                <Button title="Receber vendas" onClick={() => { HandleGetSales(client) }} color="primary" size="medium" variant="contained">
-                                                    <FeatherIcon icon="dollar-sign" width="20" height="20" />
-                                                </Button>
+                                                    <Button title="Receber vendas" onClick={() => { HandleGetSales(client) }} color="primary" size="medium" variant="contained">
+                                                        <FeatherIcon icon="dollar-sign" width="20" height="20" />
+                                                    </Button>
 
-                                                <Button title="Editar cliente" onClick={() => { HandleEditClient(client) }} color="success" size="medium" variant="contained">
-                                                    <FeatherIcon icon="edit" width="20" height="20" />
-                                                </Button>
+                                                    <Button title="Editar cliente" onClick={() => { HandleEditClient(client) }} color="success" size="medium" variant="contained">
+                                                        <FeatherIcon icon="edit" width="20" height="20" />
+                                                    </Button>
 
-                                                <Button title="Excluir cliente" onClick={() => { HandleInactiveClient(client) }} color="error" size="medium" variant="contained">
-                                                    <FeatherIcon icon="trash" width="20" height="20" />
-                                                </Button>
+                                                    <Button title="Excluir cliente" onClick={() => { HandleInactiveClient(client) }} color="error" size="medium" variant="contained">
+                                                        <FeatherIcon icon="trash" width="20" height="20" />
+                                                    </Button>
 
 
-                                            </Box>
-                                        </TableCell>
-                                    </>
+                                                </Box>
+                                            </TableCell>
+                                        </>
 
-                                </StyledTableRow>
-                            ))}
-                    </TableBody>
+                                    </StyledTableRow>
+                                ))}
+                        </TableBody>
+                        :
+                        <TableCell align="center">
+                            Nenhum registro encontrado!
+
+                        </TableCell>
+                    }
+
                 </Table>
                 <TablePagination
                     component="div"
