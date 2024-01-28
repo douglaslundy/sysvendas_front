@@ -30,6 +30,7 @@ import BasicDatePicker from "../inputs/datePicker";
 import { convertToBrlCurrency, getCurrency } from "../helpers/formatt/currency";
 import { parseISO, format, setDate } from 'date-fns';
 import AlertModal from "../messagesModal";
+import { setDateToSearch } from "../helpers/formatt/date/setDateToSearch";
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -53,6 +54,7 @@ export default () => {
 
     const [dateBegin, setDateBegin] = useState(null);
     const [dateEnd, setDateEnd] = useState(null);
+    const [isSearched, setIsSearched] = useState(null);
 
     const payMethods = [
         {
@@ -102,7 +104,7 @@ export default () => {
     }
 
     useEffect(() => {
-        dispatch(getAllSales());
+        dispatch(getAllSalesPerDate(setDateToSearch(1,1), setDateToSearch(31,12)));
     }, []);
 
     useEffect(() => {
@@ -143,15 +145,17 @@ export default () => {
     }, [payMethod, searchValue]);
 
     const getSalesPerDate = () => {
-        setPayMethod('all')
+        setPayMethod('all');
         dispatch(getAllSalesPerDate(dateBegin, dateEnd));
+        setIsSearched(true);
     }
     const resetGetSales = () => {
-        dispatch(getAllSales());
-        setDateBegin(null)
-        setDateEnd(null)
-        setPayMethod('all')
-        setSearchValue('')
+        dispatch(getAllSalesPerDate(setDateToSearch(1,1), setDateToSearch(31,12)));
+        setDateBegin(null);
+        setDateEnd(null);
+        setPayMethod('all');
+        setSearchValue('');
+        setIsSearched(null);
     }
     const printerSales = () => {
         allSales.length <= 0
@@ -162,7 +166,7 @@ export default () => {
     }
 
     return (
-        <BaseCard title={`Encontramos ${allSales && allSales.length} Vendas realizadas no período informado`}>
+        <BaseCard title={isSearched ? `Encontramos ${allSales && allSales.length} Vendas realizadas no período informado`  : ` ${allSales && allSales.length} Vendas realizadas em ${new Date().getFullYear()}` }>
 
             <AlertModal />
 

@@ -94,12 +94,6 @@ export const getAllSalesPerDate = (dateBegin, dateEnd) => {
         form.date_end = format(dateEnd, 'yyyy/MM/dd');
     }
 
-
-    // const form = {
-    //     "date_begin": dateBegin,
-    //     "date_end": dateEnd
-    // }
-
     const config = {
         transformResponse: [function (data) {
 
