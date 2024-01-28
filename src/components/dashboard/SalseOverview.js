@@ -188,15 +188,17 @@ const SalesOverview = () => {
 
   useEffect(() => {
     if (sales.length > 0) {
-      totalSalesCountByMonth();
-      setChartIsRead(true);
+      if (chartIsRead == false) {
+        totalSalesCountByMonth();
+        setChartIsRead(true);
+      }
     }
   }, [sales]);
 
 
   return (
     <BaseCard title={`Resumo - ${sales.length} vendas realizadas em ${new Date().getFullYear()}`}>
-      {chartIsRead > 0 &&
+      {chartIsRead &&
         <Chart
           options={optionssalesoverview}
           series={seriessalesoverview}
