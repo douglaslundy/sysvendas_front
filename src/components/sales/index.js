@@ -103,8 +103,29 @@ export default () => {
         dispatch(turnModalGetSale());
     }
 
+    const getSalesPerDate = () => {
+        setPayMethod('all');
+        dispatch(getAllSalesPerDate(dateBegin, dateEnd));
+        setIsSearched(true);
+    }
+    const resetGetSales = () => {
+        dispatch(getAllSalesPerDate(setDateToSearch(1, 1), setDateToSearch(31, 12)));
+        setDateBegin(null);
+        setDateEnd(null);
+        setPayMethod('all');
+        setSearchValue('');
+        setIsSearched(null);
+    }
+    const printerSales = () => {
+        allSales.length <= 0
+            ?
+            dispatch(addAlertMessage('A busca não encontrou registros, você não realizou vendas no periodo informado!!!'))
+            :
+            salesPDF(allSales)
+    }
+
     useEffect(() => {
-        dispatch(getAllSalesPerDate(setDateToSearch(1,1), setDateToSearch(31,12)));
+        dispatch(getAllSalesPerDate(setDateToSearch(1, 0), setDateToSearch(31, 11)));
     }, []);
 
     useEffect(() => {
@@ -144,29 +165,8 @@ export default () => {
         setAllSales(filteredSalesBySearch);
     }, [payMethod, searchValue]);
 
-    const getSalesPerDate = () => {
-        setPayMethod('all');
-        dispatch(getAllSalesPerDate(dateBegin, dateEnd));
-        setIsSearched(true);
-    }
-    const resetGetSales = () => {
-        dispatch(getAllSalesPerDate(setDateToSearch(1,1), setDateToSearch(31,12)));
-        setDateBegin(null);
-        setDateEnd(null);
-        setPayMethod('all');
-        setSearchValue('');
-        setIsSearched(null);
-    }
-    const printerSales = () => {
-        allSales.length <= 0
-            ?
-            dispatch(addAlertMessage('A busca não encontrou registros, você não realizou vendas no periodo informado!!!'))
-            :
-            salesPDF(allSales)
-    }
-
     return (
-        <BaseCard title={isSearched ? `Encontramos ${allSales && allSales.length} Vendas realizadas no período informado`  : ` ${allSales && allSales.length} Vendas realizadas em ${new Date().getFullYear()}` }>
+        <BaseCard title={isSearched ? `Encontramos ${allSales && allSales.length} Vendas realizadas no período informado` : ` ${allSales && allSales.length} Vendas realizadas em ${new Date().getFullYear()}`}>
 
             <AlertModal />
 
@@ -439,7 +439,6 @@ export default () => {
                             :
                             <TableCell align="center">
                                 Nenhum registro encontrado!
-
                             </TableCell>
                     }
 
