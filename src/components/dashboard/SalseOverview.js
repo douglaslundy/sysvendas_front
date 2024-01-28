@@ -12,6 +12,7 @@ const SalesOverview = () => {
   const dispatch = useDispatch();
   const { sales } = useSelector(state => state.sales);
   const [allSales] = useState(sales);
+  const [chartIsRead, setChartIsRead] = useState(false);
 
   const [monthsInCash, setMonthsInCash] = useState({
     jan: 0,
@@ -43,7 +44,7 @@ const SalesOverview = () => {
     dec: 0
   });
 
-  const totalSalesByMonthInCash = async => {
+  const totalSalesByMonthInCash = () => {
     const monthNames = ["jan", "feb", "march", "apr", "may", "jun", "july", "aug", "sept", "oct", "nov", "dec"];
     let salesInCash = { ...monthsInCash };
     let salesOnTerm = { ...monthsOnTerm };
@@ -183,19 +184,27 @@ const SalesOverview = () => {
   ];
 
   useEffect(() => {
-    dispatch(getAllSalesPerDate(setDateToSearch(1,0), setDateToSearch(31,11)));
+    dispatch(getAllSalesPerDate(setDateToSearch(1, 0), setDateToSearch(31, 11)));
     totalSalesCountByMonth();
   }, []);
 
+  useEffect(() => {
+    if (allSales.length > 0) {
+      setChartIsRead(true);
+    }
+  }, [allSales]);
+
 
   return (
-    <BaseCard title={`Resumo de Vendas ${new Date().getFullYear()}`}>
-      <Chart
-        options={optionssalesoverview}
-        series={seriessalesoverview}
-        type="bar"
-        height="295px"
-      />
+    <BaseCard title={`Resumo - ${allSales.length} vendas realizadas em ${new Date().getFullYear()}`}>
+      {chartIsRead > 0 &&
+        <Chart
+          options={optionssalesoverview}
+          series={seriessalesoverview}
+          type="bar"
+          height="400px"
+        />
+      }
     </BaseCard>
   );
 };

@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Select from '../inputs/selects';
 import Receipt from "../modal/salesReceipt";
-import { getAllSales, getAllSalesPerDate } from "../../store/fetchActions/sale";
+import { getAllSalesPerDate } from "../../store/fetchActions/sale";
 import { addAlertMessage, turnModalGetSale } from "../../store/ducks/Layout";
 import { showSale } from "../../store/ducks/sales";
 import salePDF from "../../reports/sale";
