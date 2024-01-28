@@ -109,7 +109,7 @@ export default () => {
         setIsSearched(true);
     }
     const resetGetSales = () => {
-        dispatch(getAllSalesPerDate(setDateToSearch(1, 1), setDateToSearch(31, 12)));
+        dispatch(getAllSalesPerDate(setDateToSearch(1, 0), setDateToSearch(31, 11)));
         setDateBegin(null);
         setDateEnd(null);
         setPayMethod('all');

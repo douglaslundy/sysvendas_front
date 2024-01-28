@@ -11,7 +11,6 @@ const SalesOverview = () => {
 
   const dispatch = useDispatch();
   const { sales } = useSelector(state => state.sales);
-  const [allSales] = useState(sales);
   const [chartIsRead, setChartIsRead] = useState(false);
 
   const [monthsInCash, setMonthsInCash] = useState({
@@ -154,7 +153,7 @@ const SalesOverview = () => {
     yaxis: {
       show: true,
       min: 0,
-      max: allSales.lenght,
+      max: sales.lenght,
       tickAmount: 3,
       labels: {
         style: {
@@ -185,18 +184,18 @@ const SalesOverview = () => {
 
   useEffect(() => {
     dispatch(getAllSalesPerDate(setDateToSearch(1, 0), setDateToSearch(31, 11)));
-    totalSalesCountByMonth();
   }, []);
 
   useEffect(() => {
-    if (allSales.length > 0) {
+    if (sales.length > 0) {
+      totalSalesCountByMonth();
       setChartIsRead(true);
     }
-  }, [allSales]);
+  }, [sales]);
 
 
   return (
-    <BaseCard title={`Resumo - ${allSales.length} vendas realizadas em ${new Date().getFullYear()}`}>
+    <BaseCard title={`Resumo - ${sales.length} vendas realizadas em ${new Date().getFullYear()}`}>
       {chartIsRead > 0 &&
         <Chart
           options={optionssalesoverview}
