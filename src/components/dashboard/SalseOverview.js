@@ -174,11 +174,13 @@ const SalesOverview = () => {
   const seriessalesoverview = [
     {
       name: "Vendas a prazo",
-      data: [monthsOnTerm.jan, monthsOnTerm.feb, monthsOnTerm.march, monthsOnTerm.apr, monthsOnTerm.may, monthsOnTerm.jun, monthsOnTerm.july, monthsOnTerm.aug, monthsOnTerm.sept, monthsOnTerm.oct, monthsOnTerm.nov, monthsOnTerm.dec],
+      // data: [monthsOnTerm.jan, monthsOnTerm.feb, monthsOnTerm.march, monthsOnTerm.apr, monthsOnTerm.may, monthsOnTerm.jun, monthsOnTerm.july, monthsOnTerm.aug, monthsOnTerm.sept, monthsOnTerm.oct, monthsOnTerm.nov, monthsOnTerm.dec],
+        data : [ ...Object.values(monthsOnTerm) ]
     },
     {
       name: "Vendas a vista",
-      data: [monthsInCash.jan, monthsInCash.feb, monthsInCash.march, monthsInCash.apr, monthsInCash.may, monthsInCash.jun, monthsInCash.july, monthsInCash.aug, monthsInCash.sept, monthsInCash.oct, monthsInCash.nov, monthsInCash.dec],
+      // data: [monthsInCash.jan, monthsInCash.feb, monthsInCash.march, monthsInCash.apr, monthsInCash.may, monthsInCash.jun, monthsInCash.july, monthsInCash.aug, monthsInCash.sept, monthsInCash.oct, monthsInCash.nov, monthsInCash.dec],
+      data : [ ...Object.values(monthsInCash) ]
     },
   ];
 
