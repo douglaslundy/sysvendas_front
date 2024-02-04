@@ -21,7 +21,7 @@ import AlertModal from "../messagesModal";
 import Select from '../inputs/selects';
 import { useSelector, useDispatch } from 'react-redux';
 import { getCurrency } from "../helpers/formatt/currency";
-import { addProductCartFetch, getListProductsCart, deleteProductFromCart } from "../../store/fetchActions/cart";
+import { addProductCartFetch, getListProductsCart, deleteProductFromCart, cleanCart } from "../../store/fetchActions/cart";
 import { getAllProducts } from "../../store/fetchActions/product";
 import { convertToBrlCurrency } from "../helpers/formatt/currency";
 import { addAlertMessage, changeTitleAlert, turnModal, turnObsCartModal, turnQtdCartModal } from "../../store/ducks/Layout";
@@ -30,6 +30,7 @@ import { getTotal } from "../helpers/checkout";
 import PdvModal from "../modal/pdv";
 import ObsProductCartModal from "../modal/showObsProduct";
 import QtdProductCartModal from "../modal/showQtdProduct";
+import ConfirmDialog from "../confirmDialog";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -155,6 +156,16 @@ export default () => {
         productsCart.length > 0 ? dispatch(turnModal()) : dispatch(addAlertMessage("Insira pelo menos um produto ao carrinho!"))
     }
 
+    const [confirmDialog, setConfirmDialog] = useState({
+        isOpen: false,
+        title: 'Deseja apagar todos os ítens do carrinho',
+        subTitle: 'Esta ação não poderá ser desfeita'
+    });
+
+    const hancleCleanCart = async () => {
+        setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Deseja apagar todos os ítens do carrinho`, confirm: cleanCart()}),
+            dispatch(changeTitleAlert(`Todos os ítens foram removidos com sucesso!`))
+    }
     return (
         <>
             <AlertModal />
@@ -411,9 +422,9 @@ export default () => {
 
                 <BaseCard title="Total">
                     <Box sx={{
-                        '& > :not(style)': { m: 2 },
+                        '& > :not(style)': { m: 1 },
                         'display': 'grid',
-                        'minWidth': 300,
+                        'minWidth': 250,
                         // 'justify-content': 'stretch'
                     }}
                     >
@@ -428,15 +439,24 @@ export default () => {
                             changeItem={changeSale}
                             wd={"90%"}
                         />
-                        <PdvModal formSale={formSale}>
-                            <Button onClick={confirmSale} color="secondary" size="medium" variant="contained">
-                                <FeatherIcon icon="credit-card"width="20" height="20" />
-                                CONFIRMAR
-                            </Button>
-                        </PdvModal>
+                        <PdvModal formSale={formSale} />
+                        <Button onClick={confirmSale} color="secondary" size="medium" variant="contained">
+                            <FeatherIcon icon="dollar-sign" width="20" height="20" style={{ marginRight: '10px' }} />
+                            CONFIRMAR
+                        </Button>
+                        <Button onClick={hancleCleanCart} color="error" size="medium" variant="contained">
+                            <FeatherIcon icon="alert-circle" width="20" height="20" style={{ marginRight: '10px' }} />
+                            LIMPAR CARRINHO
+                        </Button>
+                        {/* </PdvModal> */}
                     </Box>
                 </BaseCard >
             </Box>
+
+            <ConfirmDialog
+                confirmDialog={confirmDialog}
+                setConfirmDialog={setConfirmDialog}
+            />
 
         </>
     );

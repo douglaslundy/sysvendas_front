@@ -57,8 +57,7 @@ export const sendBudgetToCart = (budget) => {
                 Router.push('/pdv')
             ))
             .catch((error) => {
-                console.log('errooooo'),
-                    dispatch(addAlertMessage(error.message ? `Error - ${error.response}` : 'Erro desconhecido'));
+                    dispatch(addAlertMessage(error.message ? `Error - ${error.response.data.message}` : 'Erro desconhecido'));
                 dispatch(turnLoading());
                 return error ? error.response : 'Retorno de erro desconhecido';
             })

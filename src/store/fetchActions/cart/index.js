@@ -1,6 +1,6 @@
 import { api } from "../../../services/api";
 import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
-import { addProductsCart, addProductCart, removeProductCart } from "../../ducks/cart";
+import { addProductsCart, addProductCart, removeProductCart, cleanProductsCart } from "../../ducks/cart";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 import { parseCookies } from 'nookies';
 
@@ -8,9 +8,8 @@ import { parseCookies } from 'nookies';
 export const getListProductsCart = () => {
     const { 'sysvendas.id': user } = parseCookies();
 
-
     const config = {
-        transformResponse: [function(data) {
+        transformResponse: [function (data) {
             const payload = JSON.parse(data).map(d => {
                 return {
                     ...d,
@@ -28,7 +27,7 @@ export const getListProductsCart = () => {
         dispatch(turnLoading())
         api
             .get(`/cart/${user}`, config)
-            .then((res) => {                
+            .then((res) => {
                 dispatch(addProductsCart(res.data));
                 dispatch(turnLoading());
             })
@@ -49,7 +48,7 @@ export const addProductCartFetch = (cart, cleanForm) => {
             id_product_stock: cart.product ? cart.product.id_product_stock : '',
             reason: cart.product ? cart.product.reason : 1
         };
-        
+
         api.post('/cart', prod)
             .then((res) =>
             (
@@ -70,7 +69,7 @@ export const addProductCartFetch = (cart, cleanForm) => {
                         // active: cart.product.active,
                     }
                 },
-                
+
                 cleanForm(),
                 dispatch(addProductCart(res)),
                 dispatch(addMessage(`O produto ${res.product.name} foi adicionado ao carrinho!`)),
@@ -89,7 +88,7 @@ export const addProductCartFetch = (cart, cleanForm) => {
 export const editProductCartFetch = (cart, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
-       
+
         api.put(`/cart/${cart.id}`, cart)
             .then((res) =>
             (
@@ -144,4 +143,27 @@ export const deleteProductFromCart = (product) => {
                 return error;
             })
     }
+}
+
+export const cleanCart = () => {
+    
+    const { 'sysvendas.id': user } = parseCookies();
+    
+    return (dispatch => {
+        dispatch(turnLoading());
+
+        api.delete(`/cart/clean/${user}`)
+            .then((res) =>
+            (
+                dispatch(cleanProductsCart()),
+                dispatch(addMessage('Os produtos deste carrinho foram removidos com sucesso!')),
+                dispatch(turnAlert()),
+                dispatch(turnLoading()),
+            ))
+            .catch((error) => {
+                dispatch(addMessage(`ERROR - ${error}`));
+                dispatch(turnLoading());
+                return error;
+            })
+    })
 }

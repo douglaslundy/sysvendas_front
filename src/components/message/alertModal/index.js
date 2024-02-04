@@ -10,7 +10,7 @@ export default function AlertModal( {message} ) {
     useEffect(() => {
         setTimeout(() => {
             dispatch(removeAlertMessage(message));
-        }, 12000)
+        }, 22000)
     }, [dispatch, message])
 
     return (

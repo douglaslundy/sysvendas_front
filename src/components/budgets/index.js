@@ -28,6 +28,7 @@ import { convertToBrlCurrency, getCurrency } from "../helpers/formatt/currency";
 import { parseISO, format } from 'date-fns';
 import BudgetModal from "../modal/budget";
 import ConfirmDialog from "../confirmDialog";
+import AlertModal from "../messagesModal";
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -77,11 +78,6 @@ export default () => {
         dispatch(turnModal());
     }
 
-    // const HandleInactiveClient = async client => {
-    //     setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Deseja Realmente excluir o cliente ${client.full_name}`, confirm: inactiveClientFetch(client) })
-    //     dispatch(changeTitleAlert(`O cliente ${client.full_name} foi inativado com sucesso!`))
-    // }
-
     const HandleSendBudgetToCart = async budget => {
         setConfirmDialog({ ...confirmDialog, isOpen: true, title:`Deseja devolver este orçamento ao carrinho?`, confirm: sendBudgetToCart(budget) }),
         dispatch(changeTitleAlert(`O orçamento ${budget.id} foi devolvido para o carrinho com sucesso!`))
@@ -104,6 +100,7 @@ export default () => {
 
     return (
         <BaseCard title={`Encontramos ${allBudgets && allBudgets.length} Orçamentos realizados no período informado`}>
+             <AlertModal />
 
             {/* <BasicDatePicker /> */}
             <TextField
