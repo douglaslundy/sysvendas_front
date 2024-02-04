@@ -79,7 +79,7 @@ export default () => {
     }
 
     const HandleSendBudgetToCart = async budget => {
-        setConfirmDialog({ ...confirmDialog, isOpen: true, title:`Deseja devolver este orçamento ao carrinho?`, confirm: sendBudgetToCart(budget) }),
+        setConfirmDialog({ ...confirmDialog, isOpen: true, title:`Deseja devolver o orçamento ${budget.id} ao carrinho?`, confirm: sendBudgetToCart(budget) }),
         dispatch(changeTitleAlert(`O orçamento ${budget.id} foi devolvido para o carrinho com sucesso!`))
     }
 
@@ -266,7 +266,7 @@ export default () => {
                                                             <FeatherIcon icon="dollar-sign" width="20" height="20" />
                                                         </Button>
 
-                                                        <Button title="Devolver ao Carrinho" onClick={() => HandleSendBudgetToCart(budget)} color="success" size="medium" variant="contained">
+                                                        <Button title="Devolver este orçamento ao Carrinho" onClick={() => HandleSendBudgetToCart(budget)} color="success" size="medium" variant="contained">
                                                             <FeatherIcon icon="shopping-cart" width="20" height="20" />
                                                         </Button>
 
