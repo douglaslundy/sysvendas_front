@@ -20,14 +20,14 @@ import FeatherIcon from "feather-icons-react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Receipt from "../modal/budgetReceipt";
-import { getAllBudgets } from "../../store/fetchActions/budget";
-import { turnModal, turnModalGetSale } from "../../store/ducks/Layout";
+import { getAllBudgets, sendBudgetToCart } from "../../store/fetchActions/budget";
+import { changeTitleAlert, turnModal, turnModalGetSale } from "../../store/ducks/Layout";
 import { showBudget } from "../../store/ducks/budget";
 import salePDF from "../../reports/sale";
-import BasicDatePicker from "../inputs/datePicker";
 import { convertToBrlCurrency, getCurrency } from "../helpers/formatt/currency";
 import { parseISO, format } from 'date-fns';
 import BudgetModal from "../modal/budget";
+import ConfirmDialog from "../confirmDialog";
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -46,11 +46,16 @@ export default () => {
     const dispatch = useDispatch();
     const [searchValue, setSearchValue] = useState("");
     const [allBudgets, setAllBudgets] = useState(budgets);
-
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10); const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+
+    const [confirmDialog, setConfirmDialog] = useState({
+        isOpen: false,
+        title: 'Deseja Devolver este orçamento ao carrinho',
+        subTitle: 'Esta ação não poderá ser desfeita'
+    });
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
@@ -71,6 +76,18 @@ export default () => {
         dispatch(showBudget(budget));
         dispatch(turnModal());
     }
+
+    // const HandleInactiveClient = async client => {
+    //     setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Deseja Realmente excluir o cliente ${client.full_name}`, confirm: inactiveClientFetch(client) })
+    //     dispatch(changeTitleAlert(`O cliente ${client.full_name} foi inativado com sucesso!`))
+    // }
+
+    const HandleSendBudgetToCart = async budget => {
+        setConfirmDialog({ ...confirmDialog, isOpen: true, title:`Deseja devolver este orçamento ao carrinho?`, confirm: sendBudgetToCart(budget) }),
+        dispatch(changeTitleAlert(`O orçamento ${budget.id} foi devolvido para o carrinho com sucesso!`))
+    }
+
+    
 
     useEffect(() => {
         dispatch(getAllBudgets());
@@ -252,6 +269,10 @@ export default () => {
                                                             <FeatherIcon icon="dollar-sign" width="20" height="20" />
                                                         </Button>
 
+                                                        <Button title="Devolver ao Carrinho" onClick={() => HandleSendBudgetToCart(budget)} color="success" size="medium" variant="contained">
+                                                            <FeatherIcon icon="shopping-cart" width="20" height="20" />
+                                                        </Button>
+
                                                     </Box>
                                                 </TableCell>
                                             </>
@@ -276,6 +297,11 @@ export default () => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </TableContainer>
+
+            <ConfirmDialog
+                confirmDialog={confirmDialog}
+                setConfirmDialog={setConfirmDialog}
+            />
 
         </BaseCard >
     );

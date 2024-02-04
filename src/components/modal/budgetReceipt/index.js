@@ -19,7 +19,7 @@ import FeatherIcon from "feather-icons-react";
 
 import { turnModalGetSale } from '../../../store/ducks/Layout';
 import { convertToBrlCurrency, getCurrency } from '../../helpers/formatt/currency';
-import salesPDF from '../../../reports/sales';
+import salePDF from '../../../reports/sale';
 import { showBudget } from '../../../store/ducks/budget';
 
 
@@ -196,7 +196,7 @@ export default function SalesReceipt(props) {
                         <Button onClick={() => { handleClose() }} variant="outlined" mt={2}>
                             <FeatherIcon icon="skip-back" width="20" height="20" />
                         </Button>
-                        <Button title="Imprimir venda" onClick={() => salesPDF(sale)} color="error" size="medium" variant="contained">
+                        <Button title="Imprimir venda" onClick={() => salePDF(budget)} color="error" size="medium" variant="contained">
                             <FeatherIcon icon="printer" width="20" height="20" />
                         </Button>
                     </Box>

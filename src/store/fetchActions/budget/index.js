@@ -7,6 +7,7 @@ import { turnAlert, addAlertMessage, turnLoading, turnModalGetBudgets, changeTit
 import salePDF from "../../../reports/sale";
 
 import { valueDecrescidFromPercent } from '../../../components/helpers/functions/percent';
+import Router from "next/router";
 
 
 export const addBudget = (budget, cleanForm) => {
@@ -39,6 +40,31 @@ export const addBudget = (budget, cleanForm) => {
             })
     };
 };
+
+export const sendBudgetToCart = (budget) => {
+    const { 'sysvendas.id': user } = parseCookies();
+    // console.log(JSON.stringify(budget));
+    return (dispatch) => {
+        dispatch(turnLoading());
+
+        api.put(`/budgets/sendBudgetToCart/${budget.id}/${user}`, budget)
+            .then((res) =>
+            (
+                dispatch(removeBudget(budget)),
+                dispatch(addMessage(`Orçamento enviado ao carrinho com sucesso!`)),
+                dispatch(turnAlert()),
+                dispatch(turnLoading()),
+                Router.push('/pdv')
+            ))
+            .catch((error) => {
+                console.log('errooooo'),
+                    dispatch(addAlertMessage(error.message ? `Error - ${error.response}` : 'Erro desconhecido'));
+                dispatch(turnLoading());
+                return error ? error.response : 'Retorno de erro desconhecido';
+            })
+    };
+
+}
 
 export const getAllBudgets = () => {
     const config = {

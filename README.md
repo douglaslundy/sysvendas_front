@@ -16,11 +16,11 @@ Após a conclusão deste projeto, este README será alterado com as informaçõe
 bem como o guia para instalação e produção. 
 
 
-### Link do projeto consumindo uma api Laravel
+### Link do projeto em produção
 
 https://sysvendas.vercel.app/
 
 
 
-### Api Laravel consumida pelo projeto
+### Api do projeto em Laravel
 https://github.com/douglaslundy/sysvendas_api
