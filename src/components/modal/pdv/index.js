@@ -21,7 +21,7 @@ import {
 
 import BaseCard from "../../baseCard/BaseCard";
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
-import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
+import { convertPercentToNumeric, convertToBrlCurrency, setCurrency } from '../../helpers/formatt/currency';
 import { getAllUsers } from '../../../store/fetchActions/user';
 
 
@@ -108,7 +108,7 @@ export default function PdvModal(props) {
     const handleSaveSale = async () => {
 
         if (type_sale === "on_term") {
-            checksIfSellingIsAllowed(setCurrency(client.limit), setCurrency(client.debit_balance), setCurrency(total_sale));
+            checksIfSellingIsAllowed(client.limit, client.debit_balance, total_sale);
             checksIfClientIsMarked(client.marked);
         }
 
@@ -160,7 +160,7 @@ export default function PdvModal(props) {
 
 
     const getTotalToPay = () => {
-        return convertToBrlCurrency(valueDecrescidFromPercent(total_sale, discount));
+        return convertToBrlCurrency(valueDecrescidFromPercent(total_sale, convertPercentToNumeric(discount)));
     }
 
     const paymentType = type_sale === 'in_cash' ? ' A VISTA' : ' A PRAZO';
@@ -186,8 +186,8 @@ export default function PdvModal(props) {
                         <Grid item xs={12} lg={12}>
                             <BaseCard title={title}>
 
-                                <h4>Total {convertToBrlCurrency(getCurrency(setCurrency(total_sale)))}</h4>
-                                {setCurrency(discount) > 0 &&
+                                <h4>Total {convertToBrlCurrency(total_sale)}</h4>
+                                {convertPercentToNumeric(discount) > 0 &&
                                     <>
                                         <h5 style={{ color: "red" }}>Desconto {discount}</h5>
                                         <h3> Pagar {getTotalToPay()}</h3>
@@ -195,12 +195,19 @@ export default function PdvModal(props) {
                                 }
                                 {setCurrency(pay_value) > 0 &&
 
-                                    (setCurrency(discount) > 0 ? setCurrency(pay_value) - (setCurrency(total_sale) - setCurrency(discount)) : setCurrency(pay_value) - (setCurrency(total_sale)) > 0) &&
+                                    (convertPercentToNumeric(discount) > 0 
+                                        ? setCurrency(pay_value) - (total_sale - convertPercentToNumeric(discount)) : setCurrency(pay_value) - (total_sale) > 0) &&
 
-                                    <h5 style={{ color: "blue" }}>Troco {convertToBrlCurrency(getCurrency(
-                                        setCurrency(discount) > 0
-                                            ? setCurrency(pay_value) - getCurrency(setCurrency(valueDecrescidFromPercent(total_sale, discount)))
-                                            : setCurrency(pay_value) - setCurrency(total_sale)))}</h5>
+                                    <h5 style={{ color: "blue" }}>Troco {convertToBrlCurrency(
+                                        convertPercentToNumeric(discount) > 0
+                                            ? setCurrency(pay_value) - valueDecrescidFromPercent(total_sale, discount)
+                                            : setCurrency(pay_value) - total_sale)}</h5>
+
+
+                                    // <h5 style={{ color: "blue" }}>Troco {convertToBrlCurrency(getCurrency(
+                                    //     setCurrency(discount) > 0
+                                    //         ? setCurrency(pay_value) - getCurrency(setCurrency(valueDecrescidFromPercent(total_sale, discount)))
+                                    //         : setCurrency(pay_value) - setCurrency(total_sale)))}</h5>
                                 }
 
                                 <Box sx={{

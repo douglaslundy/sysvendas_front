@@ -1,5 +1,4 @@
 import { api } from "../../../services/api";
-import { setCurrency } from "../../../components/helpers/formatt/currency";
 import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
 import { addBudgets, addBudgetsPerClient, removeBudget } from "../../ducks/budget";
@@ -19,7 +18,7 @@ export const addBudget = (budget, cleanForm) => {
             id_seller: budget.id_user ? budget.id_user : null,
             id_user: user,
             id_client: budget.id_client,
-            total_sale: setCurrency(budget.total_sale),
+            total_sale: budget.total_sale,
             obs: budget.obs
         };
 
@@ -130,12 +129,7 @@ export const changeBudgetToSale = (sale, cleanForm) => {
             id_seller: sale.id_user ? sale.id_user : null,
             ...sale,
             id_user: user,
-            check: setCurrency(sale.check),
-            card: setCurrency(sale.card),
-            cash: setCurrency(sale.cash),
-            pay_value: setCurrency(sale.pay_value),
-            total_sale: setCurrency(sale.total_sale),
-            discount: setCurrency(sale.total_sale) - (setCurrency(valueDecrescidFromPercent(sale.total_sale, sale.discount)) / 100)
+            discount: sale.total_sale - valueDecrescidFromPercent(sale.total_sale, sale.discount)
         };
 
         api.post('/sales/changeBudgetToSale', sale)

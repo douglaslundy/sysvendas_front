@@ -94,7 +94,7 @@ async function salesPDF(sales) {
                     { text: sale.paied === 'yes' ? sale?.updated_at && format(parseISO(sale?.updated_at), 'dd/MM/yyyy HH:mm:ss') : 'Pagamento Pendente', fontSize: 9, margin: [0, 2, 0, 2] }
                 ]
             },
-            { text: convertToBrlCurrency(getCurrency(sale.total_sale)), fontSize: 9, margin: [0, 2, 0, 2] },
+            { text: convertToBrlCurrency(sale.total_sale), fontSize: 9, margin: [0, 2, 0, 2] },
         ]
     });
 
@@ -129,27 +129,27 @@ async function salesPDF(sales) {
         stack: [
             {text: [
                 { text: `Total à vista:  ` },
-                { text: `${convertToBrlCurrency(getCurrency(totalInSight))}`, bold: true, fontSize: 14 },
+                { text: `${convertToBrlCurrency(totalInSight)}`, bold: true, fontSize: 14 },
             ]},
 
             {text: [
                 { text: `Total à prazo:  ` },
-                { text: `${convertToBrlCurrency(getCurrency(termTotal))}`, bold: true, fontSize: 14 },
+                { text: `${convertToBrlCurrency(termTotal)}`, bold: true, fontSize: 14 },
             ]},
             
             {text: [
                 { text: `Total à prazo pendente:  ` },
-                { text: `${convertToBrlCurrency(getCurrency(totalPendingTerm))}`, bold: true, fontSize: 14 },
+                { text: `${convertToBrlCurrency(totalPendingTerm)}`, bold: true, fontSize: 14 },
             ]},
 
             {text: [
                 { text: `Total à prazo recebido:  ` },
-                { text: `${convertToBrlCurrency(getCurrency(totalOnTermReceived))}`, bold: true, fontSize: 14 },
+                { text: `${convertToBrlCurrency(totalOnTermReceived)}`, bold: true, fontSize: 14 },
             ]},
 
             {text: [
                 { text: `Total de vendas:  ` },
-                { text: `${convertToBrlCurrency(getCurrency(totalSales))}`, bold: true, fontSize: 14 },
+                { text: `${convertToBrlCurrency(totalSales)}`, bold: true, fontSize: 14 },
             ]},
         ],
         fontSize: 12,

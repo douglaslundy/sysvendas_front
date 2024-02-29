@@ -10,10 +10,7 @@ export const getAllProducts = () => {
             const payload = JSON.parse(data).map(d => {
                 return {
                     ...d,
-                    cost_value: getCurrency(d.cost_value),
-                    sale_value: getCurrency(d.sale_value),
-                    reason: getCurrency(d.reason),
-                    stock: getCurrency(d.stock !== null ? d.stock.stock : 0)
+                    stock: d.stock !== null ? d.stock.stock : 0
                 }
             })
             return payload;
@@ -50,10 +47,7 @@ export const addProductFetch = (product, cleanForm) => {
             (
                 product = {
                     ...res.data.product,
-                    cost_value: getCurrency(res.data.product.cost_value),
-                    sale_value: getCurrency(res.data.product.sale_value),
-                    reason: getCurrency(res.data.product.reason),
-                    stock: getCurrency(res.data.product.stock.stock)
+                    stock: res.data.product.stock.stock
                 },
 
                 dispatch(addProduct(product)),
@@ -114,10 +108,7 @@ export const editProductFetch = (product, cleanForm) => {
             (
                 product = {
                     ...res.data.product,
-                    cost_value: getCurrency(res.data.product.cost_value),
-                    sale_value: getCurrency(res.data.product.sale_value),
-                    reason: getCurrency(res.data.product.reason),
-                    stock: getCurrency(res.data.product.stock.stock)
+                    stock: res.data.product.stock.stock
                 },
 
                 dispatch(editProduct(product)),

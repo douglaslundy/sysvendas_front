@@ -237,7 +237,7 @@ export default () => {
                                                                     fontWeight: "600",
                                                                 }}
                                                             >
-                                                                {convertToBrlCurrency(getCurrency(budget.total_sale))}
+                                                                {convertToBrlCurrency(budget.total_sale)}
                                                             </Typography>
                                                             <Typography
                                                                 color="textSecondary"

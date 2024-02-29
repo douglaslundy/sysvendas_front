@@ -1,5 +1,5 @@
 import { api } from "../../../services/api";
-import { setCurrency } from "../../../components/helpers/formatt/currency";
+import { convertToDecimalWith2DigitsAfterComma, convertToDecimalWith3DigitsAfterComma, setCurrency } from "../../../components/helpers/formatt/currency";
 import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
 import { addSales, addSalesPerClient } from "../../ducks/sales";
@@ -22,16 +22,16 @@ export const addSale = (sale, cleanForm) => {
             ...sale,
             id_seller: sale.id_user ? sale.id_user : null,
             id_user: user,
-            check: setCurrency(sale.check),
-            card: setCurrency(sale.card),
-            cash: setCurrency(sale.cash),
+
             pay_value: setCurrency(sale.pay_value),
+            cash: setCurrency(sale.cash),
             total_sale: setCurrency(sale.total_sale),
             
             // esta rotina converte o desconto que chega em percentagem, exemplo : 50% para o valor decimal real, exemplo 10000
-            discount: setCurrency(sale.total_sale) - (setCurrency(valueDecrescidFromPercent(sale.total_sale, sale.discount)) / 100)
+            discount: convertToDecimalWith2DigitsAfterComma(sale.total_sale - valueDecrescidFromPercent(sale.total_sale, sale.discount))
         };
 
+        console.log(`Venda é ${JSON.stringify(sale)}`)
         api.post('/sales', sale)
             .then((res) =>
             (
@@ -156,12 +156,12 @@ export const toPaySalesFetch = (form, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
 
-        form = {
-            ...form,
-            // check: setCurrency(form.check),
-            cash: setCurrency(form.cash),
-            // card: setCurrency(form.card)
-        };
+        // form = {
+        //     ...form,
+        //     // check: setCurrency(form.check),
+        //     cash: setCurrency(form.cash),
+        //     // card: setCurrency(form.card)
+        // };
 
         api.post(`/sales/pay`, form)
             .then((res) =>

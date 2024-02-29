@@ -8,7 +8,7 @@ const defaultMaskOptions = {
   prefix: 'R$ ',
   suffix: '',
   includeThousandsSeparator: true,
-  thousandsSeparatorSymbol: '.',
+  thousandsSeparatorSymbol: '',
   allowDecimal: true,
   decimalSymbol: ',',
   decimalLimit: 2, // how many digits allowed after the decimal
@@ -32,8 +32,8 @@ const Currency = React.forwardRef((props, ref) => {
 
 
 export default function index(props) {
-
-    const { label, name, value, changeItem, wd, disabled } = props;
+  
+  const { label, name, value, changeItem, wd, disabled } = props;
     return (
         <TextField
             label={label}
@@ -42,7 +42,7 @@ export default function index(props) {
             value={value ? value : ''}
             onChange={changeItem}
             sx={{ width: wd }}
-            required
+            // required
             disabled={disabled ? disabled : false}
 
             InputProps={{

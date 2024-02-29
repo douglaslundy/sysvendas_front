@@ -23,7 +23,7 @@ import BaseCard from "../../baseCard/BaseCard";
 import { showProduct } from '../../../store/ducks/products';
 import { editProductFetch, addProductFetch } from '../../../store/fetchActions/product';
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
-import { getCurrency, setCurrency } from '../../helpers/formatt/currency';
+import { changeDotToComma, getCurrency, setCurrency } from '../../helpers/formatt/currency';
 import { convertStock } from '../../helpers/stock';
 import { getAllUnitsToSelect } from "../../../store/fetchActions/unit";
 import { getAllCategoriesToSelect } from "../../../store/fetchActions/categorie";
@@ -69,28 +69,34 @@ export default function ProductModal(props) {
 
     // responsavel por informar ao useEffect se a alteração esta acontecendo no input valor de venda ou percent
     // e permitir que ele execute ou não a rotina de atualizar o input percnetual 
-    const [isPercent, setIsPercent] = useState(false);
+    // variavel responsavel por perceber sempre que houver digitação no input percent
+    // ou seja, o usuario inserir o valor percent para somar ou diminuir do valor original
 
     const changeItem = ({ target }) => {
         setForm({ ...form, [target.name]: target.value });
     };
 
 
+    // no inicio da função, altera a variavel isPercent, afim de acionar o useEffect para atualizar o input percent
     const changePercent = ({ target }) => {
-
-        setIsPercent(true);
         setPercent(target.value);
-        const newValue = valueSaleSummedFromPercent(cost_value, target.value);
-        setForm({ ...form, ['sale_value']: getCurrency(newValue * 100) });
-        setIsPercent(false);
-
+        const newValue = valueSaleSummedFromPercent(cost_value, target.value ? target.value : 0);
+        // console.log(newValue);
+        // console.log(changeDotToComma(newValue));
+        setForm({ ...form, ['sale_value']: changeDotToComma(newValue) });
     };
 
+
+    const changeSaleValue = ({ target }) => {
+        setForm({ ...form, sale_value: target.value});
+        setPercent(parseFloat(summedPercentage(cost_value, target.value)));
+    };
+
+
     const changePercentPerValue = () => {
-        if (!isPercent) {
-            setPercent(parseFloat(summedPercentage(setCurrency(cost_value), setCurrency(sale_value))));
-        }
+            setPercent(parseFloat(summedPercentage(cost_value, sale_value)));
     }
+
     const cleanForm = () => {
         setForm({
             name: "",
@@ -150,9 +156,10 @@ export default function ProductModal(props) {
         }
     }, [product]);
 
+    // este useEffect atualiza os valores cost_value e sale_value sempre que houver alguma alteração seja no valor de custo ou valor de venda
     useEffect(() => {
         changePercentPerValue()
-    }, [cost_value, sale_value]);
+    }, [cost_value]);
 
     useEffect(() => {
         !isVisible ? setForm({ ...form, ['id_product_stock']: null }) : setForm({ ...form, ['stock']: stock });
@@ -226,19 +233,22 @@ export default function ProductModal(props) {
                                         'justify-content': 'space-between'
                                     }}
                                     >
-                                        <Currency value={cost_value}
+                                        <Currency
+                                            value={changeDotToComma(cost_value)}
                                             label={'Valor de Custo'}
                                             name={'cost_value'}
                                             changeItem={changeItem}
                                             wd={"36%"}
                                         />
-                                        <Currency value={sale_value}
+                                        <Currency
+                                            value={changeDotToComma(sale_value)}
                                             label={'Valor de Venda'}
                                             name={'sale_value'}
-                                            changeItem={changeItem}
+                                            changeItem={changeSaleValue}
                                             wd={"36%"}
                                         />
-                                        <Percent value={percent}
+                                        <Percent
+                                            value={changeDotToComma(percent)}
                                             label={'Percentual'}
                                             name={'percent'}
                                             required={'required'}
@@ -246,7 +256,8 @@ export default function ProductModal(props) {
                                             wd={"24%"}
                                         />
                                     </Box>
-                                    <Select value={id_unity}
+                                    <Select
+                                        value={id_unity}
                                         label={'Unidade'}
                                         name={'id_unity'}
                                         store={units}
@@ -257,7 +268,7 @@ export default function ProductModal(props) {
                                         label="Razão"
                                         variant="outlined"
                                         name="reason"
-                                        value={reason ? reason : ''}
+                                        value={reason ? changeDotToComma(reason) : ''}
                                         changeItem={changeItem}
                                         required
                                     />
@@ -284,7 +295,7 @@ export default function ProductModal(props) {
                                             label="Estoque Real"
                                             variant="outlined"
                                             name="stock"
-                                            value={stock ? stock : ''}
+                                            value={stock ? changeDotToComma(stock) : ''}
                                             changeItem={changeItem}
                                             required
                                         />

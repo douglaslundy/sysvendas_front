@@ -186,7 +186,9 @@ export default function SalesReceipt(props) {
                                                         variant="h6" sx={{
                                                             fontWeight: "600"
                                                         }} >
-                                                        {convertToBrlCurrency(getCurrency(item.item_value * item.qtd / 100))}</Typography>
+                                                        {convertToBrlCurrency(getCurrency(item.item_value * item.qtd))}
+                                                        {/* {convertToBrlCurrency(item.item_value * item.qtd)} */}
+                                                    </Typography>
                                                 </TableCell>
 
                                             </>
@@ -201,7 +203,7 @@ export default function SalesReceipt(props) {
                         discount != 0 &&
                         <>
                             <h5 style={{ color: "red" }}>Desconto:  {convertToBrlCurrency(getCurrency(discount))}</h5>
-                            <h4>Total Pago:  {convertToBrlCurrency(getCurrency(total_sale - discount))}</h4>
+                            <h4>Total Pago:  {convertToBrlCurrency(total_sale - discount)}</h4>
                         </>
                     }
 

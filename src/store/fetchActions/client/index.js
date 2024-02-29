@@ -32,8 +32,8 @@ export const getAllClients = () => {
                     "ie": d.ie,
                     "fantasy_name": d.fantasy_name,
                     "obs": d.obs,
-                    "debit_balance": getCurrency(d.debit_balance),
-                    "limit": getCurrency(d.limit),
+                    "debit_balance": d.debit_balance,
+                    "limit": d.limit,
                     "marked": d.marked,
                     "zip_code": zip_code,
                     "city": city,
@@ -52,7 +52,7 @@ export const getAllClients = () => {
 
         api
             .get('/clients', config)
-            .then((res) => {
+            .then((res) => {                
                 dispatch(addClients(res.data));
                 dispatch(turnLoading());
             })
@@ -91,7 +91,7 @@ export const addClientFetch = (client, cleanForm) => {
             (
                 client = {
                     ...res.data.client,
-                    limit: getCurrency(res.data.client.limit),
+                    limit: res.data.client.limit,
                     ...client.addresses,
                 },
                 dispatch(addClient(client)),
@@ -115,7 +115,7 @@ export const editClientFetch = (client, cleanForm) => {
         client = {
             ...client,
             limit: setCurrency(client.limit),
-            debit_balance: setCurrency(client.debit_balance),
+            debit_balance: client.debit_balance,
             cpf_cnpj: cleanCpfCnpj(client.cpf_cnpj),
             phone: cleanPhone(client.phone),
             addresses: {
@@ -133,7 +133,7 @@ export const editClientFetch = (client, cleanForm) => {
             (
                 client = {
                     ...res.data.client,
-                    limit: getCurrency(res.data.client.limit),
+                    limit: res.data.client.limit,
                     debit_balance: getCurrency(res.data.client.debit_balance),
                     ...client.addresses,
                 },

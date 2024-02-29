@@ -7,14 +7,15 @@ import { TextField } from "@mui/material";
 const defaultMaskOptions = {
   prefix: '',
   suffix: ' %',
-  includeThousandsSeparator: true,
-  thousandsSeparatorSymbol: ',',
+  includeThousandsSeparator: false,
+  thousandsSeparatorSymbol: '.',
   allowDecimal: true,
-  decimalSymbol: '.',
+  decimalSymbol: ',',
   decimalLimit: 2, // how many digits allowed after the decimal
-//   integerLimit: 9, // limit length of integer numbers
+  //   integerLimit: 9, // limit length of integer numbers
   allowNegative: false,
   allowLeadingZeroes: false,
+  integerLimit: 3
 }
 
 const PercentMask = React.forwardRef((props, ref) => {

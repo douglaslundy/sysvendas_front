@@ -69,7 +69,7 @@ export default () => {
     }, [product]);
 
     useEffect(() => {
-        setFormSale({ ...formSale, ['total_sale']: getTotal(productsCart), total_itens: productsCart.length })
+        setFormSale({ ...formSale, total_sale: getTotal(productsCart), total_itens: productsCart.length })
     }, [productsCart]);
 
     useEffect(() => {
@@ -323,7 +323,7 @@ export default () => {
                                                                         fontWeight: "600",
                                                                     }}
                                                                 >
-                                                                    {convertToBrlCurrency(getCurrency(prod.item_value))}
+                                                                    {convertToBrlCurrency(prod.item_value)}
                                                                 </Typography>
                                                             </Box>
                                                         </Box>
@@ -349,18 +349,10 @@ export default () => {
                                                                             color: "#000"
                                                                         }}
                                                                     >
-                                                                        {getCurrency(prod.qtd)}
+                                                                        {prod.qtd.toString().replace('.',',').replace(',000','')}
+                                                                        {prod?.product?.unity ? ` ${prod.product.unity?.name}` : ''}
                                                                     </Typography>
                                                                 </Button>
-
-                                                                <Typography
-                                                                    color="textSecondary"
-                                                                    sx={{
-                                                                        fontSize: "13px",
-                                                                    }}
-                                                                >
-                                                                    {prod.unity ? prod.unity.name : ''}
-                                                                </Typography>
                                                             </Box>
                                                         </Box>
                                                     </TableCell>
@@ -379,7 +371,7 @@ export default () => {
                                                                         fontWeight: "600",
                                                                     }}
                                                                 >
-                                                                    {convertToBrlCurrency(getCurrency(prod.item_value * prod.qtd / 100))}
+                                                                    {convertToBrlCurrency(prod.item_value * prod.qtd)}
                                                                 </Typography>
                                                             </Box>
                                                         </Box>

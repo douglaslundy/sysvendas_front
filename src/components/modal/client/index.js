@@ -23,6 +23,7 @@ import BaseCard from "../../baseCard/BaseCard";
 import { showClient } from '../../../store/ducks/clients';
 import { editClientFetch, addClientFetch } from '../../../store/fetchActions/client';
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
+import { changeDotToComma, setCurrency } from '../../helpers/formatt/currency';
 
 
 const style = {
@@ -355,7 +356,7 @@ export default function ClientModal(props) {
 
                                     <Currency
                                         id="limit"
-                                        value={limit}
+                                        value={changeDotToComma(limit)}
                                         label={'Limite'}
                                         name={'limit'}
                                         changeItem={changeItem}

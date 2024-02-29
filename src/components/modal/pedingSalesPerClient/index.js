@@ -26,13 +26,16 @@ import FeatherIcon from "feather-icons-react";
 import Receipt from "../../modal/salesReceipt";
 import { showClient } from '../../../store/ducks/clients';
 import { changeTitleAlert, turnModalGetSale, turnModalGetPendingSales } from '../../../store/ducks/Layout';
-import { convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
+import { changeDotToComma, convertToBrlCurrency, setCurrency } from '../../helpers/formatt/currency';
 import { toPaySalesFetch } from '../../../store/fetchActions/sale';
 import ConfirmDialog from "../../confirmDialog";
-import { parseISO, format } from 'date-fns';
+import { parseISO, format, set } from 'date-fns';
+
+import Percent from '../../inputs/textFields/percent';
 
 import salesPDF from '../../../reports/sales';
 import { showSale } from '../../../store/ducks/sales';
+import { discountPercentage, valueDecrescidFromPercent } from '../../helpers/functions/percent';
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -65,6 +68,10 @@ export default function (props) {
     const { client } = useSelector(state => state.clients);
     const { isOpenModalGetPendingSales } = useSelector(state => state.layout);
     const [totalSale, setTotalSale] = useState(0);
+    const [percent, setPercent] = useState();
+
+    // variavel responsavel por perceber sempre que houver digitação no input percent
+    // ou seja, o usuario inserir o valor percent para somar ou diminuir do valor original
 
     const dispatch = useDispatch();
 
@@ -91,14 +98,6 @@ export default function (props) {
     const changeItem = ({ target }) => {
         setForm({ ...form, [target.name]: target.value })
     }
-
-    useEffect(() => {
-        setForm({ ...form, troco: setCurrency(cash) - setCurrency(payable) });
-    }, [cash])
-
-    useEffect(() => {
-        setForm({ ...form, payable: getCurrency(totalSale - setCurrency(discount ? discount : 0)) });
-    }, [discount, totalSale])
 
     const handleEditForm = (sale) => {
         // salesToPay.includes(sale.id) ? (setSalesToPay([...salesToPay.filter(s => s != sale.id)]), setTotalSale(totalSale - setCurrency(sale.total_sale))) : (setSalesToPay([...salesToPay, sale.id]), setTotalSale(totalSale + setCurrency(sale.total_sale)));
@@ -128,11 +127,11 @@ export default function (props) {
     };
 
     const HandleToPay = () => {
-        if (setCurrency(cash) < (setCurrency(payable) - setCurrency(discount))) {
+        if (setCurrency(cash) < (payable - discount)) {
             setWarning("O Valor inserido precisa ser igual ou maior ao valor total a pagar");
         } else {
             setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja baixar estas vendas?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: toPaySalesFetch(form, cleanForm) })
-            dispatch(changeTitleAlert("Vendas recebidas com sucesso dimais da conta"));
+            dispatch(changeTitleAlert("Vendas recebidas com sucesso"));
         }
     };
 
@@ -150,6 +149,40 @@ export default function (props) {
         dispatch(showSale(sale));
         dispatch(turnModalGetSale());
     }
+
+    // no inicio da função, altera a variavel isPercent, afim de acionar o useEffect para atualizar o input percent
+    const changePercent = ({ target }) => {
+        setPercent(target.value);
+        const newValue = valueDecrescidFromPercent(totalSale, target.value ? target.value : 0);
+        setForm({ ...form, totalSale: newValue, discount: changeDotToComma(totalSale - newValue) });
+    }
+
+    // const changeDiscount = ({ target }) => {
+    //     setForm({ ...form, discount: target.value });
+    //     const newValue = valueDecrescidFromPercent(totalSale, target.value ? target.value : 0);
+    // }
+
+
+
+    // funcção e acionada no useEffet, afim de alterar a porcentagem, sempre que o usuario alterar p valor de custo ou de venda, informando 
+    // a porcentagem atualizada de lucro
+    const changePercentPerValue = value => {
+            setPercent(parseFloat(discountPercentage(totalSale, value)));
+    }
+
+    useEffect(() => {
+        setForm({ ...form, troco: setCurrency(cash) - payable });
+    }, [cash, payable])
+
+    useEffect(() => {
+        setForm({ ...form, payable: setCurrency(discount) > 0 ? (totalSale - setCurrency(discount) >= 0 ? totalSale - setCurrency(discount) : 0) : totalSale });
+    }, [discount, totalSale])
+
+    const changeDiscount = ({target}) => {
+        setForm({...form, discount: target.value})
+        changePercentPerValue(target.value)
+    }
+
 
     return (
         <div>
@@ -320,7 +353,7 @@ export default function (props) {
                                                                                     fontWeight: "600",
                                                                                 }}
                                                                             >
-                                                                                {convertToBrlCurrency(getCurrency(sale.total_sale - sale.discount))}
+                                                                                {convertToBrlCurrency(sale.total_sale - sale.discount)}
                                                                             </Typography>
                                                                             <Typography
                                                                                 color="textSecondary"
@@ -362,11 +395,11 @@ export default function (props) {
                                     />
                                 </TableContainer>
 
-                                <h3>Total de vendas selecionadas: {convertToBrlCurrency(getCurrency(totalSale))}</h3>
+                                <h3>Total de vendas selecionadas: {convertToBrlCurrency(totalSale)}</h3>
 
-                                <h4>Desconto: {convertToBrlCurrency(getCurrency(setCurrency(discount ? discount : 0)))}</h4>
-                                <h3>Total a Pagar: {convertToBrlCurrency(getCurrency(setCurrency(payable ? payable : 0)))}</h3>
-                                <h4>Troco: {troco && troco > 0 ? convertToBrlCurrency(getCurrency(troco)) : convertToBrlCurrency(0)}</h4>
+                                <h4>Desconto: {convertToBrlCurrency(discount ? discount : 0)}</h4>
+                                <h3>Total a Pagar: {convertToBrlCurrency(payable ? payable : 0)}</h3>
+                                <h4>Troco: {troco && troco > 0 ? convertToBrlCurrency(troco) : convertToBrlCurrency(0)}</h4>
                                 <ConfirmDialog
                                     confirmDialog={confirmDialog}
                                     setConfirmDialog={setConfirmDialog} />
@@ -388,10 +421,18 @@ export default function (props) {
                                 <Currency
                                     value={discount}
                                     disabled={!totalSale > 0}
-                                    label={'Desconto'}
+                                    label={'Desconto em R$'}
                                     name={'discount'}
-                                    changeItem={changeItem}
+                                    changeItem={changeDiscount}
                                     wd={"30%"}
+                                />
+                                <Percent
+                                    value={changeDotToComma(percent)}
+                                    label="Desconto em %"
+                                    name="discount"
+                                    changeItem={changePercent}
+                                    disabled={!totalSale > 0}
+                                    wd="30%"
                                 />
                                 <Currency
                                     value={cash}

@@ -1,5 +1,4 @@
 import { api } from "../../../services/api";
-import { getCurrency, setCurrency } from "../../../components/helpers/formatt/currency";
 import { addProductsCart, addProductCart, removeProductCart, cleanProductsCart } from "../../ducks/cart";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
 import { parseCookies } from 'nookies';
@@ -8,25 +7,27 @@ import { parseCookies } from 'nookies';
 export const getListProductsCart = () => {
     const { 'sysvendas.id': user } = parseCookies();
 
-    const config = {
-        transformResponse: [function (data) {
-            const payload = JSON.parse(data).map(d => {
-                return {
-                    ...d,
-                    product: {
-                        ...d.product,
-                        reason: getCurrency(d.product.reason),
-                    }
-                }
-            })
-            return payload;
-        }]
-    }
+    // const config = {
+
+    //     transformResponse: [function (data) {
+    //         const payload = JSON.parse(data).map(d => {
+    //             return {
+    //                 ...d,
+    //                 product: {
+    //                     ...d.product,
+    //                     reason: getCurrency(d.product.reason),
+    //                 }
+    //             }
+    //         })
+    //         return payload;
+    //     }]
+    // }
 
     return (dispatch) => {
         dispatch(turnLoading())
         api
-            .get(`/cart/${user}`, config)
+            // .get(`/cart/${user}`, config)
+            .get(`/cart/${user}`)
             .then((res) => {
                 dispatch(addProductsCart(res.data));
                 dispatch(turnLoading());
@@ -42,8 +43,8 @@ export const addProductCartFetch = (cart, cleanForm) => {
 
         const prod = {
             id_user: user,
-            qtd: setCurrency(cart.qtd),
-            item_value: setCurrency(cart.product.sale_value),
+            qtd: cart.qtd,
+            item_value: cart.product.sale_value,
             id_product: cart.product ? cart.product.id : '',
             id_product_stock: cart.product ? cart.product.id_product_stock : '',
             reason: cart.product ? cart.product.reason : 1
@@ -59,14 +60,9 @@ export const addProductCartFetch = (cart, cleanForm) => {
                         id: cart.product.id,
                         name: cart.product.name,
                         bar_code: cart.product.bar_code,
-                        item_value: setCurrency(cart.product.item_value),
                         reason: cart.product.reason,
-                        id_product_stock: cart.product.id_product_stock
-                        // id_unity: cart.product.id_unity,
-                        // id_category: cart.product.id_category,
-                        // stock: setCurrency(cart.product.stock),
-                        // cost_value: setCurrency(cart.product.cost_value),
-                        // active: cart.product.active,
+                        id_product_stock: cart.product.id_product_stock,
+                        unity: cart.product.unity
                     }
                 },
 
@@ -101,13 +97,8 @@ export const editProductCartFetch = (cart, cleanForm) => {
                         item_value: res.data.cart.item_value,
                         obs: cart.product.obs,
                         reason: cart.product.reason,
-                        id_product_stock: cart.product.id_product_stock
-                        // id_unity: cart.product.id_unity,
-                        // id_category: cart.product.id_category,
-                        // stock: setCurrency(cart.product.stock),
-                        // qtd: res.data.cart.qtd,
-                        // cost_value: setCurrency(cart.product.cost_value),
-                        // active: cart.product.active,
+                        id_product_stock: cart.product.id_product_stock,
+                        unity: res.data.cart.product.unity
                     }
                 },
                 cleanForm(),

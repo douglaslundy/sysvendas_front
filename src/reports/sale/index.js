@@ -145,9 +145,9 @@ async function salePDF({ id, created_at, updated_at, type_sale, paied = null, to
                     { text: item.obs, fontSize: 8, margin: [0, 2, 0, 2] }
                 ]
             },
-            { text: getCurrency(item.qtd), fontSize: 9, margin: [0, 2, 0, 2] },
-            { text: convertToBrlCurrency(getCurrency(item.item_value)), fontSize: 9, margin: [0, 2, 0, 2] },
-            { text: convertToBrlCurrency(getCurrency(item.item_value * item.qtd / 100)), fontSize: 9, margin: [0, 2, 0, 2] }
+            { text: item.qtd, fontSize: 9, margin: [0, 2, 0, 2] },
+            { text: convertToBrlCurrency(item.item_value), fontSize: 9, margin: [0, 2, 0, 2] },
+            { text: convertToBrlCurrency(item.item_value * item.qtd), fontSize: 9, margin: [0, 2, 0, 2] }
         ]
     });
 
@@ -187,7 +187,7 @@ async function salePDF({ id, created_at, updated_at, type_sale, paied = null, to
         {
 
             text: [
-                `TOTAL: ${convertToBrlCurrency(getCurrency(total_sale))}`,
+                `TOTAL: ${convertToBrlCurrency(total_sale)}`,
             ],
             fontSize: 10,
             alignment: 'right',
@@ -199,7 +199,7 @@ async function salePDF({ id, created_at, updated_at, type_sale, paied = null, to
         {
 
             text: [
-                `DESCONTO: ${convertToBrlCurrency(getCurrency(discount))}`,
+                `DESCONTO: ${convertToBrlCurrency(discount)}`,
             ],
             fontSize: 10,
             alignment: 'right',
@@ -212,7 +212,7 @@ async function salePDF({ id, created_at, updated_at, type_sale, paied = null, to
         {
 
             text: [
-                `TOTAL PAGO: ${convertToBrlCurrency(getCurrency(total_sale - discount))}`,
+                `TOTAL PAGO: ${convertToBrlCurrency(total_sale - discount)}`,
             ],
             alignment: 'right',
             fontSize: 12,

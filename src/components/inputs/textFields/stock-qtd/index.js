@@ -7,11 +7,11 @@ import { TextField } from "@mui/material";
 const defaultMaskOptions = {
   prefix: '',
   suffix: '',
-  includeThousandsSeparator: true,
+  includeThousandsSeparator: false,
   thousandsSeparatorSymbol: '.',
   allowDecimal: true,
   decimalSymbol: ',',
-  decimalLimit: 2, // how many digits allowed after the decimal
+  decimalLimit: 3, // how many digits allowed after the decimal
   integerLimit: 9, // limit length of integer numbers
   allowNegative: false,
   allowLeadingZeroes: false,
