@@ -125,7 +125,6 @@ export const changeBudgetToSale = (sale, cleanForm) => {
     const { 'sysvendas.id': user } = parseCookies();
     return (dispatch) => {
         dispatch(turnLoading());
-
         sale = {
             id_seller: sale.id_user ? sale.id_user : null,
             ...sale,
@@ -133,9 +132,8 @@ export const changeBudgetToSale = (sale, cleanForm) => {
             total_sale: setCurrency(sale.total_sale),
             pay_value: setCurrency(sale.pay_value),
             cash: setCurrency(sale.cash),
-            discount: sale.total_sale - valueDecrescidFromPercent(sale.total_sale, sale.discount)
+            discount: setCurrency(sale.total_sale) - valueDecrescidFromPercent(sale.total_sale, sale.discount)
         };
-        console.log(`Venda ${JSON.stringify(sale)}`)
 
         api.post('/sales/changeBudgetToSale', sale)
             .then((res) =>

@@ -1,4 +1,4 @@
-import { convertPercentToNumeric, setCurrency } from "../../formatt/currency";
+import { convertPercentToNumeric, convertToDecimalWith2DigitsAfterComma, setCurrency } from "../../formatt/currency";
 
 export const summedPercentage = (cost_value, sale_value) => {
     cost_value = setCurrency(cost_value);
@@ -43,8 +43,9 @@ export const discountPercentage = (total_sale, discount) => {
 // 100 - (100 * (20 /100))
 export const valueDecrescidFromPercent = (cost_value, percent_value) => {   
     cost_value = setCurrency(cost_value);
+    percent_value = convertPercentToNumeric(percent_value);
 
-    return cost_value - (cost_value * (convertPercentToNumeric(percent_value) / 100));
+    return parseFloat( percent_value > 0 ? convertToDecimalWith2DigitsAfterComma(cost_value - (cost_value * (percent_value / 100))) : cost_value);
 }
 
 
