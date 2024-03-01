@@ -141,8 +141,8 @@ async function salePDF({ id, created_at, updated_at, type_sale, paied = null, to
             { text: item.bar_code, fontSize: 9, margin: [0, 2, 0, 2] },
             {
                 stack: [
-                    { text: item.name, fontSize: 12, margin: [0, 2, 0, 2] },
-                    { text: item.obs, fontSize: 8, margin: [0, 2, 0, 2] }
+                    { text: item.name?.toUpperCase(), fontSize: 12, margin: [0, 2, 0, 2] },
+                    { text: item.obs?.toUpperCase(), fontSize: 8, margin: [0, 2, 0, 2] }
                 ]
             },
             { text: item.qtd, fontSize: 9, margin: [0, 2, 0, 2] },
@@ -155,7 +155,7 @@ async function salePDF({ id, created_at, updated_at, type_sale, paied = null, to
         {
             table: {
                 headerRows: 1,
-                widths: ['14%', '44%', '6%', '18%', '18%'],
+                widths: ['16%', '42%', '6%', '18%', '18%'],
                 body: [
                     [
                         { text: 'Código', style: 'tableHeader', fontSize: 10 },

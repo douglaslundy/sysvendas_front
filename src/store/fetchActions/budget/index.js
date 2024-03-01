@@ -7,6 +7,7 @@ import salePDF from "../../../reports/sale";
 
 import { valueDecrescidFromPercent } from '../../../components/helpers/functions/percent';
 import Router from "next/router";
+import { setCurrency } from "../../../components/helpers/formatt/currency";
 
 
 export const addBudget = (budget, cleanForm) => {
@@ -129,8 +130,12 @@ export const changeBudgetToSale = (sale, cleanForm) => {
             id_seller: sale.id_user ? sale.id_user : null,
             ...sale,
             id_user: user,
+            total_sale: setCurrency(sale.total_sale),
+            pay_value: setCurrency(sale.pay_value),
+            cash: setCurrency(sale.cash),
             discount: sale.total_sale - valueDecrescidFromPercent(sale.total_sale, sale.discount)
         };
+        console.log(`Venda ${JSON.stringify(sale)}`)
 
         api.post('/sales/changeBudgetToSale', sale)
             .then((res) =>
