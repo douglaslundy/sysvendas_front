@@ -157,12 +157,6 @@ export default function (props) {
         setForm({ ...form, totalSale: newValue, discount: changeDotToComma(totalSale - newValue) });
     }
 
-    // const changeDiscount = ({ target }) => {
-    //     setForm({ ...form, discount: target.value });
-    //     const newValue = valueDecrescidFromPercent(totalSale, target.value ? target.value : 0);
-    // }
-
-
 
     // funcção e acionada no useEffet, afim de alterar a porcentagem, sempre que o usuario alterar p valor de custo ou de venda, informando 
     // a porcentagem atualizada de lucro

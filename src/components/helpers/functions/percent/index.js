@@ -42,10 +42,11 @@ export const discountPercentage = (total_sale, discount) => {
 // cost value = 100 ; percent_value = 20
 // 100 - (100 * (20 /100))
 export const valueDecrescidFromPercent = (cost_value, percent_value) => {   
-    cost_value = setCurrency(cost_value);
-    percent_value = convertPercentToNumeric(percent_value);
+    cost_value = parseFloat(setCurrency(cost_value));
+    percent_value = parseFloat(convertPercentToNumeric(percent_value));
 
-    return parseFloat( percent_value > 0 ? convertToDecimalWith2DigitsAfterComma(cost_value - (cost_value * (percent_value / 100))) : cost_value);
+    // return parseFloat( percent_value > 0 ? convertToDecimalWith2DigitsAfterComma(cost_value - (cost_value * (percent_value / 100))) : cost_value);
+    return parseFloat( percent_value > 0 ? convertToDecimalWith2DigitsAfterComma(cost_value * (1-(percent_value / 100))) : cost_value);
 }
 
 

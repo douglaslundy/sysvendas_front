@@ -7,7 +7,7 @@ export function convertToDecimalWith3DigitsAfterComma(str = 0) {
     const number = str?.toString().replace(',','.');    
 
     let dotIndex = number?.indexOf('.');
-    var result = number?.slice(0, dotIndex + 4);
+    var result = dotIndex > 0 ? number?.slice(0, dotIndex + 4) : number;
 
     return parseFloat(result)?.toFixed(3);
 }
@@ -16,7 +16,7 @@ export function convertToDecimalWith2DigitsAfterComma(str = 0) {
     const number = str?.toString().replace(',','.');    
 
     let dotIndex = number?.indexOf('.');
-    var result = number?.slice(0, dotIndex + 3);
+    var result = dotIndex > 0 ? number?.slice(0, dotIndex + 3) : number;
 
     return parseFloat(result).toFixed(2);
 }

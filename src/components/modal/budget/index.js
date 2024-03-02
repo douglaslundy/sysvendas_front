@@ -183,7 +183,7 @@ export default function BudgetModal(props) {
                                 <h4>Total {convertToBrlCurrency(total_sale)}</h4>
                                 {convertPercentToNumeric(discount) > 0 &&
                                     <>
-                                        <h5 style={{ color: "red" }}>Desconto {discount}</h5>
+                                        <h5 style={{ color: "red" }}>Desconto {convertToBrlCurrency(setCurrency(total_sale) - valueDecrescidFromPercent(total_sale, discount))}</h5>
                                         <h3>
                                             {`Pagar 
 

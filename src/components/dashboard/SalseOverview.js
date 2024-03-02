@@ -48,7 +48,7 @@ const SalesOverview = () => {
     let salesInCash = { ...monthsInCash };
     let salesOnTerm = { ...monthsOnTerm };
 
-    sales.forEach(sale => {
+    sales?.forEach(sale => {
       const monthIndex = new Date(sale.created_at).getMonth();
       const monthKey = monthNames[monthIndex];
 
@@ -68,7 +68,7 @@ const SalesOverview = () => {
     let salesCountInCash = { ...monthsInCash };
     let salesCountOnTerm = { ...monthsOnTerm };
 
-    sales.forEach(sale => {
+    sales?.forEach(sale => {
       const monthIndex = new Date(sale.created_at).getMonth();
       const monthKey = monthNames[monthIndex];
 
@@ -153,7 +153,7 @@ const SalesOverview = () => {
     yaxis: {
       show: true,
       min: 0,
-      max: sales.lenght,
+      max: sales?.lenght,
       tickAmount: 3,
       labels: {
         style: {
@@ -189,7 +189,7 @@ const SalesOverview = () => {
   }, []);
 
   useEffect(() => {
-    if (sales.length > 0) {
+    if (sales?.length > 0) {
       if (chartIsRead == false) {
         totalSalesCountByMonth();
         setChartIsRead(true);
@@ -199,7 +199,7 @@ const SalesOverview = () => {
 
 
   return (
-    <BaseCard title={`Resumo - ${sales.length} vendas realizadas em ${new Date().getFullYear()}`}>
+    <BaseCard title={`Resumo - ${sales?.length} vendas realizadas em ${new Date().getFullYear()}`}>
       {chartIsRead &&
         <Chart
           options={optionssalesoverview}
