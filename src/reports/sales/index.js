@@ -60,20 +60,28 @@ async function salesPDF(sales) {
     let totalOnTermReceived = 0;
     let totalSales = 0;
 
+        // AVISTA	APRAZO	  APRAZO RECEBIDO   APRAZO PENDENTES      TOTAL
+    // '41.988,76', '71.049,99',   '48.129,43',      '22.920,56',      '113.038,75'
+
     const dados = sales.map((sale) => {
-        if (sale.type_sale === 'in_cash')
-            totalInSight += sale.total_sale;
 
-        if (sale.type_sale === 'on_term')
-            termTotal += sale.total_sale;
+        if (sale.type_sale == 'in_cash') {
+            totalInSight += (parseFloat(sale.total_sale) - parseFloat(sale.discount)) > 0 ? parseFloat(sale.total_sale) - parseFloat(sale.discount) : 0;
+        }
+        else 
+        if (sale.type_sale == 'on_term') {
+            termTotal += (parseFloat(sale.total_sale) - parseFloat(sale.discount)) > 0 ? parseFloat(sale.total_sale) - parseFloat(sale.discount) : 0;
+        }
 
-        if (sale.type_sale === 'on_term' && sale.paied === 'no')
-            totalPendingTerm += sale.total_sale;
-
-        if (sale.type_sale === 'on_term' && sale.paied === 'yes')
-            totalOnTermReceived += sale.total_sale;
-
-        totalSales += sale.total_sale;
+        if (sale.type_sale == 'on_term' && sale.paied == 'no'){
+            totalPendingTerm += (parseFloat(sale.total_sale) - parseFloat(sale.discount)) > 0 ? parseFloat(sale.total_sale) - parseFloat(sale.discount) : 0;
+        }
+        else
+        if (sale.type_sale == 'on_term' && sale.paied == 'yes'){
+            totalOnTermReceived += (parseFloat(sale.total_sale) - parseFloat(sale.discount)) > 0 ? parseFloat(sale.total_sale) - parseFloat(sale.discount) : 0;
+        }
+        
+        totalSales += (parseFloat(sale.total_sale) - parseFloat(sale.discount)) > 0 ? parseFloat(sale.total_sale) - parseFloat(sale.discount) : 0;
 
         return [
             {
@@ -94,7 +102,7 @@ async function salesPDF(sales) {
                     { text: sale.paied === 'yes' ? sale?.updated_at && format(parseISO(sale?.updated_at), 'dd/MM/yyyy HH:mm:ss') : 'Pagamento Pendente', fontSize: 9, margin: [0, 2, 0, 2] }
                 ]
             },
-            { text: convertToBrlCurrency(sale.total_sale), fontSize: 9, margin: [0, 2, 0, 2] },
+            { text: convertToBrlCurrency((sale.total_sale - sale.discount) > 0 ? sale.total_sale - sale.discount : 0), fontSize: 9, margin: [0, 2, 0, 2] },
         ]
     });
 

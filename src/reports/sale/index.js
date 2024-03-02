@@ -212,7 +212,7 @@ async function salePDF({ id, created_at, updated_at, type_sale, paied = null, to
         {
 
             text: [
-                `TOTAL PAGO: ${convertToBrlCurrency(total_sale - discount)}`,
+                `TOTAL PAGO: ${convertToBrlCurrency((total_sale - discount) > 0 ? total_sale - discount : 0)}`,
             ],
             alignment: 'right',
             fontSize: 12,

@@ -285,7 +285,7 @@ export default () => {
                         </TableRow>
                     </TableHead>
                     {
-                        allSales.length >= 1 ?
+                        allSales?.length >= 1 ?
 
                             <TableBody>
                                 {allSales &&
@@ -404,7 +404,7 @@ export default () => {
                                                                     }}
                                                                 >
                                                                     {/* {convertToBrlCurrency(getCurrency(setCurrency(sale.total_sale) - setCurrency(sale.discount)))} */}
-                                                                    {convertToBrlCurrency(getCurrency(sale.total_sale - sale.discount))}
+                                                                    {convertToBrlCurrency((sale.total_sale - sale.discount) > 0 ? sale.total_sale - sale.discount : 0)}
                                                                 </Typography>
                                                                 <Typography
                                                                     color="textSecondary"
