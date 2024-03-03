@@ -157,12 +157,18 @@ export const toPaySalesFetch = (form, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
 
-        // form = {
-        //     ...form,
-        //     // check: setCurrency(form.check),
-        //     cash: setCurrency(form.cash),
-        //     // card: setCurrency(form.card)
-        // };
+        form = {
+            ...form,
+            // check: setCurrency(form.check),
+            cash: setCurrency(form.cash),
+            discount: setCurrency(form.discount),
+            payable: setCurrency(form.payable),
+            totalSale: setCurrency(form.totalSale),
+            troco: setCurrency(form.troco),
+            // card: setCurrency(form.card)
+        };
+
+        console.log(`vendas a receber ${JSON.stringify({...form})}`)
 
         api.post(`/sales/pay`, form)
             .then((res) =>
