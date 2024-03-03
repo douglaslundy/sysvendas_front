@@ -131,6 +131,10 @@ export default function PdvModal(props) {
         setFormSale({ ...formSale, pay_value: target.value, [id_pay_metod]: target.value });
     };
 
+    const changeTotalByPercent = ({ target }) => {
+        setFormSale({ ...formSale, discount: target.value });
+    };
+
     useEffect(() => {
         setFormSale({ ...formSale, ...props.formSale })
     }, [props.formSale]);
@@ -159,10 +163,6 @@ export default function PdvModal(props) {
     }, [isOpenModal]);
 
 
-    const getTotalToPay = () => {
-        return convertToBrlCurrency(valueDecrescidFromPercent(total_sale, convertPercentToNumeric(discount)));
-    }
-
     const paymentType = type_sale === 'in_cash' ? ' A VISTA' : ' A PRAZO';
     const saleType = type_sale === 'budget' ? 'Orçamento' : 'Venda';
 
@@ -189,25 +189,32 @@ export default function PdvModal(props) {
                                 <h4>Total {convertToBrlCurrency(total_sale)}</h4>
                                 {convertPercentToNumeric(discount) > 0 &&
                                     <>
-                                        <h5 style={{ color: "red" }}>Desconto {discount}</h5>
-                                        <h3> Pagar {getTotalToPay()}</h3>
+                                        <h5 style={{ color: "red" }}>Desconto  {convertToBrlCurrency(setCurrency(total_sale) - valueDecrescidFromPercent(total_sale, discount))}</h5>
+                                        <h3>
+                                            {`Pagar 
+
+                                            ${valueDecrescidFromPercent(total_sale, discount) > 0
+                                                    ?
+                                                    convertToBrlCurrency(valueDecrescidFromPercent(total_sale, discount))
+                                                    :
+                                                    convertToBrlCurrency(0.00)
+                                                }
+
+                                            `}
+                                        </h3>
                                     </>
                                 }
-                                {setCurrency(pay_value) > 0 &&
+                                {parseFloat(setCurrency(pay_value)) > 0 &&
 
-                                    (convertPercentToNumeric(discount) > 0 
-                                        ? setCurrency(pay_value) - (total_sale - convertPercentToNumeric(discount)) : setCurrency(pay_value) - (total_sale) > 0) &&
+                                    parseFloat(setCurrency(pay_value)) > valueDecrescidFromPercent(total_sale, discount) &&
 
-                                    <h5 style={{ color: "blue" }}>Troco {convertToBrlCurrency(
-                                        convertPercentToNumeric(discount) > 0
-                                            ? setCurrency(pay_value) - valueDecrescidFromPercent(total_sale, discount)
-                                            : setCurrency(pay_value) - total_sale)}</h5>
-
-
-                                    // <h5 style={{ color: "blue" }}>Troco {convertToBrlCurrency(getCurrency(
-                                    //     setCurrency(discount) > 0
-                                    //         ? setCurrency(pay_value) - getCurrency(setCurrency(valueDecrescidFromPercent(total_sale, discount)))
-                                    //         : setCurrency(pay_value) - setCurrency(total_sale)))}</h5>
+                                    <h5 style={{ color: "blue" }}>Troco {
+                                        convertToBrlCurrency(
+                                            (valueDecrescidFromPercent(total_sale, discount) > 0)
+                                                ? setCurrency(pay_value) - setCurrency(valueDecrescidFromPercent(total_sale, discount))
+                                                : setCurrency(pay_value)
+                                        )}
+                                    </h5>
                                 }
 
                                 <Box sx={{
@@ -243,7 +250,7 @@ export default function PdvModal(props) {
                                             value={discount}
                                             label="Desconto"
                                             name="discount"
-                                            changeItem={changeItem}
+                                            changeItem={changeTotalByPercent}
                                             wd="90%"
                                         />
                                     }

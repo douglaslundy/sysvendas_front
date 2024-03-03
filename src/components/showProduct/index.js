@@ -6,7 +6,7 @@ import InputSelectProduct from "../../components/inputs/inputSelectProduct";
 import { useSelector, useDispatch } from 'react-redux';
 import { getId } from "../helpers/formatt/getIdFromSelect";
 import { summedPercentage } from "../helpers/functions/percent";
-import { setCurrency } from "../helpers/formatt/currency";
+import { changeDotToComma, convertToBrlCurrency, setCurrency } from "../helpers/formatt/currency";
 import { getAllProducts } from "../../store/fetchActions/product";
 
 export default () => {
@@ -51,7 +51,7 @@ export default () => {
             <Stack spacing={3}>
 
                 <h1>{name}</h1>
-                <h3>{` VALOR: R$  ${sale_value}`}</h3>
+                <h3>{` VALOR: ${convertToBrlCurrency(sale_value)}`}</h3>
                 <br />
 
                 <TextField
@@ -78,7 +78,7 @@ export default () => {
                 >
 
                     <TextField
-                        value={cost_value ? `R$  ${cost_value}` : ''}
+                        value={cost_value ? `${convertToBrlCurrency(cost_value)}` : ''}
                         label={'Valor de Custo'}
                         name={'cost_value'}
                         sx={{ width: "36%" }}
@@ -93,7 +93,7 @@ export default () => {
                     />
 
                     <TextField
-                        value={sale_value ? `R$  ${sale_value}` : ''}
+                        value={sale_value ? `${convertToBrlCurrency(sale_value)}` : ''}
                         label={'Valor de Venda'}
                         name={'sale_value'}
                         sx={{ width: "36%" }}
@@ -113,7 +113,7 @@ export default () => {
                     label="Estoque"
                     variant="outlined"
                     name="stock"
-                    value={stock ? stock : ''}
+                    value={stock ? changeDotToComma(stock) : ''}
                 />
 
             </Stack>

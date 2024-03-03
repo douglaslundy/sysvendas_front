@@ -24,7 +24,7 @@ import { getAllBudgets, sendBudgetToCart } from "../../store/fetchActions/budget
 import { changeTitleAlert, turnModal, turnModalGetSale } from "../../store/ducks/Layout";
 import { showBudget } from "../../store/ducks/budget";
 import salePDF from "../../reports/sale";
-import { convertToBrlCurrency, getCurrency } from "../helpers/formatt/currency";
+import { convertToBrlCurrency } from "../helpers/formatt/currency";
 import { parseISO, format } from 'date-fns';
 import BudgetModal from "../modal/budget";
 import ConfirmDialog from "../confirmDialog";

@@ -115,7 +115,6 @@ export const editClientFetch = (client, cleanForm) => {
         client = {
             ...client,
             limit: setCurrency(client.limit),
-            debit_balance: client.debit_balance,
             cpf_cnpj: cleanCpfCnpj(client.cpf_cnpj),
             phone: cleanPhone(client.phone),
             addresses: {

@@ -18,7 +18,7 @@ import {
 import FeatherIcon from "feather-icons-react";
 
 import { turnModalGetSale } from '../../../store/ducks/Layout';
-import { convertToBrlCurrency, getCurrency } from '../../helpers/formatt/currency';
+import { changeDotToComma, convertToBrlCurrency, getCurrency } from '../../helpers/formatt/currency';
 import salePDF from '../../../reports/sale';
 import { showBudget } from '../../../store/ducks/budget';
 
@@ -161,7 +161,7 @@ export default function SalesReceipt(props) {
                                                 </TableCell>
 
                                                 <TableCell>
-                                                    <Typography variant="h6">{convertToBrlCurrency(getCurrency(item.item_value))}</Typography>
+                                                    <Typography variant="h6">{convertToBrlCurrency(item.item_value)}</Typography>
                                                 </TableCell>
 
                                                 <TableCell>
@@ -171,7 +171,7 @@ export default function SalesReceipt(props) {
                                                             fontWeight: "600",
                                                         }}
                                                     >
-                                                        {getCurrency(item.qtd)}
+                                                        {changeDotToComma(item.qtd)}
                                                     </Typography>
                                                 </TableCell>
 
@@ -180,7 +180,7 @@ export default function SalesReceipt(props) {
                                                         variant="h6" sx={{
                                                             fontWeight: "600"
                                                         }} >
-                                                        {convertToBrlCurrency(getCurrency(item.item_value * item.qtd / 100))}</Typography>
+                                                        {convertToBrlCurrency(item.item_value * item.qtd)}</Typography>
                                                 </TableCell>
 
                                             </>
@@ -190,7 +190,7 @@ export default function SalesReceipt(props) {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <h5>Total:  {convertToBrlCurrency(getCurrency(total_sale))}</h5>
+                    <h5>Total:  {convertToBrlCurrency(total_sale)}</h5>
                     
                     <Box sx={{ "& button": { mx: 1, mt: 5 } }}>
                         <Button onClick={() => { handleClose() }} variant="outlined" mt={2}>
