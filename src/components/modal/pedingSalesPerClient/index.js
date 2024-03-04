@@ -391,9 +391,9 @@ export default function (props) {
 
                                 <h3>Total de vendas selecionadas: {convertToBrlCurrency(totalSale)}</h3>
 
-                                <h4>Desconto: {convertToBrlCurrency(discount ? discount : 0)}</h4>
+                                <h4 style={{color: 'red'}}>Desconto: {convertToBrlCurrency(discount ? discount : 0)}</h4>
                                 <h3>Total a Pagar: {convertToBrlCurrency(payable ? payable : 0)}</h3>
-                                <h4>Troco: {troco && troco > 0 ? convertToBrlCurrency(troco) : convertToBrlCurrency(0)}</h4>
+                                <h4 style={{color: 'blue'}}>Troco: {troco && troco > 0 ? convertToBrlCurrency(troco) : convertToBrlCurrency(0)}</h4>
                                 <ConfirmDialog
                                     confirmDialog={confirmDialog}
                                     setConfirmDialog={setConfirmDialog} />

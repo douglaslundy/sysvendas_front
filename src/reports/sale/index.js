@@ -66,7 +66,7 @@ async function salePDF({ id, created_at, updated_at, type_sale, paied = null, to
                 { text: `D O C U M E N T O   A U X I L I A R   D E   V E N D A  - ${type_sale === 'budget' ? 'O R Ç A M E N T O' : 'P E D I D O'}`, fontSize: 14 },
                 { text: `NÃO É DOCUMENTO FISCAL - NÃO É VÁLIDO COMO GARANTIA DE MERCADORIA`, fontSize: 10, bold: true },
                 type_sale === 'budget' ? { text: `ESTE ORÇAMENTO SÓ É VÁLIDO MEDIANTE A DISPONIBILIDADE DO ESTOQUE`, fontSize: 10, bold: true } : '',
-                { text: `N. do(a) ${type_sale === 'budget' ? 'orçamento' : 'documento'}: ${id}       -       ${created_at && format(parseISO(created_at), 'dd/MM/yyyy HH:mm:ss')}       -       ${created_at && format(parseISO(created_at), 'HH:mm:ss')}`, fontSize: 12 },
+                { text: `N. do(a) ${type_sale === 'budget' ? 'orçamento' : 'documento'}: ${id}       -       ${created_at && format(parseISO(created_at), 'dd/MM/yyyy')}       -       ${created_at && format(parseISO(created_at), 'HH:mm:ss')}`, fontSize: 12 },
             ],
             alignment: 'center',
             margin: [0, 0, 0, 0] // left, top, right, bottom
