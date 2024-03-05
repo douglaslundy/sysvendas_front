@@ -1,5 +1,5 @@
 import { api } from "../../../services/api";
-import { convertToDecimalWith2DigitsAfterComma, convertToDecimalWith3DigitsAfterComma, setCurrency } from "../../../components/helpers/formatt/currency";
+import { convertToDecimalWith2DigitsAfterComma, setCurrency } from "../../../components/helpers/formatt/currency";
 import { parseCookies } from 'nookies';
 import { cleanProductsCart } from "../../ducks/cart";
 import { addSales, addSalesPerClient } from "../../ducks/sales";

@@ -1,6 +1,7 @@
 import { api } from "../../../services/api";
 import { addProductsCart, addProductCart, removeProductCart, cleanProductsCart } from "../../ducks/cart";
 import { turnLoading, turnAlert, addMessage, addAlertMessage } from "../../ducks/Layout";
+import { setCurrency } from "../../../components/helpers/formatt/currency";
 import { parseCookies } from 'nookies';
 
 
@@ -43,7 +44,7 @@ export const addProductCartFetch = (cart, cleanForm) => {
 
         const prod = {
             id_user: user,
-            qtd: cart.qtd,
+            qtd: setCurrency(cart.qtd),
             item_value: cart.product.sale_value,
             id_product: cart.product ? cart.product.id : '',
             id_product_stock: cart.product ? cart.product.id_product_stock : '',
