@@ -93,7 +93,7 @@ async function salesPDF(sales) {
             {
                 stack: [
                     { text: sale.client && sale.client.full_name ? sale.client.id + ' - ' + sale.client.full_name.toUpperCase() : 'VENDA NO BALCÃO', fontSize: 9, margin: [0, 2, 0, 2] },
-                    { text: sale.user.id + ' - ' + sale.user.name, fontSize: 9, margin: [0, 2, 0, 2] },
+                    { text: sale.user.id + ' - ' + sale?.user?.name.toUpperCase(), fontSize: 9, margin: [0, 2, 0, 2] },
                 ]
             },
             {

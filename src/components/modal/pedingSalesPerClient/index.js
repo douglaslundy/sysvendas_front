@@ -32,10 +32,9 @@ import ConfirmDialog from "../../confirmDialog";
 import { parseISO, format, set } from 'date-fns';
 
 import Percent from '../../inputs/textFields/percent';
-
-import salesPDF from '../../../reports/sales';
 import { showSale } from '../../../store/ducks/sales';
 import { discountPercentage, valueDecrescidFromPercent } from '../../helpers/functions/percent';
+import salePDF from '../../../reports/sale';
 
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -368,7 +367,7 @@ export default function (props) {
                                                                             <FeatherIcon icon="eye" width="20" height="20" />
                                                                         </Button>
 
-                                                                        <Button title="Imprimir venda" onClick={() => { salesPDF(sale) }} color="error" size="medium" variant="contained">
+                                                                        <Button title="Imprimir venda" onClick={() => { salePDF(sale) }} color="error" size="medium" variant="contained">
                                                                             <FeatherIcon icon="printer" width="20" height="20" />
                                                                         </Button>
                                                                     </Box>
