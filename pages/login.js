@@ -13,6 +13,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { parseCookies } from 'nookies';
 import AlertModal from '../src/components/messagesModal';
+import LogoDark from "../assets/images/logos/logo.png";
+import Image from "next/image";
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -62,15 +64,13 @@ export default function SignIn() {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-                    <FeatherIcon icon="lock" />
-                </Avatar>
+
                 <Typography component="h1" variant="h5">
-                    Login 
+                    <Image width={200} height={80} src={LogoDark} alt={LogoDark} />
                 </Typography>
-               
+
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                     <AlertModal />
+                    <AlertModal />
                     <TextField
                         margin="normal"
                         required
@@ -125,16 +125,16 @@ export default function SignIn() {
 export async function getServerSideProps(context) {
 
     const { 'sysvendas.token': token } = parseCookies(context);
-    
-    if(token){
-      return {
-        redirect: {
-          destination: '/',
-          permanent: false, 
+
+    if (token) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            }
         }
-      }
     }
     return {
-      props: {}, // will be passed to the page component as props
+        props: {}, // will be passed to the page component as props
     }
-  }
+}

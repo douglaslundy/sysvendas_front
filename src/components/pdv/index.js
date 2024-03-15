@@ -20,7 +20,6 @@ import QTD from "../../components/inputs/textFields/stock-qtd";
 import AlertModal from "../messagesModal";
 import Select from '../inputs/selects';
 import { useSelector, useDispatch } from 'react-redux';
-import { getCurrency } from "../helpers/formatt/currency";
 import { addProductCartFetch, getListProductsCart, deleteProductFromCart, cleanCart } from "../../store/fetchActions/cart";
 import { getAllProducts } from "../../store/fetchActions/product";
 import { convertToBrlCurrency } from "../helpers/formatt/currency";
@@ -55,7 +54,7 @@ export default () => {
 
 
     const [formSale, setFormSale] = useState({
-        id_pay_metod: "cash",
+        id_pay_metod: "in_cash",
         type_sale: 'in_cash',
         total_sale: 0,
         total_itens: 0
@@ -137,7 +136,7 @@ export default () => {
     };
 
     const payMetods = [{
-        'id': "cash",
+        'id': "in_cash",
         'name': 'a vista'
     },
 

@@ -8,22 +8,6 @@ import { parseCookies } from 'nookies';
 export const getListProductsCart = () => {
     const { 'sysvendas.id': user } = parseCookies();
 
-    // const config = {
-
-    //     transformResponse: [function (data) {
-    //         const payload = JSON.parse(data).map(d => {
-    //             return {
-    //                 ...d,
-    //                 product: {
-    //                     ...d.product,
-    //                     reason: getCurrency(d.product.reason),
-    //                 }
-    //             }
-    //         })
-    //         return payload;
-    //     }]
-    // }
-
     return (dispatch) => {
         dispatch(turnLoading())
         api
