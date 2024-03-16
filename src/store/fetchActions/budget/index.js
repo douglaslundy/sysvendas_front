@@ -132,8 +132,11 @@ export const changeBudgetToSale = (sale, cleanForm) => {
             total_sale: setCurrency(sale.total_sale),
             pay_value: setCurrency(sale.pay_value),
             cash: setCurrency(sale.cash),
+            card: setCurrency(sale.card),
+            check: setCurrency(sale.check),
             discount: setCurrency(sale.total_sale) - valueDecrescidFromPercent(sale.total_sale, sale.discount)
         };
+        // console.log(`Venda é ${JSON.stringify(sale)}`)
 
         api.post('/sales/changeBudgetToSale', sale)
             .then((res) =>

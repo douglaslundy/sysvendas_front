@@ -68,6 +68,7 @@ export default function (props) {
     const { isOpenModalGetPendingSales } = useSelector(state => state.layout);
     const [totalSale, setTotalSale] = useState(0);
     const [percent, setPercent] = useState();
+    const [amountPaid, setAmountPaid] = useState();
 
     // variavel responsavel por perceber sempre que houver digitação no input percent
     // ou seja, o usuario inserir o valor percent para somar ou diminuir do valor original
@@ -87,12 +88,12 @@ export default function (props) {
         cash: 0,
         discount: 0,
         payable: 0,
-        troco: 0
-        // check: 0,
-        // card: 0
+        troco: 0,
+        card: 0,
+        check: 0
     });
 
-    const { id_sales: salesToPay, cash, discount, payable, troco } = form;
+    const { id_sales: salesToPay, cash, card, check, discount, payable, troco } = form;
 
     const changeItem = ({ target }) => {
         setForm({ ...form, [target.name]: target.value })
@@ -114,8 +115,8 @@ export default function (props) {
             id_sales: [],
             id_client: client ? client.id : 0,
             cash: 0,
-            // check: 0,
-            // card: 0
+            card: 0,
+            check: 0
         });
         dispatch(turnModalGetPendingSales());
         dispatch(showClient({}));
@@ -126,7 +127,7 @@ export default function (props) {
     };
 
     const HandleToPay = () => {
-        if (setCurrency(cash) < (payable - discount)) {
+        if (setCurrency(amountPaid) < (payable - discount)) {
             setWarning("O Valor inserido precisa ser igual ou maior ao valor total a pagar");
         } else {
             setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja baixar estas vendas?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: toPaySalesFetch(form, cleanForm) })
@@ -135,7 +136,7 @@ export default function (props) {
     };
 
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(20); const handleChangePage = (event, newPage) => {
+    const [rowsPerPage, setRowsPerPage] = useState(25); const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
 
@@ -160,19 +161,28 @@ export default function (props) {
     // funcção e acionada no useEffet, afim de alterar a porcentagem, sempre que o usuario alterar p valor de custo ou de venda, informando 
     // a porcentagem atualizada de lucro
     const changePercentPerValue = value => {
-            setPercent(parseFloat(discountPercentage(totalSale, value)));
+        setPercent(parseFloat(discountPercentage(totalSale, value)));
+    }
+
+    const changeValue = ({ target }) => {
+        setForm({ ...form, [target.name]: target.value ? target.value : 0 })
     }
 
     useEffect(() => {
-        setForm({ ...form, troco: setCurrency(cash) - payable });
-    }, [cash, payable])
+        setAmountPaid(parseFloat(parseFloat(setCurrency(cash)) + parseFloat(setCurrency(card)) + parseFloat(setCurrency(check))))
+    }, [cash, check, card])
+
+
+    useEffect(() => {
+        setForm({ ...form, troco: setCurrency(amountPaid) - payable });
+    }, [cash, card, check, payable, amountPaid])
 
     useEffect(() => {
         setForm({ ...form, payable: setCurrency(discount) > 0 ? (totalSale - setCurrency(discount) >= 0 ? totalSale - setCurrency(discount) : 0) : totalSale });
     }, [discount, totalSale])
 
-    const changeDiscount = ({target}) => {
-        setForm({...form, discount: target.value})
+    const changeDiscount = ({ target }) => {
+        setForm({ ...form, discount: target.value })
         changePercentPerValue(target.value)
     }
 
@@ -390,9 +400,12 @@ export default function (props) {
 
                                 <h3>Total de vendas selecionadas: {convertToBrlCurrency(totalSale)}</h3>
 
-                                <h4 style={{color: 'red'}}>Desconto: {convertToBrlCurrency(discount ? discount : 0)}</h4>
+                                <h4 style={{ color: 'red' }}>Desconto: {convertToBrlCurrency(discount ? discount : 0)}</h4>
                                 <h3>Total a Pagar: {convertToBrlCurrency(payable ? payable : 0)}</h3>
-                                <h4 style={{color: 'blue'}}>Troco: {troco && troco > 0 ? convertToBrlCurrency(troco) : convertToBrlCurrency(0)}</h4>
+                                {
+                                    amountPaid > 0 && <h5>Valor Pago:  {convertToBrlCurrency(amountPaid)}</h5>
+                                }
+                                <h4 style={{ color: 'blue' }}>Troco: {troco && troco > 0 ? convertToBrlCurrency(troco) : convertToBrlCurrency(0)}</h4>
                                 <ConfirmDialog
                                     confirmDialog={confirmDialog}
                                     setConfirmDialog={setConfirmDialog} />
@@ -427,16 +440,40 @@ export default function (props) {
                                     disabled={!totalSale > 0}
                                     wd="30%"
                                 />
+                            </Box>
+
+                            <Box sx={{
+                                '& > :not(style)': { m: 2 },
+                                // 'display': 'flex',
+                                'justify-content': 'left'
+                            }}
+                            >
                                 <Currency
                                     value={cash}
                                     disabled={!totalSale > 0}
                                     label={'Dinheiro'}
                                     name={'cash'}
-                                    changeItem={changeItem}
+                                    changeItem={changeValue}
                                     wd={"30%"}
                                 />
-
+                                <Currency
+                                    value={card}
+                                    disabled={!totalSale > 0}
+                                    label={'Cartão'}
+                                    name={'card'}
+                                    changeItem={changeValue}
+                                    wd={"30%"}
+                                />
+                                <Currency
+                                    value={check}
+                                    disabled={!totalSale > 0}
+                                    label={'Cheque'}
+                                    name={'check'}
+                                    changeItem={changeValue}
+                                    wd={"30%"}
+                                />
                             </Box>
+
                             <Box sx={{ "& button": { mx: 1, mt: 5 } }}>
                                 <Button onClick={() => { handleClose() }} variant="outlined" mt={2}>
                                     Fechar

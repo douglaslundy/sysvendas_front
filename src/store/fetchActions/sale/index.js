@@ -33,7 +33,7 @@ export const addSale = (sale, cleanForm) => {
             discount: convertToDecimalWith2DigitsAfterComma(sale.total_sale - valueDecrescidFromPercent(sale.total_sale, sale.discount))
         };
 
-        console.log(`Venda é ${JSON.stringify(sale)}`)
+        // console.log(`Venda é ${JSON.stringify(sale)}`)
         api.post('/sales', sale)
             .then((res) =>
             (
@@ -162,9 +162,9 @@ export const toPaySalesFetch = (form, cleanForm) => {
         form = {
             ...form,
             // check: setCurrency(form.check),
-            cash: setCurrency(sale.cash),
-            card: setCurrency(sale.card),
-            check: setCurrency(sale.check),
+            cash: setCurrency(form.cash),
+            card: setCurrency(form.card),
+            check: setCurrency(form.check),
             discount: setCurrency(form.discount),
             payable: setCurrency(form.payable),
             totalSale: setCurrency(form.totalSale),

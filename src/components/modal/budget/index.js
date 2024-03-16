@@ -58,6 +58,7 @@ export default function BudgetModal(props) {
 
     const { isOpenModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
+    const [pay_value, set_pay_value] = useState(0)
 
     const [formSale, setFormSale] = useState({
         id_user: null,
@@ -72,7 +73,7 @@ export default function BudgetModal(props) {
         discount: 0,
         obs: budget.obs ? budget.obs : ""
     });
-    const { id_pay_metod = "cash", pay_value, type_sale, discount, obs, total_sale } = formSale;
+    const { id_pay_metod = 'in_cash', cash, card, check, type_sale, discount, obs, total_sale } = formSale;
     const { id } = budget;
 
     const changeItem = ({ target }) => {
@@ -80,7 +81,7 @@ export default function BudgetModal(props) {
     };
 
     const payMetods = [{
-        'id': "cash",
+        'id': "in_cash",
         'name': 'a vista'
     },
 
@@ -101,7 +102,6 @@ export default function BudgetModal(props) {
             id_budget: null,
             id_client: null,
             id_user: null,
-            pay_value: 0,
             paied: "yes",
             check: 0,
             cash: 0,
@@ -123,12 +123,16 @@ export default function BudgetModal(props) {
     };
 
     const changePayValue = ({ target }) => {
-        setFormSale({ ...formSale, pay_value: target.value, [id_pay_metod]: target.value });
+        setFormSale({ ...formSale, [target.name]: target.value ? target.value : 0 });
     };
 
     const changeTotalByPercent = ({ target }) => {
         setFormSale({ ...formSale, discount: target.value });
     };
+
+    useEffect(() => {
+        set_pay_value(parseFloat(parseFloat(setCurrency(cash)) + parseFloat(setCurrency(card)) + parseFloat(setCurrency(check))))
+    }, [cash, card, check])
 
     useEffect(() => {
         dispatch(getAllClients());
@@ -181,6 +185,9 @@ export default function BudgetModal(props) {
 
 
                                 <h4>Total {convertToBrlCurrency(total_sale)}</h4>
+                                {
+                                    pay_value > 0 && <h5>Valor Pago:  {convertToBrlCurrency(pay_value)}</h5>
+                                }
                                 {convertPercentToNumeric(discount) > 0 &&
                                     <>
                                         <h5 style={{ color: "red" }}>Desconto {convertToBrlCurrency(setCurrency(total_sale) - valueDecrescidFromPercent(total_sale, discount))}</h5>
@@ -266,9 +273,33 @@ export default function BudgetModal(props) {
                                     {type_sale !== 'on_term' && type_sale !== 'budget' &&
                                         <>
                                             <Currency
-                                                value={pay_value}
+                                                value={cash}
                                                 label="Dinheiro"
-                                                name="pay_value"
+                                                name="cash"
+                                                changeItem={changePayValue}
+                                                wd="90%"
+                                            />
+                                        </>
+                                    }
+
+                                    {type_sale !== 'on_term' && type_sale !== 'budget' &&
+                                        <>
+                                            <Currency
+                                                value={card}
+                                                label="Cartão"
+                                                name="card"
+                                                changeItem={changePayValue}
+                                                wd="90%"
+                                            />
+                                        </>
+                                    }
+
+                                    {type_sale !== 'on_term' && type_sale !== 'budget' &&
+                                        <>
+                                            <Currency
+                                                value={check}
+                                                label="Cheque"
+                                                name="check"
                                                 changeItem={changePayValue}
                                                 wd="90%"
                                             />

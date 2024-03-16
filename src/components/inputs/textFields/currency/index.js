@@ -44,6 +44,7 @@ export default function index(props) {
             sx={{ width: wd }}
             // required
             disabled={disabled ? disabled : false}
+            autoComplete='off'
 
             InputProps={{
                 inputComponent: Currency,

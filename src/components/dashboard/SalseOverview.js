@@ -202,12 +202,13 @@ const SalesOverview = () => {
     <BaseCard title={`Resumo - ${sales?.length} vendas realizadas em ${new Date().getFullYear()}`}>
       {chartIsRead &&
         <Chart
-          options={optionssalesoverview}
-          series={seriessalesoverview}
-          type="bar"
-          height="400px"
+        options={optionssalesoverview}
+        series={seriessalesoverview}
+        type="bar"
+        height="400px"
         />
       }
+      <h5>Em 16/03/2024 foi inserido métodos de pagamento como Cartão e Cheque!</h5>
     </BaseCard>
   );
 };

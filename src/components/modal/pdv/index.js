@@ -131,7 +131,7 @@ export default function PdvModal(props) {
 
     const changePayValue = ({ target }) => {
         // setFormSale({ ...formSale, pay_value: target.value, [id_pay_metod]: target.value });
-        setFormSale({ ...formSale, [target.name]: target.value });
+        setFormSale({ ...formSale, [target.name]: target.value ? target.value : 0 });
 
     };
 
