@@ -3,7 +3,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { convertToBrlCurrency, getCurrency } from '../../components/helpers/formatt/currency';
 import { parseISO, format } from 'date-fns';
 
-async function salePDF({ id, created_at, updated_at, type_sale, paied = null, total_sale = null, client, itens, discount = null, obs, user }) {
+async function salePDF({ id, created_at, updated_at, type_sale, paied = null, total_sale = null, cash = null, card = null, check = null, client, itens, discount = null, obs, user }) {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
     const loadImage = async (url) => {
@@ -208,6 +208,21 @@ async function salePDF({ id, created_at, updated_at, type_sale, paied = null, to
             margin: [2, 2, 2, 2] // left, top, right, bottom
         }
     ];
+
+    const vPgt = [
+        {
+
+            stack: [
+                {text: [`Dinheiro: ${convertToBrlCurrency(cash)} - Cartão: ${convertToBrlCurrency(card)} - Cheque: ${convertToBrlCurrency(check)}:                   Vlr. apurado: ${convertToBrlCurrency(parseFloat(cash)+parseFloat(card)+parseFloat(check))} `]},
+                {text: [`Troco: ${convertToBrlCurrency((parseFloat(cash)+parseFloat(card)+parseFloat(check))-(parseFloat(total_sale) - parseFloat(discount)))}`]},
+            ],
+            fontSize: 10,
+            alignment: 'right',
+            bold: true,
+            margin: discount > 0 ? [2, 10, 2, 2] : [2, -20, 2, 2]// left, top, right, bottom
+        }
+    ];
+
     const totalPaied = [
         {
 
@@ -272,7 +287,7 @@ async function salePDF({ id, created_at, updated_at, type_sale, paied = null, to
         pageOrientation: 'portrait',
         pageMargins: [15, 50, 15, 40],
         header: [logo],
-        content: [company, name, type, details, total, discount > 0 ? [discountLabel, totalPaied] : '', lbObs, lbSingn
+        content: [company, name, type, details, total, discount > 0 ? [discountLabel, totalPaied] : '', lbObs, type_sale == 'in_cash' ? vPgt : 0, lbSingn
         ],
         // footer: footer
     };
