@@ -139,6 +139,7 @@ export default function ConfirmDialog(props) {
                         type="password"
                         value={password}
                         onChange={changePassword}
+                        autoComplete='off'
 
                     />
                 </BaseCard>

@@ -130,7 +130,6 @@ export default function PdvModal(props) {
     };
 
     const changePayValue = ({ target }) => {
-        // setFormSale({ ...formSale, pay_value: target.value, [id_pay_metod]: target.value });
         setFormSale({ ...formSale, [target.name]: target.value ? target.value : 0 });
 
     };
@@ -200,7 +199,7 @@ export default function PdvModal(props) {
                                }
                                 {convertPercentToNumeric(discount) > 0 &&
                                     <>
-                                        <h5 style={{ color: "red" }}>Desconto  {convertToBrlCurrency(setCurrency(total_sale) - valueDecrescidFromPercent(total_sale, discount))}</h5>
+                                        <h5 style={{ color: "red" }}>Desconto  {convertToBrlCurrency(parseFloat(total_sale - valueDecrescidFromPercent(total_sale, discount)).toFixed(2))}</h5>
                                         <h3>
                                             {`Pagar 
 

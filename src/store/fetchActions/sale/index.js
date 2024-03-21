@@ -30,10 +30,11 @@ export const addSale = (sale, cleanForm) => {
             total_sale: setCurrency(sale.total_sale),
             
             // esta rotina converte o desconto que chega em percentagem, exemplo : 50% para o valor decimal real, exemplo 10000
-            discount: convertToDecimalWith2DigitsAfterComma(sale.total_sale - valueDecrescidFromPercent(sale.total_sale, sale.discount))
+            // discount: convertToDecimalWith2DigitsAfterComma(sale.total_sale - valueDecrescidFromPercent(sale.total_sale, sale.discount))
+            discount: (sale.total_sale - valueDecrescidFromPercent(sale.total_sale, sale.discount)).toFixed(2)
         };
 
-        // console.log(`Venda é ${JSON.stringify(sale)}`)
+        console.log(sale.discount)
         api.post('/sales', sale)
             .then((res) =>
             (
