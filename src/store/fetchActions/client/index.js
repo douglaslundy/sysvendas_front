@@ -34,7 +34,7 @@ export const getAllClients = () => {
                     "obs": d.obs,
                     "debit_balance": d.debit_balance,
                     "limit": d.limit,
-                    "marked": d.marked,
+                    "marked": parseInt(d.marked),
                     "zip_code": zip_code,
                     "city": city,
                     "street": street,
