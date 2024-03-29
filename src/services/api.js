@@ -4,7 +4,6 @@ import { parseCookies } from 'nookies';
 const { 'sysvendas.token': token } = parseCookies();
 
 export const api = axios.create({
-    // baseURL: 'https://dlsistemas.com.br/api'
     baseURL: 'https://sysvendas.douglaslundy.com.br/api'
     // baseURL: 'http://localhost:8000/api'
 });
