@@ -101,6 +101,7 @@ export default function (props) {
     }
 
     const handleEditForm = (sale) => {
+        setCheckedAllSales(false)
         const isSaleIncluded = salesToPay.includes(sale.id);
         const updatedSales = isSaleIncluded ? salesToPay.filter(s => s !== sale.id) : [...salesToPay, sale.id];
         const updatedTotal = isSaleIncluded ? totalSale - (sale.total_sale - sale.discount) : totalSale + (sale.total_sale - sale.discount);
