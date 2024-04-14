@@ -157,9 +157,9 @@ export default function BudgetModal(props) {
 
     useEffect(() => {
         id_pay_metod == "on_term" ?
-            setFormSale({ ...formSale, 'paied': 'no', 'type_sale': 'on_term' })
+            setFormSale({ ...formSale, 'paied': 'no', 'type_sale': 'on_term', 'check': 0, 'cash': 0, 'card': 0, 'discount': 0, 'obs': "" })
             :
-            setFormSale({ ...formSale, 'paied': 'yes', 'type_sale': 'in_cash' });
+            setFormSale({ ...formSale, 'paied': 'yes', 'type_sale': 'in_cash', 'check': 0, 'cash': 0, 'card': 0, 'discount': 0, 'obs': "" });
 
     }, [id_pay_metod])
 
