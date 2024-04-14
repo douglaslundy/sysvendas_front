@@ -163,13 +163,13 @@ export const toPaySalesFetch = (form, cleanForm) => {
         form = {
             ...form,
             // check: setCurrency(form.check),
-            cash: setCurrency(form.cash),
-            card: setCurrency(form.card),
-            check: setCurrency(form.check),
-            discount: setCurrency(form.discount),
-            payable: setCurrency(form.payable),
-            totalSale: setCurrency(form.totalSale),
-            troco: setCurrency(form.troco),
+            cash: parseFloat(setCurrency(form.cash)),
+            card: parseFloat(setCurrency(form.card)),
+            check: parseFloat(setCurrency(form.check)),
+            discount: parseFloat(setCurrency(form.discount)),
+            payable: parseFloat(setCurrency(form.payable)),
+            totalSale: parseFloat(setCurrency(form.totalSale)),
+            troco: parseFloat(setCurrency(form.troco)),
             // card: setCurrency(form.card)
         };
 

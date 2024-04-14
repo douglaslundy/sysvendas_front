@@ -69,6 +69,7 @@ export default function (props) {
     const [totalSale, setTotalSale] = useState(0);
     const [percent, setPercent] = useState();
     const [amountPaid, setAmountPaid] = useState();
+    const [checkedAllSales, setCheckedAllSales] = useState(false)
 
     // variavel responsavel por perceber sempre que houver digitação no input percent
     // ou seja, o usuario inserir o valor percent para somar ou diminuir do valor original
@@ -100,17 +101,20 @@ export default function (props) {
     }
 
     const handleEditForm = (sale) => {
-        // salesToPay.includes(sale.id) ? (setSalesToPay([...salesToPay.filter(s => s != sale.id)]), setTotalSale(totalSale - setCurrency(sale.total_sale))) : (setSalesToPay([...salesToPay, sale.id]), setTotalSale(totalSale + setCurrency(sale.total_sale)));
+        const isSaleIncluded = salesToPay.includes(sale.id);
+        const updatedSales = isSaleIncluded ? salesToPay.filter(s => s !== sale.id) : [...salesToPay, sale.id];
+        const updatedTotal = isSaleIncluded ? totalSale - (sale.total_sale - sale.discount) : totalSale + (sale.total_sale - sale.discount);
 
-        salesToPay.includes(sale.id)
-
-            ? (setForm({ ...form, id_sales: [...salesToPay.filter(s => s != sale.id)] }), setTotalSale(totalSale - (sale.total_sale - sale.discount)))
-
-            : (setForm({ ...form, id_sales: [...salesToPay, sale.id] }), setTotalSale(totalSale + (sale.total_sale - sale.discount)))
-    }
+        setForm({
+            ...form,
+            id_sales: updatedSales
+        });
+        setTotalSale(updatedTotal);
+    };
 
     const cleanForm = () => {
         setTotalSale(0);
+        setCheckedAllSales(false);
         setForm({
             id_sales: [],
             id_client: client ? client.id : 0,
@@ -136,7 +140,7 @@ export default function (props) {
     };
 
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(25); 
+    const [rowsPerPage, setRowsPerPage] = useState(25);
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -187,6 +191,22 @@ export default function (props) {
         changePercentPerValue(target.value)
     }
 
+    // const checkAllSales = checkedAllSales => {
+    //     setCheckedAllSales(!checkedAllSales)
+    // }
+
+    const checkAllSales = () => {
+        const allSelected = salesPerClient.length !== salesToPay.length;
+        const newSalesToPay = allSelected ? salesPerClient.map(sale => sale.id) : [];
+        const newTotalSale = allSelected ? salesPerClient.reduce((total, sale) => total + (sale.total_sale - sale.discount), 0) : 0;
+
+        setCheckedAllSales(allSelected);
+        setForm({
+            ...form,
+            id_sales: newSalesToPay
+        });
+        setTotalSale(newTotalSale);
+    };
 
     return (
         <div>
@@ -209,6 +229,18 @@ export default function (props) {
                     <Grid container spacing={0}>
                         <Grid item xs={12} lg={12}>
                             <BaseCard title={client && client.id ? `Listagem de Vendas / ${client.full_name}` : "Listagem de vendas / Selecione o cliente na pagina anterior"}>
+
+                                {/* {salesPerClient.length > 0 &&
+                                    <FormControlLabel 
+                                        control={<Switch checked={checkedAllSales} onClick={() => checkAllSales(checkedAllSales)} />} />
+                                } */}
+
+                                {salesPerClient?.length > 0 &&
+                                    <FormControlLabel
+                                        control={<Switch checked={checkedAllSales} onChange={checkAllSales} />}
+                                        label="Selecionar todas as vendas"
+                                    />
+                                }
 
                                 <TableContainer>
 

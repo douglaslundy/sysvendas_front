@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import AlertModal from '../../messagesModal'
 import { useDispatch, useSelector } from 'react-redux';
@@ -51,10 +55,10 @@ export default function BudgetModal(props) {
 
     const { clients } = useSelector(state => state.clients);
     const { budget } = useSelector(state => state.budgets);
-    const [client, setClient] = useState([]);
+    const [client, setClient] = useState(budget.client);
 
+    const [user, setUser] = useState(budget.user);
     const { users } = useSelector(state => state.users);
-    const [user, setUser] = useState([]);
 
     const { isOpenModal } = useSelector(state => state.layout);
     const dispatch = useDispatch();
@@ -242,7 +246,7 @@ export default function BudgetModal(props) {
                                                 id="sailor"
                                                 label="Selecione o vendedor"
                                                 name="user"
-                                                value={budget.user}
+                                                value={user}
                                                 clients={users}
                                                 setClient={setUser}
                                                 wd={"90%"}
@@ -252,7 +256,7 @@ export default function BudgetModal(props) {
                                                 id="client"
                                                 label="Selecione o cliente"
                                                 name="client"
-                                                value={budget.client}
+                                                value={client}
                                                 clients={clients}
                                                 setClient={setClient}
                                                 wd={"90%"}
@@ -346,3 +350,8 @@ export default function BudgetModal(props) {
         </div >
     );
 }
+
+
+
+
+

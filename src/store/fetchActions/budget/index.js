@@ -136,25 +136,22 @@ export const changeBudgetToSale = (sale, cleanForm) => {
             check: setCurrency(sale.check),
             discount: setCurrency(sale.total_sale) - valueDecrescidFromPercent(sale.total_sale, sale.discount)
         };
-        console.log(`Venda é ${JSON.stringify(sale)}`)
 
-        // api.post('/sales/changeBudgetToSale', sale)
-        //     .then((res) =>
-        //     (
-        //         dispatch(removeBudget(sale)),
-        //         dispatch(addMessage(`Venda realizada com sucesso!`)),
-        //         dispatch(turnAlert()),
-        //         dispatch(turnLoading()),
-        //         cleanForm(),
-        //         salePDF(...res.data.sale)
-        //     ))
-        //     .catch((error) => {
-        //         dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
-        //         dispatch(turnLoading());
-        //         return error.response ? error.response.data : 'erro desconhecido';
-        //     })
-
-        dispatch(turnLoading());
+        api.post('/sales/changeBudgetToSale', sale)
+            .then((res) =>
+            (
+                dispatch(removeBudget(sale)),
+                dispatch(addMessage(`Venda realizada com sucesso!`)),
+                dispatch(turnAlert()),
+                dispatch(turnLoading()),
+                cleanForm(),
+                salePDF(...res.data.sale)
+            ))
+            .catch((error) => {
+                dispatch(addAlertMessage(error.response ? `ERROR - ${error.response.data.message} ` : 'Erro desconhecido'));
+                dispatch(turnLoading());
+                return error.response ? error.response.data : 'erro desconhecido';
+            })
     };
 };
 
