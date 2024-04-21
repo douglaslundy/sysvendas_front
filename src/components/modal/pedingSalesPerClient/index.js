@@ -132,7 +132,7 @@ export default function (props) {
     };
 
     const HandleToPay = () => {
-        if (setCurrency(amountPaid) < (payable - discount)) {
+        if (parseFloat(setCurrency(amountPaid)) < parseFloat((setCurrency(payable) - setCurrency(discount)))) {
             setWarning("O Valor inserido precisa ser igual ou maior ao valor total a pagar");
         } else {
             setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja baixar estas vendas?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: toPaySalesFetch(form, cleanForm) })
@@ -180,7 +180,7 @@ export default function (props) {
 
 
     useEffect(() => {
-        setForm({ ...form, troco: setCurrency(amountPaid) - payable });
+        setForm({ ...form, troco: setCurrency(amountPaid) - setCurrency(payable)});
     }, [cash, card, check, payable, amountPaid])
 
     useEffect(() => {
@@ -432,10 +432,10 @@ export default function (props) {
                                     />
                                 </TableContainer>
 
-                                <h3>Total de vendas selecionadas: {convertToBrlCurrency(totalSale)}</h3>
+                                <h3>Total de vendas selecionadas: {convertToBrlCurrency(parseFloat(totalSale))}</h3>
 
                                 <h4 style={{ color: 'red' }}>Desconto: {convertToBrlCurrency(discount ? discount : 0)}</h4>
-                                <h3>Total a Pagar: {convertToBrlCurrency(payable ? payable : 0)}</h3>
+                                <h3>Total a Pagar: {convertToBrlCurrency(payable ? parseFloat(payable) : 0)}</h3>
                                 {
                                     amountPaid > 0 && <h5>Valor Pago:  {convertToBrlCurrency(amountPaid)}</h5>
                                 }

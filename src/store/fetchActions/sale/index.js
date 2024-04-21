@@ -173,8 +173,6 @@ export const toPaySalesFetch = (form, cleanForm) => {
             // card: setCurrency(form.card)
         };
 
-        console.log(`vendas a receber ${JSON.stringify({...form})}`)
-
         api.post(`/sales/pay`, form)
             .then((res) =>
             (
