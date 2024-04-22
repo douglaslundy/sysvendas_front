@@ -71,7 +71,7 @@ const formattedDate = `${currentDate.getDate().toString().padStart(2, '0')}/${(c
             },
             {
                 stack: [
-                    { text: convertToBrlCurrency(getCurrency(cli.debit_balance)), fontSize: 9, margin: [0, 2, 0, 2] },
+                    { text: convertToBrlCurrency(cli.debit_balance), fontSize: 9, margin: [0, 2, 0, 2] },
                 ]
             },
             { text: cli.phone, fontSize: 9, margin: [0, 2, 0, 2] },

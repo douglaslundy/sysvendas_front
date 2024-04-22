@@ -27,19 +27,19 @@ describe('testing  currency formatt with setCurrency function', () => {
 describe('testing  currency formatt  with getCurrency function', () => {
     
     it('should split number per 100 and return to currency  ', () => {
-        expect(getCurrency('100055')).toBe('1000,55');
+        expect('100055').toBe('1000,55');
     });
 
     it('should split number per 100 and return to currency  ', () => {
-        expect(getCurrency('100000')).toBe('1000');
+        expect('100000').toBe('1000');
     });
 
     it('should split number per 100 and return to currency  ', () => {
-        expect(getCurrency('100005')).toBe('1000,05');
+        expect('100005').toBe('1000,05');
     });
 
     it('should split number per 100 and return to currency  ', () => {
-        expect(getCurrency('100050')).toBe('1000,5');
+        expect('100050').toBe('1000,5');
     });
 
 });

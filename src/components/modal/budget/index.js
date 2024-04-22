@@ -25,7 +25,7 @@ import {
 
 import BaseCard from "../../baseCard/BaseCard";
 import { turnModal, changeTitleAlert } from '../../../store/ducks/Layout';
-import { convertPercentToNumeric, convertToBrlCurrency, getCurrency, setCurrency } from '../../helpers/formatt/currency';
+import { convertPercentToNumeric, convertToBrlCurrency, setCurrency } from '../../helpers/formatt/currency';
 import { showBudget } from '../../../store/ducks/budget';
 import { getAllUsers } from '../../../store/fetchActions/user';
 
@@ -67,7 +67,7 @@ export default function BudgetModal(props) {
     const [formSale, setFormSale] = useState({
         id_user: null,
         id_budget: budget.id ? budget.id : null,
-        total_sale: budget.total_sale ? getCurrency(budget.total_sale) : null,
+        total_sale: budget.total_sale ? budget.total_sale : null,
         id_client: null,
         pay_value: 0,
         paied: "yes",

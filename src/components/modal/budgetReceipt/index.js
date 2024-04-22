@@ -18,7 +18,7 @@ import {
 import FeatherIcon from "feather-icons-react";
 
 import { turnModalGetSale } from '../../../store/ducks/Layout';
-import { changeDotToComma, convertToBrlCurrency, getCurrency } from '../../helpers/formatt/currency';
+import { changeDotToComma, convertToBrlCurrency } from '../../helpers/formatt/currency';
 import salePDF from '../../../reports/sale';
 import { showBudget } from '../../../store/ducks/budget';
 
