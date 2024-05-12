@@ -27,7 +27,7 @@ export function setCurrency(str = '') {
     
     // troca a vergula pelo ponto, afim de transformar em numero monetário
     multiplier = convertToDecimalWith2DigitsAfterComma(multiplier?.replace(',', '.'));
-    return multiplier?.trim();
+    return parseFloat(multiplier?.trim()).toFixed(2);
 }
 
 export function changeDotToComma(str) {

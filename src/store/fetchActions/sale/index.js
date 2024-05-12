@@ -18,6 +18,9 @@ export const addSale = (sale, cleanForm) => {
     return (dispatch) => {
         dispatch(turnLoading());
 
+        // console.log('Total venda ' + sale.total_sale)
+        // console.log('Desconto ' + sale.discount)
+
         sale = {
             ...sale,
             id_seller: sale.id_user ? sale.id_user : null,
@@ -31,10 +34,10 @@ export const addSale = (sale, cleanForm) => {
             
             // esta rotina converte o desconto que chega em percentagem, exemplo : 50% para o valor decimal real, exemplo 10000
             // discount: convertToDecimalWith2DigitsAfterComma(sale.total_sale - valueDecrescidFromPercent(sale.total_sale, sale.discount))
-            discount: (sale.total_sale - valueDecrescidFromPercent(sale.total_sale, sale.discount)).toFixed(2)
+            discount: setCurrency(sale.total_sale - valueDecrescidFromPercent(sale.total_sale, sale.discount))
         };
 
-        console.log(sale.discount)
+        // console.log(sale.discount)
         api.post('/sales', sale)
             .then((res) =>
             (
@@ -42,7 +45,7 @@ export const addSale = (sale, cleanForm) => {
                 dispatch(turnLoading()),
                 dispatch(cleanProductsCart()),
                 cleanForm(),
-                console.log(`Venda ${JSON.stringify(...res.data.sale)}`),
+                // console.log(`Venda ${JSON.stringify(...res.data.sale)}`),
                 salePDF(...res.data.sale)
             ))
             .catch((error) => {

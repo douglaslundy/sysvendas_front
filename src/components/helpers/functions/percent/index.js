@@ -46,7 +46,7 @@ export const valueDecrescidFromPercent = (cost_value, percent_value) => {
     percent_value = parseFloat(convertPercentToNumeric(percent_value));
 
     // return parseFloat( percent_value > 0 ? convertToDecimalWith2DigitsAfterComma(cost_value - (cost_value * (percent_value / 100))) : cost_value);
-    return parseFloat( percent_value > 0 ? convertToDecimalWith2DigitsAfterComma(cost_value * (1-(percent_value / 100))) : cost_value);
+    return parseFloat( percent_value > 0 ? convertToDecimalWith2DigitsAfterComma(cost_value * (1-(percent_value / 100))) : cost_value).toFixed(2);
 }
 
 
