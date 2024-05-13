@@ -25,8 +25,8 @@ const SalesOverview = () => {
       </iframe>
 
 
+      <h5>2.1.2</h5>
     </div>
-    //   <h5>Em 16/03/2024 foi inserido métodos de pagamento como Cartão e Cheque!</h5>
     // </BaseCard>
   );
 };

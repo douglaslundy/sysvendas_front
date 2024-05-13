@@ -26,7 +26,7 @@ export function setCurrency(str = '') {
     let multiplier = str?.toString().replace(/['R$']/g, '');
     
     // troca a vergula pelo ponto, afim de transformar em numero monetário
-    multiplier = convertToDecimalWith2DigitsAfterComma(multiplier?.replace(',', '.'));
+    // multiplier = convertToDecimalWith2DigitsAfterComma(multiplier?.replace(',', '.'));
     return parseFloat(multiplier?.trim()).toFixed(2);
 }
 
