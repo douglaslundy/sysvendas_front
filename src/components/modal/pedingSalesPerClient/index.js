@@ -132,7 +132,7 @@ export default function (props) {
     };
 
     const HandleToPay = () => {
-        if (parseFloat(setCurrency(amountPaid)) < parseFloat((setCurrency(payable) - setCurrency(discount)))) {
+        if (Math.floor(setCurrency(amountPaid)) < Math.floor((setCurrency(payable) - setCurrency(discount)))) {
             setWarning("O Valor inserido precisa ser igual ou maior ao valor total a pagar");
         } else {
             setConfirmDialog({ ...confirmDialog, isOpen: true, title: `Você tem certeza que deseja baixar estas vendas?`, subTitle: 'Esta ação não poderá ser desfeita', confirm: toPaySalesFetch(form, cleanForm) })
