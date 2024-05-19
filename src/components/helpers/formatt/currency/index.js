@@ -3,13 +3,18 @@ export function getCurrency(str = '') {
     return str?.toString().replace(".", ",");
 }
 
+// export function convertToDecimalWith3DigitsAfterComma(str = 0) {
+//     const number = str?.toString().replace(',','.');    
+
+//     let dotIndex = number?.indexOf('.');
+//     var result = dotIndex > 0 ? number?.slice(0, dotIndex + 4) : number;
+
+//     return parseFloat(result)?.toFixed(3);
+// }
+
 export function convertToDecimalWith3DigitsAfterComma(str = 0) {
-    const number = str?.toString().replace(',','.');    
-
-    let dotIndex = number?.indexOf('.');
-    var result = dotIndex > 0 ? number?.slice(0, dotIndex + 4) : number;
-
-    return parseFloat(result)?.toFixed(3);
+    const number = parseFloat(str?.toString().replace(',','.'));     
+    return number.toFixed(3);
 }
 
 export function convertToDecimalWith2DigitsAfterComma(str = 0) {
