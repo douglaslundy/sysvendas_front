@@ -52,7 +52,7 @@ export const getAllClients = () => {
 
         api
             .get('/clients', config)
-            .then((res) => {                
+            .then((res) => {
                 dispatch(addClients(res.data));
                 dispatch(turnLoading());
             })
@@ -115,7 +115,6 @@ export const editClientFetch = (client, cleanForm) => {
         client = {
             ...client,
             limit: setCurrency(client.limit),
-            debit_balance: setCurrency(client.debit_balance),
             cpf_cnpj: cleanCpfCnpj(client.cpf_cnpj),
             phone: cleanPhone(client.phone),
             addresses: {
@@ -128,7 +127,7 @@ export const editClientFetch = (client, cleanForm) => {
             }
         };
 
-        api.put(`/clients/${client.id}`, client)
+        api.patch(`/clients/${client.id}`, client)
             .then((res) =>
             (
                 client = {
