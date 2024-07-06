@@ -29,7 +29,7 @@ const SalesOverview = () => {
 
       {/* <h5>2.1.2</h5> */}
       {/* <h5>2.1.3</h5> */}
-      Version - <h5>2.1.6</h5>
+      {/* Version - <h5>2.1.6</h5> */}
     </div>
     // </BaseCard>
   );
