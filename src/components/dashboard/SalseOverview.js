@@ -9,16 +9,17 @@ import Head from 'next/head';
 
 
 const SalesOverview = () => {
+  const iframeUrl = "https://mb.dlsistemas.com.br/public/dashboard/9ecd914e-a981-4957-bb5d-1f6fe7a63139";
 
   return (
     // <BaseCard title={`Resumo - ${sales?.length} vendas realizadas em ${new Date().getFullYear()}`}>
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
 
       <iframe
-        width="980"
-        height="850"
+        width="1200"
+        height="900"
         // src="https://lookerstudio.google.com/embed/reporting/d1aca8b4-f198-4a5c-8cdd-7397ee146470/page/ul1tD"
-        src="https://mb.dlsistemas.com.br/public/dashboard/9ecd914e-a981-4957-bb5d-1f6fe7a63139"
+        src={iframeUrl}
         frameborder="0"
         style={{ border: 0 }}
         allowfullscreen
