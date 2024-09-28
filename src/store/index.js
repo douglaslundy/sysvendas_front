@@ -12,6 +12,7 @@ import cartReducer from './ducks/cart';
 import saleReducer from './ducks/sales';
 import budgetReducer from './ducks/budget';
 import logReducer from './ducks/logs';
+import errorlogReducer from './ducks/errorlogs';
 
 
 export default configureStore({
@@ -27,6 +28,7 @@ export default configureStore({
         cart: cartReducer,
         sales: saleReducer,
         budgets: budgetReducer,
-        logs: logReducer
+        logs: logReducer,
+        errorlogs: errorlogReducer
     },
 });
