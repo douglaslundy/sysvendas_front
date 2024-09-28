@@ -12,76 +12,65 @@ const Menuitems = [
     profile: "user",
   },
   {
-    title: "Orçamentos", 
+    title: "Orçamentos",
     icon: "shopping-bag",
     href: "/budgets",
     profile: "user",
   },
   {
-    title: "Vendas", 
+    title: "Vendas",
     icon: "activity",
     href: "/sales",
     profile: "user",
   },
   {
-    title: "Usuarios", 
+    title: "Usuarios",
     icon: "users",
     href: "/users",
     profile: "admin",
   },
   {
-    title: "Clientes", 
+    title: "Clientes",
     icon: "smile",
     href: "/clients",
     profile: "user",
   },
   {
-    title: "Produtos", 
+    title: "Produtos",
     icon: "package",
     href: "/products",
     profile: "user",
   },
   {
-    title: "Pesquisar Produtos", 
+    title: "Pesquisar Produtos",
     icon: "search",
     href: "/searchProd",
     profile: "user",
   },
   {
-    title: "Categorias", 
+    title: "Categorias",
     icon: "tool",
     href: "/categories",
     profile: "user",
   },
   {
-    title: "Unidades", 
+    title: "Unidades",
     icon: "underline",
     href: "/units",
     profile: "user",
   },
   {
-    title: "Preço / Categoria", 
+    title: "Preço / Categoria",
     icon: "dollar-sign",
     href: "/valueCategory",
     profile: "user",
-  },  
-
-  // {
-  //   title: "Vendas", 
-  //   icon: "bar-code",
-  //   href: "/buttons",
-  // },  
-  // {
-  //   title: "Buttons",
-  //   icon: "disc",
-  //   href: "/buttons",
-  // },
-  // {
-  //   title: "Forms",
-  //   icon: "layout",
-  //   href: "/forms",
-  // }
-  
+  },
+  {
+    title: "Logs",
+    icon: "list",
+    href: "/logs",
+    profile: "admin",
+  }
 ];
 
 export default Menuitems;
