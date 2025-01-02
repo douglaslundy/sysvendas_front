@@ -6,7 +6,7 @@ const ModalPage = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsVisible(false);
-        }, 15000); // Fecha após 15 segundos
+        }, 20000); // Fecha após 20 segundos
 
         return () => clearTimeout(timer);
     }, []);
@@ -89,7 +89,7 @@ const ModalPage = () => {
                     fontSize: '0.9rem',
                     color: '#64748b'
                 }}>
-                    &copy; 2024 Sua Empresa - Todos os direitos reservados.
+                    &copy; 2024 DLSISTEMAS - Todos os direitos reservados.
                 </footer>
             </div>
         </div>
