@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllSales, getAllSalesPerDate } from "../../store/fetchActions/sale";
 import { setDateToSearch } from "../helpers/formatt/date/setDateToSearch";
 import Head from 'next/head';
+import LicenseRenew from "../modal/licenseRenew";
 
 
 const SalesOverview = () => {
@@ -15,6 +16,8 @@ const SalesOverview = () => {
   return (
     // <BaseCard title={`Resumo - ${sales?.length} vendas realizadas em ${new Date().getFullYear()}`}>
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+
+      <LicenseRenew />
 
       <iframe
         width="1200"
@@ -26,11 +29,6 @@ const SalesOverview = () => {
         allowfullscreen
         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
       </iframe>
-
-
-      {/* <h5>2.1.2</h5> */}
-      {/* <h5>2.1.3</h5> */}
-      {/* Version - <h5>2.1.6</h5> */}
     </div>
     // </BaseCard>
   );
