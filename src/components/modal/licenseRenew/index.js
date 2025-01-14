@@ -56,7 +56,7 @@ const ModalPage = () => {
                     color: '#1e293b'
                 }}>Sua licença expira em {Math.round((new Date('2025-02-01') - new Date((`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`).toString())) / (1000 * 60 * 60 * 24))} dias!</h1>
                 <p><strong>NÃO FIQUE SEM SISTEMA!</strong></p>
-                <p>Renovando até o dia <strong>10/01/2025</strong>, você pagará somente:</p>
+                <p>Renovando até o dia <strong>20/01/2025</strong>, você pagará somente:</p>
                 <div style={{
                     fontSize: '1.5rem',
                     margin: '20px 0'
@@ -69,7 +69,7 @@ const ModalPage = () => {
                     <span style={{
                         color: '#459DF7',
                         fontWeight: 'bold'
-                    }}>R$ 1600,00</span>
+                    }}>R$ 1799,00</span>
                 </div>
                 <div style={{
                     marginTop: '20px',
